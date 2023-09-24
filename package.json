@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pub": "bash publish.sh"
+    "pub": "bash publish.sh",
+    "build": "echo yolo"
   },
   "repository": {
     "type": "git",
