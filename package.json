@@ -1,0 +1,20 @@
+{
+  "name": "mangoleaf.world",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pub": "bash publish.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mangoleaf69/mangoleaf.world.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mangoleaf69/mangoleaf.world/issues"
+  },
+  "homepage": "https://github.com/mangoleaf69/mangoleaf.world#readme"
+}
