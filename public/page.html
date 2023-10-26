@@ -11,6 +11,7 @@
             --yellow: #fae420;
             --yellow-hover: #d9c91b;
         }
+
         body {
             background-color: #fff;
             color: #333;
@@ -63,12 +64,14 @@
         .contact-button:hover {
             background-color: var(--yellow-hover);
         }
-        #introAudio {
-            background-color: var(--pink);
-            width: 100vw;
+
+        .mfaudio{
+            background-color: var(--pink);/*no work :(*/
+            width: 100%;
+            border-radius: 2em;
         }
 
-               .pdf-wrapper {
+        .pdf-wrapper {
             background-color: var(--pink); /* Change this color to your preference */
             width: 100%;
             height: 600px; /* Set the height as needed */
@@ -82,27 +85,33 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Welcome to Mango Leaf World</h1>
-    </div>
-    <audio id="introAudio" controls>
+<div class="header">
+    <h1>Welcome to Mango Leaf World</h1>
+    <audio class="mfaudio" id="introAudio" controls>
         <source src="./img/mlintro.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
-    <div class="logo">
-        <img src="your-logo.png" alt="Mango Leaf World Logo">
-    </div>
-    <div class="content">
-        <h2>Your Trusted Development Services Provider</h2>
-        <img src="demo-image-1.jpg" alt="Demo Image 1">
-        <img src="demo-image-2.jpg" alt="Demo Image 2">
-        <div class="pdf-wrapper">
-            <embed class="pdf-embed" src="./img/purple-modern-pitch.pdf" type="application/pdf" width="100%" height="600">
-        </div>
+    <audio class="mfaudio" id="introMix" controls>
+        <source src="./img/mix1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</div>
 
+<div class="logo">
+    <img src="your-logo.png" alt="Mango Leaf World Logo">
+</div>
+<div class="content">
+    <h2>Your Trusted Development Services Provider</h2>
+    <img src="demo-image-1.jpg" alt="Demo Image 1">
+    <img src="demo-image-2.jpg" alt="Demo Image 2">
+    <div class="pdf-wrapper">
+        <embed class="pdf-embed" src="./img/purple-modern-pitch.pdf"
+               type="application/pdf" width="100%" height="600">
     </div>
-    <div class="contact">
-        <a href="https://wa.me/your-phone-number" class="contact-button">Contact us on WhatsApp</a>
-    </div>
+
+</div>
+<div class="contact">
+    <a href="https://wa.me/917039038061" class="contact-button">Contact us on WhatsApp</a>
+</div>
 </body>
 </html>
