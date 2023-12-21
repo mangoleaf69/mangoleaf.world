@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pub": "bash publish.sh",
-    "build": "echo yolo"
+    "build": "npx ei ./src . package.json"
   },
   "repository": {
     "type": "git",
