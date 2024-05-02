@@ -212,12 +212,12 @@
 
 </head>
 <body>
-<!--<script src="./js/lottie-player.js" ></script>-->
+<script src="./js/lottie-player.js" type="module"></script>
 <audio-player data-src="./img/mlintro.mp3"></audio-player>
 <!--<script src="https://cdn.skypack.dev/lottie-web" type="application/javascript"></script>-->
 <script type="module">
-    // import lottieWeb from './js/lottie-player';
-    import "./js/lottie-player.js";
+    import lottieWeb from './js/lottie-player';
+
     class AudioPlayer extends HTMLElement {
         constructor() {
             super();
@@ -249,7 +249,6 @@
         let raf = null;
 
         audio.src = element.getAttribute('data-src');
-
 
         const playAnimation = lottieWeb.loadAnimation({
             container: playIconContainer,
