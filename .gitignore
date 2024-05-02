@@ -1,4 +1,7 @@
-/node_modules
+node_modules
+public
+function
 .idea
 .env
 env.js
+.dev.vars
