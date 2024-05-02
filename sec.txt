@@ -1,0 +1,27 @@
+# Yet another ramble on securitay
+
+chain of trust
+
+your laptop
+
+your bootloader
+
+ your os
+
+ your browser
+
+ your editor jetbrains
+
+#freedom_edition
+
+ your browser firefox
+    - Permissions-Policy: geolocation=(self "https://example.com"), microphone=()
+
+
+ your email google or other...
+
+ your git provider (github mircrosoft) (1337 git + sourcetree)
+
+------------------------- theoretical FOSS ONLY ABOVE THIS LINE
+ your cloud providers (digital ocean + cloudflare + name.com + dns)
+

@@ -1,0 +1,3 @@
+If you edit in the public folder then you will lose all changes
+
+cd ../../src/public/fancy
