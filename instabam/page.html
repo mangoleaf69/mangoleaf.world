@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Photo Gallery</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .gallery img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 gallery">
+            <!-- Photos will be inserted here dynamically -->
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+
+class ImageManager {
+    constructor(imageUrls) {
+        this.imagesData = imageUrls.map(url => ({
+            url,
+            likes: 0,
+            views: 0,
+            cat: new Date().getTime(),
+            exploded: false
+        }));
+        this.initGallery();
+        setInterval(() => this.updateAllCountdowns(), 1000); // Update countdowns every second
+    }
+
+    initGallery() {
+        const gallery = document.querySelector('.gallery');
+        gallery.innerHTML = ''; // Clear gallery
+        this.imagesData.forEach((image, index) => {
+            const imgContainer = document.createElement('div');
+            imgContainer.classList.add('img-container', 'mb-4');
+            imgContainer.innerHTML = `
+                <img src="${image.url}" class="img-fluid" alt="Gallery image">
+                <p>Likes: <span id="likes-${index}">0</span> | Views: <span id="views-${index}">0</span></p>
+                <p>Countdown: <span id="countdown-${index}"></span></p>
+                <button class="btn btn-primary like-btn" data-index="${index}">Like</button>
+                <div class="explosion-banner" id="explosion-${index}" style="display: none;">💥 Exploded!</div>
+            `;
+            gallery.appendChild(imgContainer);
+
+            // Increment views
+            image.views++;
+            document.getElementById(`views-${index}`).innerText = image.views;
+
+            // Initially update likes, explosion status, and countdown
+            this.updateLikesAndExplode(image, index);
+            this.updateCountdown(image, index);
+        });
+
+        this.addLikeEventListeners();
+    }
+
+    updateLikesAndExplode(image, index) {
+        const explosionBanner = document.getElementById(`explosion-${index}`);
+        if (!image.exploded && this.isExploded(image)) {
+            explosionBanner.style.display = 'block';
+        }
+
+        document.getElementById(`likes-${index}`).innerText = image.likes;
+    }
+
+    addLikeEventListeners() {
+        const likeButtons = document.querySelectorAll('.like-btn');
+        likeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const index = e.target.dataset.index;
+                const image = this.imagesData[index];
+                image.likes++;
+                this.updateLikesAndExplode(image, index);
+            });
+        });
+    }
+
+    isExploded(image) {
+        let now = new Date().getTime();
+        let hoursPassed = (now - image.cat) / 3600000;
+        if (hoursPassed < Math.log2(image.likes + 1)) { // +1 to handle log(0)
+            return false;
+        } else {
+            image.exploded = true;
+            return true;
+        }
+    }
+
+    updateCountdown(image, index) {
+        let now = new Date();
+        let nextHour = new Date(now);
+        nextHour.setHours(now.getHours() + 1);
+        nextHour.setMinutes(0, 0, 0); // Set to the next hour mark
+
+        let msUntilNextHour = nextHour - now;
+        let countdownText = `${Math.floor(msUntilNextHour / 60000)}m ${Math.floor((msUntilNextHour % 60000) / 1000)}s`;
+        document.getElementById(`countdown-${index}`).innerText = countdownText;
+    }
+
+    updateAllCountdowns() {
+        this.imagesData.forEach((image, index) => {
+            if (!image.exploded) {
+                this.updateCountdown(image, index);
+            }
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const imageUrls = [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Piranha_-_Delapouite_-_game-icons.svg/640px-Piranha_-_Delapouite_-_game-icons.svg.png',
+        'https://live.staticflickr.com/65535/50265276538_fbeb216f8a_o_d.jpg',
+        // Add more image URLs as needed
+    ];
+
+    new ImageManager(imageUrls);
+});
+
+
+
+</script>
+</body>
+</html>
