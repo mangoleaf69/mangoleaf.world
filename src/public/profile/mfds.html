@@ -119,7 +119,7 @@
 
                     <input type="range" name="units" min=100 max=10000 value=200 step=100
                            id="units-input">
-                    <input type="range" name="cost" min=10 max=1000 value=100 step=10
+                    <input type="range" name="cost" min=10 max=10000 value=100 step=10
                            id="cost-input">
 
                     <p id="price-output"></p>
@@ -798,7 +798,8 @@
 
         let outputs = estimate_profit(units, cost, 5, 1000, 200, 100, 1.3, 1.5, 0.8)
 
-        console.log()
+        console.log("Expected Profit: ",outputs.expected_profit)
+
         priceOutput2.innerText = `${JSON.stringify(outputs, null, 2)}`
 
     }
