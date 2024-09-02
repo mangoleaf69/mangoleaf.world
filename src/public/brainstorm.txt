@@ -1,0 +1,58 @@
+
+8 Beginer/Intermediate Guides
+
+let guides = [
+	{
+		img: "",
+		name: "Drop Shipping"
+		desc: "buisiness"
+		url: "https://mangoleaf.world/mfds"
+	},
+	{
+		img: "",
+		name: "Mountian Hiking"
+		desc: "self love"
+		url: "https://mangoleaf.world/hike"
+	},{
+		img: "",
+		name: "Wellness Yoga"
+		desc: "self love"
+		url: "https://mangoleaf.world/yoga"
+	},{
+		img: "",
+		name: "Programing Fundamentals"
+		desc: "computers"
+		url: "https://mangoleaf.world/programming"
+	},{
+		img: "",
+		name: "UI/UX Design"
+		desc: "computers"
+		url: "https://mangoleaf.world/uiux"
+	},{
+		img: "",
+		name: "Web Maping and GIS"
+		desc: "analysis"
+		url: "https://mangoleaf.world/gis"
+	},{
+		img: "",
+		name: "Travel"
+		desc: "self love"
+		url: "https://mangoleaf.world/travel"
+	},{
+		img: "",
+		name: "Fassion"
+		desc: "self love"
+		url: "https://mangoleaf.world/fassion"
+	},
+]
+
+Drop shiping 
+Mountiniering/Treking, 
+Wellness/Yoga, 
+Proramming Fundamentals
+UI/UX Desing
+Web mapping/Gis
+Travel
+Fassion
+
+
