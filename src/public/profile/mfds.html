@@ -793,7 +793,7 @@
         let units = parseInt(unitsInput.value);
         let cost = parseInt(costInput.value);
 
-        priceOutput.innerText = `For ${units}units at a cost of ${cost}/unit ...`
+        priceOutput.innerText = `For ${units}units at a cost of ${cost}/unit + $300 for shipping and packaging.`
 
 
         let outputs = estimate_profit(units, cost, 5, 1000, 200, 100, 1.3, 1.5, 0.8)
