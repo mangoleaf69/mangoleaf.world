@@ -1,172 +1,14 @@
 {
-  "charts": [
-    {
-      "name": "marketResearch",
-      "title": "Research",
-      "desc": "Identify profitable niches, analyze competitors, and understand consumer behavior.",
-      "val": 90,
-      "color": "#3498db"
-    },
-    {
-      "name": "productSourcing",
-      "title": "Sourcing",
-      "desc": "Find reliable suppliers, negotiate favorable terms, and manage relationships.",
-      "val": 85,
-      "color": "#2ecc71"
-    },
-    {
-      "name": "ecommerceSetup",
-      "title": "eCommerce",
-      "desc": "Set up and optimize an online store on platforms like Shopify, WooCommerce, or BigCommerce.",
-      "val": 80,
-      "color": "#e67e22"
-    },
-    {
-      "name": "digitalMarketing",
-      "title": "Marketing",
-      "desc": "Drive traffic through SEO, social media marketing, email campaigns, and paid advertising.",
-      "val": 88,
-      "color": "#9b59b6"
-    },
-    {
-      "name": "logistics",
-      "title": "Logistics",
-      "desc": "Manage order processing, shipping logistics, and handle returns efficiently.",
-      "val": 82,
-      "color": "#1abc9c"
-    },
-    {
-      "name": "customerService",
-      "title": "Service",
-      "desc": "Create a seamless customer experience, handle inquiries, and resolve issues effectively.",
-      "val": 87,
-      "color": "#34495e"
-    },
-    {
-      "name": "financialPlanning",
-      "title": "Finance",
-      "desc": "Manage cash flow, set budgets, and ensure profitability.",
-      "val": 85,
-      "color": "#f39c12"
-    },
-    {
-      "name": "legalCompliance",
-      "title": "Compliance",
-      "desc": "Understand legal requirements, including contracts, taxes, and intellectual property protection.",
-      "val": 80,
-      "color": "#e74c3c"
-    }
-  ],
-  "bars": [
-    {
-      "name": "activeListening",
-      "title": "Active Listening",
-      "desc": "Truly hear and understand others, showing empathy and making people feel valued and supported.",
-      "val": 90,
-      "color": "#2ecc71"
-    },
-    {
-      "name": "communication",
-      "title": "Effective Communication",
-      "desc": "Express ideas clearly and concisely, both in writing and verbally.",
-      "val": 88,
-      "color": "#3498db"
-    },
-    {
-      "name": "problemSolving",
-      "title": "Problem-Solving",
-      "desc": "Analyze situations, think critically, and find creative solutions to challenges.",
-      "val": 92,
-      "color": "#e67e22"
-    },
-    {
-      "name": "timeManagement",
-      "title": "Time Management",
-      "desc": "Prioritize tasks, manage time efficiently, and meet deadlines without stress.",
-      "val": 85,
-      "color": "#9b59b6"
-    },
-    {
-      "name": "adaptability",
-      "title": "Adaptability & Flexibility",
-      "desc": "Adjust to new situations, handle change gracefully, and find new paths when needed.",
-      "val": 83,
-      "color": "#1abc9c"
-    },
-    {
-      "name": "empathy",
-      "title": "Empathy & Emotional Intelligence",
-      "desc": "Understand and respond to the emotions of others, fostering positive relationships and trust.",
-      "val": 87,
-      "color": "#34495e"
-    },
-    {
-      "name": "leadership",
-      "title": "Leadership & Motivation",
-      "desc": "Inspire and guide others towards shared goals, providing encouragement and support.",
-      "val": 89,
-      "color": "#f39c12"
-    },
-    {
-      "name": "continuousLearning",
-      "title": "Continuous Learning",
-      "desc": "Commitment to self-improvement and staying updated with new knowledge and skills.",
-      "val": 90,
-      "color": "#e74c3c"
-    }
-  ],
-  "guides": [
-    {
-      "img": "",
-      "name": "Drop Shipping",
-      "desc": "buisiness",
-      "url": "https://mangoleaf.world/mfds"
-    },
-    {
-      "img": "",
-      "name": "Mountian Hiking",
-      "desc": "self love",
-      "url": "https://mangoleaf.world/hike"
-    },
-    {
-      "img": "",
-      "name": "Wellness Yoga",
-      "desc": "self love",
-      "url": "https://mangoleaf.world/yoga"
-    },
-    {
-      "img": "",
-      "name": "Programing Fundamentals",
-      "desc": "computers",
-      "url": "https://mangoleaf.world/programming"
-    },
-    {
-      "img": "",
-      "name": "UI/UX Design",
-      "desc": "computers",
-      "url": "https://mangoleaf.world/uiux"
-    },
-    {
-      "img": "",
-      "name": "Web Maping and GIS",
-      "desc": "analysis",
-      "url": "https://mangoleaf.world/gis"
-    },
-    {
-      "img": "",
-      "name": "Travel",
-      "desc": "self love",
-      "url": "https://mangoleaf.world/travel"
-    },
-    {
-      "img": "",
-      "name": "Fassion",
-      "desc": "self love",
-      "url": "https://mangoleaf.world/fassion"
-    }
-  ],
-  "medium": {
-    "items": [
+  "status": "ok",
+  "feed": {
+    "url": "https://medium.com/feed/@mangoleaf96d343",
+    "title": "Stories by mangoleaf on Medium",
+    "link": "https://medium.com/@mangoleaf96d343?source=rss-bf1474b7e499------2",
+    "author": "",
+    "description": "Stories by mangoleaf on Medium",
+    "image": "https://cdn-images-1.medium.com/fit/c/150/150/0*2mhj8Lbc6uxW80x2"
+  },
+  "items": [
     {
       "title": "Optimizing Saga Peak Detection.",
       "pubDate": "2024-07-20 12:27:43",
@@ -202,5 +44,4 @@
       ]
     }
   ]
-  }
 }
