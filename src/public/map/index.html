@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accordion Example</title>
+    <style>
+        :root {
+            --transition-duration: 0.6s;
+            --color-section-1: #3498db;
+            --color-section-2: #2ecc71;
+            --color-section-3: #e74c3c;
+            --color-section-4: #f1c40f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .horizontal-accordion {
+            display: flex;
+            width: 100%;
+            transition: all var(--transition-duration) ease-in-out;
+            flex-direction: row; /* Horizontal by default */
+        }
+
+        .vertical-accordion {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: all var(--transition-duration) ease-in-out;
+        }
+
+        .section {
+            padding: 20px;
+            color: white;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all var(--transition-duration) ease-in-out;
+            overflow: hidden;
+        }
+
+        /* Horizontal Sections */
+        .horizontal {
+            flex: 1;
+            width: 0;
+            background-color: var(--color-section-1);
+        }
+
+        /* Vertical Sections */
+        .vertical {
+            flex: 1;
+            height: 0;
+            background-color: var(--color-section-3);
+        }
+
+        #horizontal-section-1 {
+            background-color: var(--color-section-1);
+        }
+
+        #horizontal-section-2 {
+            background-color: var(--color-section-2);
+        }
+
+        #vertical-section-3 {
+            background-color: var(--color-section-3);
+        }
+
+        #vertical-section-4 {
+            background-color: var(--color-section-4);
+        }
+
+        .controls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #34495e;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 20;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #2c3e50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1e2b34;
+        }
+
+        /* Mobile view: Switch horizontal accordion to vertical */
+        @media (max-width: 768px) {
+            .horizontal-accordion {
+                flex-direction: column;
+            }
+
+            .section.horizontal {
+                width: 100%;
+                height: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <button onclick="setSections([1], [3])">Camera</button>
+    <button onclick="setSections([2], [3])">Gallery</button>
+    <button onclick="setSections([1], [4])">Map</button>
+    <button onclick="setSections([2], [3, 4])">Map + Gallery</button>
+    <button onclick="setSections([1], [3, 4])">Map + Camera</button>
+    <button onclick="setSections([1, 2], [3, 4])">Show All Sections</button>
+</div>
+
+<div class="container">
+    <div class="vertical-accordion">
+        <div id="vertical-section-3" class="horizontal-accordion">
+            <div id="horizontal-section-1" class="section horizontal">Horizontal Section 1 (Camera)</div>
+            <div id="horizontal-section-2" class="section horizontal">Horizontal Section 2 (Gallery)</div>
+        </div>
+        <div id="vertical-section-4" class="section vertical">Vertical Section 4 (Map)</div>
+    </div>
+</div>
+
+    <script>
+    function setSections(horizontalIds, verticalIds) {
+        let hdivs = Array.from(document.querySelectorAll(".horizontal-accordion>div"));
+        let vdivs = Array.from(document.querySelectorAll(".vertical-accordion>div"));
+
+        // Reset widths and heights
+        hdivs.forEach(div => {
+            div.style.width = '0';
+            div.style.height = '0'; // for mobile mode
+        });
+        vdivs.forEach(div => div.style.height = '0');
+
+        // Set horizontal sections (Camera and Gallery)
+        if (horizontalIds.length > 0) {
+            let width = 100 / horizontalIds.length;
+            horizontalIds.forEach(id => {
+                document.getElementById(`horizontal-section-${id}`).style.width = `${width}%`;
+                document.getElementById(`horizontal-section-${id}`).style.height = `auto`; // for mobile
+            });
+        }
+
+        // Set vertical sections (Map and other vertical sections)
+        if (verticalIds.length > 0) {
+            let height = 100 / verticalIds.length;
+            verticalIds.forEach(id => {
+                document.getElementById(`vertical-section-${id}`).style.height = `${height}vh`;
+            });
+        }
+    }
+
+    // Initial state
+    setSections([1, 2], [3, 4]);
+</script>
+
+</body>
+</html>
