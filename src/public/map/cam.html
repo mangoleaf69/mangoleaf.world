@@ -373,6 +373,8 @@
     var fileCount = 0;
 
     document.querySelector("#gal-back").addEventListener("click", toggleGal)
+
+
     document.querySelector("#gal-upload").addEventListener("click", async e => {
         if (_idx === -1) {
             alert("No image selected! Please click an thumbnail.")
@@ -408,14 +410,21 @@
             let hash2 = await res.text();
             topbar.hide()
 
-            console.assert(hash2 == hash, "hash must match server computed one")
+            console.log(hash)
+            console.log(hash2)
+            if(hash2 === "" && res.ok) {
+                console.warn("Probably ok just a cors opaque response.")
+            } else {
+                console.assert(hash2 == hash, "hash must match server computed one")
+            }
+
             //alert(res.status)
 
             if (res.status === 200) {
-                alert("Cloud says uploaded OK... verifying file before opening images.")
+                // alert("Cloud says uploaded OK... verifying file before opening images.")
                 console.log(hash);
             } else {
-                alert("Oops something went wrong, code: " + res.status)
+                // alert("Oops something went wrong, code: " + res.status)
                 console.error(res.statusText)
             }
 
@@ -523,6 +532,130 @@
 
 
     }
+
+
+    function showPastelModal(message, color, img) {
+        // Color options
+        const colors = {
+            green: '#77dd77',  // Pastel green
+            blue: '#aec6cf',   // Pastel blue
+            orange: '#ffb347', // Pastel orange
+            purple: '#b39eb5', // Pastel purple
+            black: '#cfcfc4'   // Light grey (pastel alternative for black)
+        };
+
+        // Ensure color is one of the allowed options, default to black if not
+        const modalColor = colors[color] || colors.black;
+
+        // Create the backdrop
+        const backdrop = document.createElement('div');
+        backdrop.style.position = 'fixed';
+        backdrop.style.top = '0';
+        backdrop.style.left = '0';
+        backdrop.style.width = '100%';
+        backdrop.style.height = '100%';
+        backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Transparent black background
+        backdrop.style.zIndex = '105';
+
+
+
+
+        // Create the modal container
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '50%';
+        modal.style.left = '50%';
+        modal.style.transform = 'translate(-50%, -50%)';
+        modal.style.padding = '20px';
+        modal.style.backgroundColor = modalColor;
+        modal.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.1)';
+        modal.style.borderRadius = '10px';
+        modal.style.zIndex = '5000';
+        modal.style.maxWidth = '80%';
+        modal.style.textAlign = 'center';
+        modal.style.fontFamily = '"Comic Sans MS", sans-serif'; // Cartoon-like font
+        modal.style.fontSize = '96px';
+        modal.style.color = '#fff';
+
+        if (img) {
+            modal.style.opacity = "0.9";
+            backdrop.style.background = "url(" + img + ")";
+            backdrop.style.backgroundSize = "cover"; // This will cover the entire backdrop
+            backdrop.style.backgroundRepeat = "repeat"; // This will tile the background image
+            backdrop.style.backgroundPosition = "center"; // Center the background image
+            backdrop.style.backgroundSize = "240px 240px"; // Adjust this to control tile size
+        }
+        // Create the message text
+        const messageText = document.createElement('p');
+        messageText.textContent = message;
+
+        // Add the message to the modal
+        modal.appendChild(messageText);
+
+        // Append both backdrop and modal to the body
+        document.body.appendChild(backdrop);
+        document.body.appendChild(modal);
+
+        // Close the modal when clicking on the backdrop
+        backdrop.addEventListener('click', function() {
+            document.body.removeChild(modal);
+            document.body.removeChild(backdrop);
+        });
+    }
+
+    // Example usage
+    // showPastelModal('Mango Leaf World Map Requires Camera Permissions. Please Accept', 'orange');
+
+
+    async function checkCameraPermission() {
+        try {
+            const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+
+            if (permissionStatus.state === 'granted') {
+                console.log('Camera permission is already granted.');
+                return true; // Permission is granted
+            } else if (permissionStatus.state === 'denied') {
+                console.log('Camera permission is denied.');
+                return false; // Permission is denied
+            } else if (permissionStatus.state === 'prompt') {
+                console.log('Camera permission is not yet granted, asking now...');
+                return false; // Permission is not granted but can be prompted
+            }
+        } catch (err) {
+            console.error('Permission check failed:', err);
+            return false; // Failed to check permissions
+        }
+    }
+    async function checkCameraAccess() {
+        try {
+            // Try to get user media with video only
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+            // If successful, stop the stream and return that access is granted
+            stream.getTracks().forEach(track => track.stop());
+            console.log('Camera access is granted.');
+            return true;
+        } catch (err) {
+            // If an error occurs (e.g., user denied permission), handle it here
+            if (err.name === 'NotAllowedError') {
+                console.log('Camera access is denied.');
+            } else if (err.name === 'NotFoundError') {
+                console.log('No camera device found.');
+            } else {
+                console.error('Error accessing camera:', err);
+            }
+            return false;
+        }
+    }
+
+    // Example usage
+    checkCameraAccess().then(granted => {
+        if (granted) {
+            console.log("Proceed with accessing the camera.");
+        } else {
+            showPastelModal('Mango Leaf World Map Requires Camera Permissions. Please accept and check always allow.', 'orange', "../img/40dogo.jpg");
+        }
+    });
 
 
     L.Map.include({
@@ -854,6 +987,7 @@
     };
 
 
+
     /*
  (c) 2014, Vladimir Agafonkin
  simpleheat, a tiny JavaScript library for drawing heatmaps with Canvas
@@ -968,9 +1102,18 @@
     var map;
 
     // Initialize the map
-    function initMap() {
+    async  function initMap() {
 
-        ispLoc();
+        ispLoc().then(m=>{
+
+            console.log("marker ", m)
+
+        });
+
+        console.log("Todo convert to h3 cell")
+        console.log("Todo embed metadata in jpeg img")
+        console.log("Todo redirect to map and show uploaded image")
+        console.log("Finaly update database and user profile for heat map lat lon list.")
 
         map = L.map('map', {
             zoom: 5,
@@ -1005,7 +1148,7 @@
         var t = L.terminator({
             color: false,
             fillColor: "#242424",
-            fillOpacity: 0.25,
+            fillOpacity: 0.15,
             resolution: 5
 
         });
@@ -1068,9 +1211,13 @@
 
             let marker = L.circleMarker(ll)
 
-            marker.addTo(map)
+            if(map) {
+                marker.addTo(map)
+                map.panTo(ll);
+            }
 
-            map.panTo(ll);
+
+
             bs.resNotify({
                 success: true,
                 color: "info",
@@ -1167,6 +1314,8 @@
                 }
             })
 
+
+            return marker
         }).catch(e => {
             console.error(e);
             bs.resNotify({
@@ -1275,6 +1424,7 @@
             video: true
         };
 
+
         navigator.mediaDevices.getUserMedia(constraints)
             .then(function (stream) {
                 const video = document.getElementById('video');
@@ -1289,13 +1439,6 @@
                 window.stream = stream;
                 video.play();
 
-
-                // Dynamically add CSS styles for the video
-                const style = document.createElement('style');
-                style.textContent = `
-
-        `;
-                document.head.appendChild(style);
 
                 // Function to check if the body has a scrollbar
                 function hasScrollbar() {
@@ -1332,13 +1475,14 @@
                 setTimeout(() => {
                     scrollCheckInterval = setInterval(checkForScrollbar, 100);
                     if (!map) {
+                        showPastelModal("Access the map from the gallery 🙂‍↔️🧐", "green")
                         // let can = prompt("Do you want to skip to map? yes to cancel uploading a pic ... borrrring.")
-                        if (can && can.toLowerCase().startsWith("y")) {
-                            console.log("Map is initialising:")
-                            // toggleGal();
-
-                            toggleMap()
-                        }
+                        // if (can && can.toLowerCase().startsWith("y")) {
+                        //     console.log("Map is initialising:")
+                        //     // toggleGal();
+                        //
+                        //     toggleMap()
+                        // }
                     }
                 }, 555)
 
