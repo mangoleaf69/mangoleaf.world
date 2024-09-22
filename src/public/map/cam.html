@@ -227,14 +227,13 @@
     </div>
     <ul id="gal_img_list">
         <!--    <li><img src=”img2.jpg” alt=”My Home”></li>-->
-        <!--    <li><img src=”img3.jpg” alt=”My Home”></li>-->
-        <!--    <li><img src=”img4.jpg” alt=”My Home”></li>-->
+        <!-- Here we later dynamicaly add the taken images-->
     </ul>
 
     <div id="gal-tools">
-        <button id="gal-back"><- Back</button>
-        <button id="gal-upload">Upload selected!</button>
-        <button id="gal-map" onclick="toggleMap()"> TO MAP!</button>
+        <button id="gal-back" title="Return to camera."><- Back</button>
+        <button id="gal-upload" title="Send file to cloud storage for public access.">Upload selected!</button>
+        <button id="gal-map" onclick="toggleMap()" title="Open the world map."> TO MAP!</button>
 
         <ul id="gal-uploads"></ul>
     </div>
@@ -574,7 +573,7 @@
         modal.style.maxWidth = '80%';
         modal.style.textAlign = 'center';
         modal.style.fontFamily = '"Comic Sans MS", sans-serif'; // Cartoon-like font
-        modal.style.fontSize = '96px';
+        modal.style.fontSize = '42px';
         modal.style.color = '#fff';
 
         if (img) {
