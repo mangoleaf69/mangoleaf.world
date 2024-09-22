@@ -1,0 +1,10 @@
+
+[r2]
+type = s3
+provider = Cloudflare Endpoint
+access_key_id = 2b10c6ff4d40b8a6c70203fecdb41a49
+secret_access_key = 0df75b335c624ab3f394356f11793b94c5a3ba54d02e7e7187d883e468677cad
+region = auto
+endpoint = https://e0e27ee7d28c69f5f5a4b12c2f597cdb.r2.cloudflarestorage.com
+acl = private
+
