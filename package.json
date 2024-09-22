@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pub": "bash publish.sh",
-    "build": "npx ei ./src . ./package.json"
+    "build": "npx ei ./src . ./package.json",
+	"live": "npx endpoint-ei --server ./public",
+	"clean": "rm -r public && rm -r functions && rm -r node_modules"
   },
   "repository": {
     "type": "git",
