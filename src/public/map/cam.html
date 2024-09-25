@@ -396,10 +396,9 @@
 
         return lit
     }
+    async function insertLitHash(hash) {
 
-    async function selectAllLitHash() {
-
-        let res = await fetch("https://lit.sgol.workers.dev/");
+        let res = await fetch("https://lit.sgol.workers.dev/?hash="+hash);
 
         let litdata = await res.json();
 
@@ -415,6 +414,18 @@
             return ll;
 
         })
+
+    }
+    async function selectAllLitHash() {
+
+        let res = await fetch("https://lit.sgol.workers.dev/");
+
+        let litdata = await res.json();
+
+        console.log(litdata)
+
+        let lls = litdata.ret3.data.results;
+        return  lls
 
     }
 
@@ -502,6 +513,10 @@
 
                 console.assert(sameDataReturned, "Returned data should produce same hash");
 
+
+                let ret = insertLitHash(hash);
+
+                console.debug(ret);
 
                 // let url = "https://freemap.online/camera/view?etch=" + hash
                 let url = "https://freemap.online/api/free/etch//view?etch=" + hash
@@ -1298,7 +1313,7 @@
         }
     }
 
-    var heat, marker, _llmap
+    var heat, marker, _llmap = {}
     function latLonMap(ll, data) {
 
         let lat = parseInt(Math.floor(ll[0]))
@@ -1309,11 +1324,50 @@
         let a = _llmap[lat][lon];
         let p = heat.addLatLng(ll)
 
-        a.push({ll, data, p})
+
+
+        function addPopupToCircleMarker(circleMarker, imageUrl) {
+            // Create a container for the popup content
+            const popupContent = `
+        <div style="text-align: center;">
+            <img src="${imageUrl}" alt="Popup Image" style="width: 100px; height: 100px; border-radius: 5px;">
+            <div style="margin-top: 10px;">
+                <button id="feelingLuckyBtn"  onclick="showCamera()" style="padding: 5px 10px; margin-right: 5px;">Feeling Lucky</button>
+                <button id="shareBtn" style="padding: 5px 10px;">Share</button>
+            </div>
+        </div>
+    `;
+
+            // Add the popup with the content to the CircleMarker
+            circleMarker.bindPopup(popupContent);
+
+            // Event listener for the popup opening to attach event listeners to the buttons
+            circleMarker.on('popupopen', function () {
+                document.getElementById('feelingLuckyBtn').addEventListener('click', function () {
+                    alert("You clicked 'Feeling Lucky'!");
+                    // Add custom functionality for 'Feeling Lucky' button here
+                });
+
+                document.getElementById('shareBtn').addEventListener('click', function () {
+                    alert("You clicked 'Share'!");
+                    // Add custom functionality for 'Share' button here
+                });
+            });
+        }
+
+
+
+        let m = L.circleMarker(ll).addTo(map);
+
+
+        addPopupToCircleMarker(m, "https://freemap.online/api/free/etch/file?etch="+data)
+        // addImagePopupOnMarker(map, m, "https://freemap.online/api/free/etch/file?etch="+data, ll.join(", "))
+
+        a.push({ll, data, p, m})
 
 
         return a;
-        // let m = L.marker().addTo(map);
+
 
 
 
@@ -1428,15 +1482,22 @@
 
             selectAllLitHash().then(d=>{
 
-                console.log("Adding img rows to heatmap", d.length)
-                d.data.forEach(row=>{
+                let rows = d;
+                console.log("Adding img rows to heatmap", rows.length)
+                rows.forEach(row=>{
 
-                     heat.addLatLng(L.latLng([row.lat, row.lon]));
+                    let ll = [row.lat, row.lon]
+                    let hash = row.hash;
+                    latLonMap(ll, hash)
+
+                     // heat.addLatLng(L.latLng([row.lat, row.lon]));
 
                 })
 
 
             })
+
+
             if(draw) {
                 map.on({
                     movestart: function () {

@@ -26,8 +26,9 @@ function indexUploadedPhoto(hash) {
 
 
 // Function to fetch the image, detect its dimensions, and create a popup on a marker
-async function addImagePopupOnMarker(map, imageUrl, title) {
+async function addImagePopupOnMarker(map, _marker, imageUrl, title) {
     try {
+        _marker = _marker || marker
         // Fetch the image
         const response = await fetch(imageUrl);
         const blob = await response.blob();
