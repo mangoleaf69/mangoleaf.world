@@ -1357,7 +1357,12 @@
 
 
 
-        let m = L.circleMarker(ll).addTo(map);
+        let lll = generateGaussianPoints({lat: ll[0], lng: ll[1]}, 1, 1)[0]
+        console.log(ll, lll)
+
+        let m = L.circleMarker(lll).addTo(map);
+
+
 
 
         addPopupToCircleMarker(m, "https://freemap.online/api/free/etch/file?etch="+data)
@@ -1374,6 +1379,32 @@
 
 
     }
+
+    //An extract of address points from the LINZ bulk extract: http://www.linz.govt.nz/survey-titles/landonline-data/landonline-bde
+    //Should be this data set: http://data.linz.govt.nz/#/layer/779-nz-street-address-electoral/
+    function generateGaussianPoints(latlng, n, sigma) {
+        const points = [];
+        const {lat, lng} = latlng; // Destructure the latitude and longitude from the input point
+
+        // Function to generate a random value from a normal distribution using the Box-Muller transform
+        function randomGaussian(mean, stddev) {
+            let u = 0, v = 0;
+            while (u === 0) u = Math.random(); // Convert [0,1) to (0,1)
+            while (v === 0) v = Math.random();
+            return mean + stddev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+        }
+
+        // Generate `n` points
+        for (let i = 0; i < n; i++) {
+            const newLat = randomGaussian(lat, sigma);  // Latitude perturbed by sigma
+            const newLng = randomGaussian(lng, sigma);  // Longitude perturbed by sigma
+            points.push([newLat, newLng]);              // Push the generated point to the array
+        }
+
+        return points;
+    }
+
+
     async function ispLoc() {
 
         // "https://freemap.online/api/free/getIspLoc"
@@ -1400,29 +1431,6 @@
             // document.querySelector('button[title="Search"]').click()
 
 
-            //An extract of address points from the LINZ bulk extract: http://www.linz.govt.nz/survey-titles/landonline-data/landonline-bde
-//Should be this data set: http://data.linz.govt.nz/#/layer/779-nz-street-address-electoral/
-            function generateGaussianPoints(latlng, n, sigma) {
-                const points = [];
-                const {lat, lng} = latlng; // Destructure the latitude and longitude from the input point
-
-                // Function to generate a random value from a normal distribution using the Box-Muller transform
-                function randomGaussian(mean, stddev) {
-                    let u = 0, v = 0;
-                    while (u === 0) u = Math.random(); // Convert [0,1) to (0,1)
-                    while (v === 0) v = Math.random();
-                    return mean + stddev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-                }
-
-                // Generate `n` points
-                for (let i = 0; i < n; i++) {
-                    const newLat = randomGaussian(lat, sigma);  // Latitude perturbed by sigma
-                    const newLng = randomGaussian(lng, sigma);  // Longitude perturbed by sigma
-                    points.push([newLat, newLng]);              // Push the generated point to the array
-                }
-
-                return points;
-            }
 
 // Example usage:
 //             const latlng = {lat: 40.7128, lng: -74.0060};  // Central point (e.g., New York City)
