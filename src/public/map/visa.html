@@ -1,0 +1,33 @@
+<html>
+
+
+<script>
+
+    var data;
+    fetch("https://ne.freemap.online/50m/cultural/ne_50m_admin_0_countries.json").then(d=>d.json()).then(dd=>{
+        data = dd;
+        onData();
+    })
+    function onData(){
+            let i = 0;
+            let csv = ''
+            function writeLine(a) {
+                console.log(a);
+                csv += a.join(", ") + "\n";
+            }
+            data.features.forEach(f=>{
+                let p = f.properties;
+                if(i===0) writeLine(Object.keys(p));
+                writeLine(Object.values(p));
+                let name = p.SOVEREIGNT
+                console.log(name)
+                i++;
+            })
+        console.log(csv);
+    }
+
+
+</script>
+
+https://freemap.online/zenVector?url=https://ne.freemap.online/50m/cultural/ne_50m_admin_0_countries.json
+</html>

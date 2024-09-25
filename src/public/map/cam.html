@@ -9,6 +9,10 @@
 <body>
 
 <style>
+    :root {
+
+        --bg-color: #fae420
+    }
 
     #cameraCapture {
         background: #dddd;
@@ -59,7 +63,7 @@
     .my-camera {
         display: block;
         /*background: #fff;*/
-        background: #222;
+        background: var(--bg-color);
 
         width: 100%;
         padding: 0px;
@@ -72,7 +76,7 @@
         display: flex;
         justify-content: space-evenly;
         align-items: center;
-        background: #222;
+        background: var(--bg-color);
         padding: 2em;
         /*padding: 0px;*/
         margin: 0px;
@@ -88,6 +92,7 @@
     body {
         padding: 0px;
         margin: 0px;
+        background: var(--bg-color);
     }
 
 
@@ -167,8 +172,9 @@
 
     #gal-tools {
         display: flex;
-        flex-direction: row;
+        /*flex-direction: row;*/
         justify-content: space-evenly;
+        align-items: center;
     }
 
     #gal-tools > button {
@@ -181,6 +187,9 @@
         padding: 5px;
         border-radius: 3px;
         font-size: larger;
+        padding-top: 16px;
+        padding-bottom: 16px;
+
 
     }
 
@@ -232,7 +241,7 @@
 
     <div id="gal-tools">
         <button id="gal-back" title="Return to camera."><- Back</button>
-        <button id="gal-upload" title="Send file to cloud storage for public access.">Upload selected!</button>
+        <button id="gal-upload" title="Send file to cloud storage for public access.">Upload Selected!</button>
         <button id="gal-map" onclick="toggleMap()" title="Open the world map."> TO MAP!</button>
 
         <ul id="gal-uploads"></ul>
@@ -245,6 +254,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+
 
 <script src=" https://unpkg.com/@joergdietrich/leaflet.terminator@1.0.0/L.Terminator.js"></script>
 <!-- Scale Control JS -->
@@ -342,6 +352,8 @@
         let cam = document.querySelector(".my-camera")
 
         isGal = !isGal;
+        if(isGal) stopWebcam(video);
+        else startWebcam();
 
         gal.classList.toggle("hidden")
         cam.classList.toggle("hidden")
@@ -373,13 +385,52 @@
 
     document.querySelector("#gal-back").addEventListener("click", toggleGal)
 
+    async function getLit(data) {
+
+        let res = await fetch("https://freemap.online/api/free/lit?data=" + data);
+
+        let lit = await res.json();
+
+
+        lit.data.etch = data;
+
+        return lit
+    }
+
+    async function selectAllLitHash() {
+
+        let res = await fetch("https://lit.sgol.workers.dev/");
+
+        let litdata = await res.json();
+
+        console.log(litdata)
+
+        let lls = litdata.ret3.data.results;
+
+
+        return lls.map(r=>{
+
+            let ll = [r.lat, r.lon]
+            console.log(heat.addLatLng(ll));
+            return ll;
+
+        })
+
+    }
+
+
 
     document.querySelector("#gal-upload").addEventListener("click", async e => {
         if (_idx === -1) {
-            alert("No image selected! Please click an thumbnail.")
+            showPastelModal("No image selected! Please click an thumbnail.", "blue")
+            return;
+            // alert("No image selected! Please click an thumbnail.")
         }
         let etch = selectedImg.querySelector("img").src
         let hash = await sha512Hash(etch)
+
+        let lit = await getLit(hash);
+        console.log(lit)
         _hash = hash
         viewFileUrl = "https://freemap.online/api/free/etch/file?hash=" + _hash
         let li = document.createElement("li")
@@ -392,10 +443,10 @@
 
         let btn = document.createElement("button")
         btn.title = "https://freemap.online/api/free/etch/file?hash=" + hash
-
         btn.innerText = "Copy"
         btn.onclick = () => {
-            bs.copyToClipboard(btn.title)
+            navigator.clipboard.writeText(btn.title)
+            // bs.copyToClipboard(btn.title)
         }
         li.appendChild(btn);
         galUl.appendChild(li)
@@ -406,12 +457,14 @@
             method: "POST",
             body: etch
         }).then(async res => {
+
+            //note this is empty if making cors request but it still should go trou becuse it is a simple request.
             let hash2 = await res.text();
             topbar.hide()
 
             console.log(hash)
             console.log(hash2)
-            if(hash2 === "" && res.ok) {
+            if (hash2 === "" && res.status === 0) {
                 console.warn("Probably ok just a cors opaque response.")
             } else {
                 console.assert(hash2 == hash, "hash must match server computed one")
@@ -424,30 +477,52 @@
                 console.log(hash);
             } else {
                 // alert("Oops something went wrong, code: " + res.status)
-                console.error(res.statusText)
+                console.error(res.status, res.statusText)
             }
 
             topbar.show()
+
+            showPastelModal("Your photo should be uploaded, status: " + res.status, res.status === 200 ? "purple" : "orange")
+
             fetch("https://freemap.online/api/free/etch/" + hash, {
-                method: "get",
+                method: "GET",
             }).then(async d => {
 
                 topbar.hide()
                 let etch2 = await d.text()
                 console.assert(etch2 == etch, "etch contents should match ")
 
-                let url = "./view?etch=" + has
+                let hash3 = sha512Hash(etch2);
 
-                li.style.background = "#89ff89"
+                function strcmp(a, b) {
+                    return (a < b ? -1 : (a > b ? 1 : 0));
+                }
 
-                window.open(url, "_blank")
+                let sameDataReturned = strcmp(hash3, hash)
+
+                console.assert(sameDataReturned, "Returned data should produce same hash");
+
+
+                // let url = "https://freemap.online/camera/view?etch=" + hash
+                let url = "https://freemap.online/api/free/etch//view?etch=" + hash
+
+                if (sameDataReturned) {
+                    li.style.background = "#89ff89"
+                } else {
+                    console.log(hash)
+                    console.log(hash3)
+                    console.log("strcmp: ", sameDataReturned)
+                    showPastelModal("Integrity check failed retrieved data did not match the sent data!", "orange")
+                    // i.style.background = "#89ff89"
+                }
+                // window.open(url, "_blank")
 
 
                 // alert()
 
             }).catch(e => {
                 topbar.hide()
-                alert("An error has occurred while testing the image.")
+                console.warn("An error has occurred while testing the image.")
                 console.error(e);
                 let predictUrl = "https://freemap.online/camera/view?etch=" + hash
                 let ret = prompt("Would you like to open the url anyway to see if the server got the data? (y/Yes)")
@@ -461,7 +536,7 @@
         }).catch(e => {
             topbar.hide()
 
-            alert("An error has occurred while uploading the image.")
+            console.warn("An error has occurred while uploading the image.")
             console.error(e)
             console.debug("https://freemap.online/camera/view?etch=" + hash)
         })
@@ -496,6 +571,33 @@
     });
 
     var _idx = -1
+
+
+    // Function to stop and release the webcam
+    function stopWebcam(videoElement) {
+        // Get the media stream associated with the video element
+        const stream = videoElement.srcObject;
+
+        if (stream) {
+            // Stop all tracks (video and audio)
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+
+            window.vidSrc = videoElement.srcObject
+            window.resumeTracks = () => {
+
+                // tracks.forEach(track => track.start());
+                videoElement.srcObject = vidSrc;
+            }
+
+            // Clear the video source
+            videoElement.srcObject = null;
+            console.log('Webcam stream stopped and released.');
+        } else {
+            console.log('No webcam stream found.');
+        }
+    }
+
 
     function activateImage(e) {
         let id = this.id;
@@ -557,8 +659,6 @@
         backdrop.style.zIndex = '105';
 
 
-
-
         // Create the modal container
         const modal = document.createElement('div');
         modal.style.position = 'fixed';
@@ -596,7 +696,7 @@
         document.body.appendChild(modal);
 
         // Close the modal when clicking on the backdrop
-        backdrop.addEventListener('click', function() {
+        backdrop.addEventListener('click', function () {
             document.body.removeChild(modal);
             document.body.removeChild(backdrop);
         });
@@ -608,7 +708,7 @@
 
     async function checkCameraPermission() {
         try {
-            const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+            const permissionStatus = await navigator.permissions.query({name: 'camera'});
 
             if (permissionStatus.state === 'granted') {
                 console.log('Camera permission is already granted.');
@@ -625,10 +725,11 @@
             return false; // Failed to check permissions
         }
     }
+
     async function checkCameraAccess() {
         try {
             // Try to get user media with video only
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const stream = await navigator.mediaDevices.getUserMedia({video: true});
 
             // If successful, stop the stream and return that access is granted
             stream.getTracks().forEach(track => track.stop());
@@ -986,7 +1087,6 @@
     };
 
 
-
     /*
  (c) 2014, Vladimir Agafonkin
  simpleheat, a tiny JavaScript library for drawing heatmaps with Canvas
@@ -1101,9 +1201,9 @@
     var map;
 
     // Initialize the map
-    async  function initMap() {
+    async function initMap() {
 
-        ispLoc().then(m=>{
+        ispLoc().then(m => {
 
             console.log("marker ", m)
 
@@ -1190,14 +1290,36 @@
 
     function showCamera() {
 
-        if(isMap) {
+        if (isMap) {
             toggleMap()
         }
-        if(isGal) {
+        if (isGal) {
             toggleGal()
         }
     }
 
+    var heat, marker, _llmap
+    function latLonMap(ll, data) {
+
+        let lat = parseInt(Math.floor(ll[0]))
+        let lon = parseInt(Math.floor(ll[1]))
+        _llmap[lat] = _llmap[lat] || {};
+        _llmap[lat][lon] = _llmap[lat][lon] || [];
+
+        let a = _llmap[lat][lon];
+        let p = heat.addLatLng(ll)
+
+        a.push({ll, data, p})
+
+
+        return a;
+        // let m = L.marker().addTo(map);
+
+
+
+
+
+    }
     async function ispLoc() {
 
         // "https://freemap.online/api/free/getIspLoc"
@@ -1208,13 +1330,12 @@
 
             ll = L.latLng(json.data.latLng);
 
-            let marker = L.circleMarker(ll)
+            marker = L.circleMarker(ll)
 
-            if(map) {
+            if (map) {
                 marker.addTo(map)
                 map.panTo(ll);
             }
-
 
 
             bs.resNotify({
@@ -1254,7 +1375,11 @@
 //             const sigma = 0.01;  // Standard deviation for the random spread
 //             const n =
 
-            addressPoints = [...generateGaussianPoints(ll, 25, 1), ...generateGaussianPoints(ll, 100, 0.5) , ...generateGaussianPoints(ll, 10, 0.1)]
+            addressPoints = [
+                ...generateGaussianPoints(ll, 10, 0.1)
+            ]
+
+
 
             // for (let i = 0; i < 10000; i++) {
             //     addressPoints.push([ll.lat, ll.lng, i])
@@ -1274,13 +1399,13 @@
                 circleMarker.bindPopup(popupContent).openPopup();
 
                 // Event listener for the popup opening to attach event listeners to the buttons
-                circleMarker.on('popupopen', function() {
-                    document.getElementById('feelingLuckyBtn').addEventListener('click', function() {
+                circleMarker.on('popupopen', function () {
+                    document.getElementById('feelingLuckyBtn').addEventListener('click', function () {
                         alert("You clicked 'Feeling Lucky'!");
                         // Add custom functionality for 'Feeling Lucky' button here
                     });
 
-                    document.getElementById('shareBtn').addEventListener('click', function() {
+                    document.getElementById('shareBtn').addEventListener('click', function () {
                         alert("You clicked 'Share'!");
                         // Add custom functionality for 'Share' button here
                     });
@@ -1291,27 +1416,42 @@
             // }
             addPopupToCircleMarker(marker, img)
 
-
+            // addressPoints = [ll]
             addressPoints = addressPoints.map(function (p) {
                 return [p[0], p[1]];
             });
 
-            var heat = L.heatLayer(addressPoints).addTo(map),
-                draw = true;
 
-            map.on({
-                movestart: function () {
-                    draw = false;
-                },
-                moveend: function () {
-                    draw = true;
-                },
-                mousemove: function (e) {
-                    if (draw) {
-                        heat.addLatLng(e.latlng);
-                    }
-                }
+
+            heat = L.heatLayer(addressPoints).addTo(map)
+            var draw = false;
+
+            selectAllLitHash().then(d=>{
+
+                console.log("Adding img rows to heatmap", d.length)
+                d.data.forEach(row=>{
+
+                     heat.addLatLng(L.latLng([row.lat, row.lon]));
+
+                })
+
+
             })
+            if(draw) {
+                map.on({
+                    movestart: function () {
+                        draw = false;
+                    },
+                    moveend: function () {
+                        draw = true;
+                    },
+                    mousemove: function (e) {
+                        if (draw) {
+                            heat.addLatLng(e.latlng);
+                        }
+                    }
+                })
+            }
 
 
             return marker
@@ -1331,7 +1471,7 @@
     // initMap()
 </script>
 
-
+<script src="./js/index.js"></script>
 <script>
     const mapDiv = document.getElementById('map');
 
@@ -1418,6 +1558,33 @@
     var log = msg => div.innerHTML += msg + "<br>";
 
 
+    async function startWebcam(stream) {
+        const constraints = {
+            video: true
+        };
+
+
+        stream = stream || await navigator.mediaDevices.getUserMedia(constraints)
+
+        const video = document.getElementById('video');
+
+        let cams = await getCameras()
+
+        console.debug(JSON.stringify(cams, null, 2))
+
+        video.srcObject = stream;
+        window.stream = stream;
+        video.play();
+
+
+        // // Function to check if the body has a scrollbar
+        // function hasScrollbar() {
+        //     return document.body.scrollHeight > window.innerHeight;
+        // }
+
+
+    }
+
     window.onload = function () {
         const constraints = {
             video: true
@@ -1429,11 +1596,10 @@
                 const video = document.getElementById('video');
 
                 getCameras().then(c => {
-                    //
-                    // document.getElementById("debug").innerText = JSON.stringify(c, null, 2)
-
                     console.debug(JSON.stringify(c, null, 2))
                 })
+
+
                 video.srcObject = stream;
                 window.stream = stream;
                 video.play();
