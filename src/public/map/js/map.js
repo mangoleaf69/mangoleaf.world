@@ -1,4 +1,3 @@
-
 /**
  * @license MIT
  * topbar 3.0.0
@@ -75,12 +74,15 @@ var isGal = false;
 
 var isMap = false;
 
+
+var p = Object.fromEntries(new URL(location).searchParams.entries());
+
 function toggleGal() {
     let gal = document.getElementById("gal")
     let cam = document.querySelector(".my-camera")
 
     isGal = !isGal;
-    if(isGal) stopWebcam(video);
+    if (isGal) stopWebcam(video);
     else startWebcam();
 
     gal.classList.toggle("hidden")
@@ -124,9 +126,10 @@ async function getLit(data) {
 
     return lit
 }
+
 async function insertLitHash(hash) {
 
-    let res = await fetch("https://lit.sgol.workers.dev/?hash="+hash);
+    let res = await fetch("https://lit.sgol.workers.dev/?hash=" + hash);
 
     let litdata = await res.json();
 
@@ -135,7 +138,7 @@ async function insertLitHash(hash) {
     let lls = litdata.ret3.data.results;
 
 
-    return lls.map(r=>{
+    return lls.map(r => {
 
         let ll = [r.lat, r.lon]
         console.log(heat.addLatLng(ll));
@@ -144,6 +147,7 @@ async function insertLitHash(hash) {
     })
 
 }
+
 async function selectAllLitHash() {
 
     let res = await fetch("https://lit.sgol.workers.dev/");
@@ -153,10 +157,9 @@ async function selectAllLitHash() {
     console.log(litdata)
 
     let lls = litdata.ret3.data.results;
-    return  lls
+    return lls
 
 }
-
 
 
 document.querySelector("#gal-upload").addEventListener("click", async e => {
@@ -987,40 +990,40 @@ async function initMap() {
     // Add scale control
     L.control.scale().addTo(map);
 
-    var t = L.terminator({
-        color: false,
-        fillColor: "#242424",
-        fillOpacity: 0.15,
-        resolution: 5
+    // var t = L.terminator({
+    //     color: false,
+    //     fillColor: "#242424",
+    //     fillOpacity: 0.15,
+    //     resolution: 5
+    //
+    // });
 
-    });
-
-    t.addTo(map);
-    t._path.style.filter = "blur(10px)"
+    // t.addTo(map);
+    // t._path.style.filter = "blur(10px)"
     // map.addEventListener('zoomstart movestart popupopen', function(e) {
     //     t.setTime();
     // });
     // setInterval(function(){
     //     t.setTime();
     // }, 300);
+    //
 
-
-    // Function to trigger an update
-    function triggerUpdate() {
-        console.log('Map has been updated!');
-        // Perform any update logic here
-        t.setTime();
-    }
-
-    // // Event listener for zoomend
-    map.on('zoomend', function () {
-        triggerUpdate();
-    });
-
-    // // Event listener for moveend (panning)
-    map.on('moveend', function () {
-        triggerUpdate();
-    });
+    // // Function to trigger an update
+    // function triggerUpdate() {
+    //     console.log('Map has been updated!');
+    //     // Perform any update logic here
+    //     t.setTime();
+    // }
+    //
+    // // // Event listener for zoomend
+    // map.on('zoomend', function () {
+    //     triggerUpdate();
+    // });
+    //
+    // // // Event listener for moveend (panning)
+    // map.on('moveend', function () {
+    //     triggerUpdate();
+    // });
 
     // Add north arrow control
     // L.control.northarrow().addTo(map);
@@ -1042,13 +1045,14 @@ function showCamera() {
 }
 
 function shareImage(lat, lon, hash) {
-          let url = "https://mangoleaf.world/map/cam?i="+encodeURIComponent(JSON.stringify([lat, lon, hash]))
+    let url = "https://mangoleaf.world/map/cam?i=" + encodeURIComponent(JSON.stringify([lat, lon, hash]))
     navigator.clipboard.writeText(url)
 
-    showPastelModal("Photo <a href="+url+">Link</a> Copied To Clipboard!", "green")
+    showPastelModal("Photo <a href=" + url + ">Link</a> Copied To Clipboard!", "green")
 }
 
 var heat, marker, _llmap = {}
+
 function latLonMap(ll, data) {
 
     let lat = parseInt(Math.floor(ll[0]))
@@ -1058,7 +1062,6 @@ function latLonMap(ll, data) {
 
     let a = _llmap[lat][lon];
     let p = heat.addLatLng(ll)
-
 
 
     function addPopupToCircleMarker(circleMarker, imageUrl) {
@@ -1079,17 +1082,16 @@ function latLonMap(ll, data) {
         // Event listener for the popup opening to attach event listeners to the buttons
         circleMarker.on('popupopen', function () {
             document.getElementById('feelingLuckyBtn').addEventListener('click', function () {
-                alert("You clicked 'Feeling Lucky'!");
+                console.log("You clicked 'Feeling Lucky'!");
                 // Add custom functionality for 'Feeling Lucky' button here
             });
 
             document.getElementById('shareBtn').addEventListener('click', function () {
-                alert("You clicked 'Share'!");
+                console.log("You clicked 'Share'!");
                 // Add custom functionality for 'Share' button here
             });
         });
     }
-
 
 
     let lll = generateGaussianPoints({lat: ll[0], lng: ll[1]}, 1, 0.1)[0]
@@ -1101,14 +1103,13 @@ function latLonMap(ll, data) {
     let m = L.circleMarker(lll).addTo(map);
 
 
-    addPopupToCircleMarker(m, "https://freemap.online/api/free/etch/file?etch="+data)
+    addPopupToCircleMarker(m, "https://freemap.online/api/free/etch/file?etch=" + data)
     // addImagePopupOnMarker(map, m, "https://freemap.online/api/free/etch/file?etch="+data, ll.join(", "))
 
     a.push({ll, data, p, m})
 
 
     return a;
-
 
 
 }
@@ -1164,7 +1165,6 @@ const ispLoc = async function () {
         // document.querySelector('button[title="Search"]').click()
 
 
-
 // Example usage:
 //             const latlng = {lat: 40.7128, lng: -74.0060};  // Central point (e.g., New York City)
 //             const sigma = 0.01;  // Standard deviation for the random spread
@@ -1173,7 +1173,6 @@ const ispLoc = async function () {
         addressPoints = [
             ...generateGaussianPoints(ll, 10, 0.1)
         ]
-
 
 
         // for (let i = 0; i < 10000; i++) {
@@ -1196,20 +1195,38 @@ const ispLoc = async function () {
             // Event listener for the popup opening to attach event listeners to the buttons
             circleMarker.on('popupopen', function () {
                 document.getElementById('feelingLuckyBtn').addEventListener('click', function () {
-                    alert("You clicked 'Feeling Lucky'!");
+                    console.log("You clicked 'Feeling Lucky'!");
                     // Add custom functionality for 'Feeling Lucky' button here
                 });
 
                 document.getElementById('shareBtn').addEventListener('click', function () {
-                    alert("You clicked 'Share'!");
+                    console.log("You clicked 'Share'!");
                     // Add custom functionality for 'Share' button here
                 });
             });
         }
 
-        let img = "https://picsum.photos/200"
+
+        try {
+
+            if (p.i) {
+                let a = JSON.parse(p.i);
+
+
+                let url = "https://freemap.online/api/free/etch/file?hash="+a[2];
+
+                      addPopupToCircleMarker(marker, url)
+            }
+
+
+        } catch (e) {
+            let img = "https://picsum.photos/200"
+            addPopupToCircleMarker(marker, img)
+
+        }
+
         // }
-        addPopupToCircleMarker(marker, img)
+
 
         // addressPoints = [ll]
         addressPoints = addressPoints.map(function (p) {
@@ -1217,15 +1234,14 @@ const ispLoc = async function () {
         });
 
 
-
         heat = L.heatLayer(addressPoints).addTo(map)
         var draw = false;
 
-        selectAllLitHash().then(d=>{
+        selectAllLitHash().then(d => {
 
             let rows = d;
             console.log("Adding img rows to heatmap", rows.length)
-            rows.forEach(row=>{
+            rows.forEach(row => {
 
                 let ll = [row.lat, row.lon]
                 let hash = row.hash;
@@ -1239,7 +1255,7 @@ const ispLoc = async function () {
         })
 
 
-        if(draw) {
+        if (draw) {
             map.on({
                 movestart: function () {
                     draw = false;
@@ -1388,6 +1404,8 @@ var mapInit = new Promise(resolve => {
     //first wait for window to load
     window.onload = function () {
 
+        console.log("window load")
+
         const constraints = {
             video: true
         };
@@ -1395,6 +1413,8 @@ var mapInit = new Promise(resolve => {
         //then we wait for camera permission
         navigator.mediaDevices.getUserMedia(constraints)
             .then(function (stream) {
+                console.log("camera stream")
+
                 const video = document.getElementById('video');
 
                 getCameras().then(c => {
