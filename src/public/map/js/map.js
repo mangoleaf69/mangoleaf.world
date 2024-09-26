@@ -381,11 +381,11 @@ function galAddImg(data) {
 function showPastelModal(message, color, img) {
     // Color options
     const colors = {
-        green: '#77dd77',  // Pastel green
-        blue: '#aec6cf',   // Pastel blue
-        orange: '#ffb347', // Pastel orange
-        purple: '#b39eb5', // Pastel purple
-        black: '#cfcfc4'   // Light grey (pastel alternative for black)
+        green: 'rgba(250,228,32,0.66)',  // Pastel green
+        blue: 'rgba(174,198,207,0.62)',   // Pastel blue
+        orange: 'rgba(255,179,71,0.63)', // Pastel orange
+        purple: 'rgba(179,158,181,0.69)', // Pastel purple
+        black: 'rgba(207,207,196,0.6)'   // Light grey (pastel alternative for black)
     };
 
     // Ensure color is one of the allowed options, default to black if not
@@ -1138,7 +1138,7 @@ function generateGaussianPoints(latlng, n, sigma) {
 }
 
 
-async function ispLoc() {
+const ispLoc = async function () {
 
     // "https://freemap.online/api/free/getIspLoc"
     const ispURL = "https:/freemap.online/api/free/getIspLoc"
