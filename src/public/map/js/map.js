@@ -1141,7 +1141,7 @@ function generateGaussianPoints(latlng, n, sigma) {
 const ispLoc = async function () {
 
     // "https://freemap.online/api/free/getIspLoc"
-    const ispURL = "https:/freemap.online/api/free/getIspLoc"
+    const ispURL = "https://freemap.online/api/free/getIspLoc"
     return fetch(ispURL).then(async ret => {
 
         let json = await ret.json();
