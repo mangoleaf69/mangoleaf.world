@@ -429,7 +429,7 @@ function showPastelModal(message, color, img) {
     }
     // Create the message text
     const messageText = document.createElement('p');
-    messageText.textContent = message;
+    messageText.innerHTML = message;
 
     // Add the message to the modal
     modal.appendChild(messageText);
@@ -1041,6 +1041,13 @@ function showCamera() {
     }
 }
 
+function shareImage(lat, lon, hash) {
+          let url = "https://mangoleaf.world/map/cam?i="+encodeURIComponent(JSON.stringify([lat, lon, hash]))
+    navigator.clipboard.writeText(url)
+
+    showPastelModal("Photo <a href="+url+">Link</a> Copied To Clipboard!", "green")
+}
+
 var heat, marker, _llmap = {}
 function latLonMap(ll, data) {
 
@@ -1058,10 +1065,10 @@ function latLonMap(ll, data) {
         // Create a container for the popup content
         const popupContent = `
         <div style="text-align: center;">
-            <img src="${imageUrl}" alt="Popup Image" style="width: 100px; height: 100px; border-radius: 5px;">
-            <div style="margin-top: 10px;">
+            <img src="${imageUrl}" alt="Popup Image" style="width: 250px; height: auto; border-radius: 5px;">
+            <div style="margin-top: 10px;"><span>${ll.join(", ")}</span>
                 <button id="feelingLuckyBtn"  onclick="showCamera()" style="padding: 5px 10px; margin-right: 5px;">Feeling Lucky</button>
-                <button id="shareBtn" style="padding: 5px 10px;">Share</button>
+                <button id="shareBtn" onclick="shareImage('${ll[0]}','${ll[1]}','${data}')" style="padding: 5px 10px;">Share</button>
             </div>
         </div>
     `;
@@ -1101,9 +1108,6 @@ function latLonMap(ll, data) {
 
 
     return a;
-
-
-
 
 
 
