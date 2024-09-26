@@ -1068,10 +1068,12 @@ function latLonMap(ll, data) {
         // Create a container for the popup content
         const popupContent = `
         <div style="text-align: center;">
+        
             <img src="${imageUrl}" alt="Popup Image" style="width: 250px; height: auto; border-radius: 5px;">
             <div style="margin-top: 10px;"><span>${ll.join(", ")}</span>
                 <button id="feelingLuckyBtn"  onclick="showCamera()" style="padding: 5px 10px; margin-right: 5px;">Feeling Lucky</button>
                 <button id="shareBtn" onclick="shareImage('${ll[0]}','${ll[1]}','${data}')" style="padding: 5px 10px;">Share</button>
+
             </div>
         </div>
     `;
@@ -1100,7 +1102,17 @@ function latLonMap(ll, data) {
 
     console.log(ll, lll)
 
-    let m = L.circleMarker(lll).addTo(map);
+
+
+    let m = L.circleMarker(lll, {
+        color: "#fae420",
+        opacity: 0.15,
+        fillOpacity: 0.3,
+        radius: 20,
+        weight: 4,
+        fillColor: "#fae420"
+    });
+    m.addTo(map);
 
 
     addPopupToCircleMarker(m, "https://freemap.online/api/free/etch/file?etch=" + data)
@@ -1139,6 +1151,23 @@ function generateGaussianPoints(latlng, n, sigma) {
 }
 
 
+var pi;
+if(p.i) {
+
+    try {
+        pi = JSON.parse(p.i);
+        if(!Array.isArray(pi) && pi.length=== 3) {
+            console.warn("Invalid i param!");
+            pi = null;
+        }
+    } catch (e) {
+        console.error(e);
+        pi = null;
+    }
+    //we have param
+}
+
+
 const ispLoc = async function () {
 
     // "https://freemap.online/api/free/getIspLoc"
@@ -1149,7 +1178,17 @@ const ispLoc = async function () {
 
         ll = L.latLng(json.data.latLng);
 
-        marker = L.circleMarker(ll)
+        marker = L.circleMarker(ll, {
+            color: "#ffffff",
+            opacity: 0.2,
+            fillOpacity: 0.2,
+            radius: 8,
+            weight: 2,
+            fillColor: "#fae420"
+        });
+
+// Add the marker to the map
+        marker.addTo(map);
 
         if (map) {
             marker.addTo(map)
@@ -1215,7 +1254,7 @@ const ispLoc = async function () {
 
                 let url = "https://freemap.online/api/free/etch/file?hash="+a[2];
 
-                      addPopupToCircleMarker(marker, url)
+                addPopupToCircleMarker(marker, url)
             }
 
 
