@@ -1192,13 +1192,16 @@ const ispLoc = async function () {
 
         ll = L.latLng(json.data.latLng);
 
+
+        // hmm is the shared thing really at outr location .. i dont think so but ok .
+
         marker = L.circleMarker(ll, {
             color: "#ffffff",
-            opacity: 0.2,
-            fillOpacity: 0.2,
-            radius: 8,
-            weight: 2,
-            fillColor: "#fae420"
+            opacity: 0.3,
+            fillOpacity: 0.4,
+            radius: 12,
+            weight: 5,
+            fillColor: "#fa6c20"
         });
 
 // Add the marker to the map
@@ -1234,7 +1237,7 @@ const ispLoc = async function () {
             // Create a container for the popup content
             const popupContent = `
         <div style="text-align: center;">
-            <img src="${imageUrl}" alt="Popup Image" style="width: 100px; height: 100px; border-radius: 5px;">
+            <img src="${imageUrl}" alt="Popup Image" style="width: 300px; height: auto; background: #fae42088 border-radius: 5px;">
             <div style="margin-top: 10px;">
                 <button id="feelingLuckyBtn"  onclick="showCamera()" style="padding: 5px 10px; margin-right: 5px;">Feeling Lucky</button>
                 <button id="shareBtn" style="padding: 5px 10px;">Share</button>
@@ -1269,15 +1272,19 @@ const ispLoc = async function () {
                 let url = "https://freemap.online/api/free/etch/file?hash="+a[2];
 
                 addPopupToCircleMarker(marker, url)
+            } else {
+
+                let img = "https://picsum.photos/200"
+                addPopupToCircleMarker(marker, img)
+
             }
 
 
         } catch (e) {
 
-
-            let img = "https://picsum.photos/200"
+            let img = "https://mangoleaf.world/img/40dogo.jpg"
             addPopupToCircleMarker(marker, img)
-
+            console.error(e)
         }
 
         // }
