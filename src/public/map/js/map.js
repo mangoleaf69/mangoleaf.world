@@ -1160,6 +1160,20 @@ if(p.i) {
             console.warn("Invalid i param!");
             pi = null;
         }
+
+        let ll = [parseFloat(pi[0]), parseFloat(pi[1])]
+        let hash = pi[2];
+        setTimeout(()=>{
+            toggleGal();
+            toggleMap();
+              setTimeout(()=>{
+
+
+
+        }, 330)
+        }, 1000)
+
+
     } catch (e) {
         console.error(e);
         pi = null;
@@ -1259,6 +1273,8 @@ const ispLoc = async function () {
 
 
         } catch (e) {
+
+
             let img = "https://picsum.photos/200"
             addPopupToCircleMarker(marker, img)
 
