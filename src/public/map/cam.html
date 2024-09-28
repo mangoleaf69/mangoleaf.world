@@ -283,6 +283,47 @@
 <!--https://developer.mozilla.org/en-US/docs/Web/API/Window/btoa-->
 <script>
 
+    var dev = document.createElement("div")
+    var txt = document.createElement("textarea")
+    var gpsLoc = {hist: [], ll: null }
+    navigator.geolocation.getCurrentPosition(position => {
+        const {latitude, longitude} = position.coords;
+        // Do something cool with latitude, longitude
+        let now = Date.now()
+        gpsLoc.ll = [latitude, longitude]
+
+        // gpsLoc.marker = L.marker(gpsLoc.ll)
+        // gpsLoc.marker.addTo(map);
+        //
+        // setTimeout(()=>{
+        //     map.flyTo(gpsLoc.ll)
+        // }, 3500);
+        txt.value = `/lit/${Math.floor(latitude)}/${Math.floor(longitude)}...
+        this metadata will be embedded with the image. what meme caption should we add ;)${p.text}(;
+        TITLE=${p.title || ""} ;
+        BODY=${p.body || ""} ;
+        FOOTER=${p.footer || ""} ;
+        lat=${latitude} ;
+        lon=${longitude} ;
+        time=${now} ;
+        endpoint=https://mangoleaf.world/lit/${Math.floor(latitude)}/${Math.floor(longitude)}?
+        `;
+        console.log("get lat lon: ", position);
+    });
+
+    txt.style.width = "100%"
+    txt.style.background = "#424242"
+        txt.style.color = "#99ff00"
+        txt.style.fontSize = "16px"
+        txt.style.padding = "16px"
+
+    var file = document.createElement("input")
+    file.type = "file"
+    txt.rows = 5;
+
+    if(p.text) {
+        document.querySelector(".my-camera").appendChild(txt);
+    }
     // initMap()
 </script>
 
