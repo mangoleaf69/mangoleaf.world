@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observability Platform</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css">
+    <style>
+        body {
+            padding: 40px;
+            font-size: 1.5em; /* Increase the default font size */
+        }
+        .container {
+            width: 600px; /* Increase container width */
+            margin-bottom: 40px; /* Add extra space for better layout */
+        }
+        .endpoint-list {
+            margin-top: 20px; /* More space between input and list */
+            max-height: 400px; /* Increase list height */
+            overflow-y: auto;
+        }
+        .endpoint-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 1.2em; /* Increase font size for items */
+        }
+        .window-background {
+            display: none;
+            position: fixed;
+            top: 80px; /* Space windows from the top */
+            left: 80px; /* Space windows from the left */
+            z-index: 100;
+            width: 600px; /* Larger window size */
+        }
+        .window-background.active {
+            display: block;
+        }
+        /* Center the prompt window */
+        .centered-prompt {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            width: 300px;
+            padding: 20px;
+        }
+
+        /* Background overlay */
+        .prompt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+
+
+        button {
+            margin-left: 10px; /* Increase space between buttons */
+            padding: 10px 20px; /* Make buttons larger */
+            font-size: 1.2em; /* Larger button text */
+        }
+    </style>
+</head>
+<body>
+<div class="container window">
+    <div class="title-bar">
+        <div class="title-bar-text">Observability Platform</div>
+    </div>
+    <div class="window-body">
+        <div class="field-row">
+            <input id="domain-input" type="text" placeholder="Enter domain or endpoint" style="font-size: 1.2em; padding: 10px; width: 75%;">
+            <button onclick="addDomain()">Add</button>
+        </div>
+        <div class="endpoint-list" id="endpoint-list"></div>
+    </div>
+</div>
+
+<!-- Background window template -->
+<div class="window window-background" id="background-window">
+    <div class="title-bar">
+        <div class="title-bar-text">Domain Details</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" onclick="closeDetails()">✕</button>
+        </div>
+    </div>
+    <div class="window-body">
+        <h3 id="domain-title" style="font-size: 1.5em;"></h3>
+        <p>Status: <span id="domain-status"></span></p>
+        <p>Uptime: <span id="domain-uptime"></span></p>
+        <p>Last checked: <span id="domain-last-checked"></span></p>
+        <pre id="domain-deets">
+
+        </pre>
+        <button onclick="closeDetails()">Close</button>
+    </div>
+</div>
+
+<script>
+    const domains = [];
+
+    function addDomain() {
+        const input = document.getElementById('domain-input');
+        const domain = input.value.trim();
+        if (domain) {
+            domains.push({
+                name: domain,
+                status: 'paused',
+                uptime: '0%',
+                lastChecked: 'Never'
+            });
+            console.log(`Added domain: ${domain}`);
+            renderDomains();
+            input.value = '';
+        } else {
+            console.log('No domain entered.');
+        }
+    }
+
+    function renderDomains() {
+        const list = document.getElementById('endpoint-list');
+        list.innerHTML = '';
+        domains.forEach((domain, index) => {
+            const div = document.createElement('div');
+            div.className = 'endpoint-item';
+            div.innerHTML = `
+          <span>${domain.name}</span>
+          <div>
+            <button onclick="monitorDomain(${index})">${domain.status === 'paused' ? 'Monitor' : 'Pause'}</button>
+            <button onclick="showDetails(${index})">Details</button>
+            <button onclick="removeDomain(${index})">Remove</button>
+          </div>
+        `;
+            list.appendChild(div);
+        });
+    }
+
+    function monitorDomain(index) {
+        const domain = domains[index];
+        if (domain.status === 'paused') {
+            domain.status = 'monitoring';
+            console.log(`Monitoring domain: ${domain.name}`);
+        } else {
+            domain.status = 'paused';
+            console.log(`Paused monitoring: ${domain.name}`);
+        }
+        renderDomains();
+    }
+
+    function removeDomain(index) {
+        const domain = domains[index];
+
+        trigger_are_you_sure_prompt();
+        window.on_prompt_confirm = ()=>{
+            domains.splice(index, 1);
+            console.log(`Removed domain: ${domain.name}`);
+            renderDomains();
+        }
+
+    }
+
+    function showDetails(index) {
+
+
+        const domain = domains[index];
+        document.getElementById('domain-title').innerText = domain.name;
+        document.getElementById('domain-status').innerText = domain.status;
+        document.getElementById('domain-uptime').innerText = domain.uptime;
+        document.getElementById('domain-last-checked').innerText = domain.lastChecked;
+        document.getElementById('background-window').classList.add('active');
+
+
+        console.log(`Viewing details for domain: ${domain.name}`);
+    }
+
+    function closeDetails() {
+        document.getElementById('background-window').classList.remove('active');
+    }
+</script>
+
+
+
+<button onclick="trigger_are_you_sure_prompt()">Click me</button>
+
+<script>
+    // Function to dynamically create the 'Are you sure?' prompt
+    function trigger_are_you_sure_prompt() {
+        // Create overlay for the prompt
+        const overlay = document.createElement('div');
+        overlay.className = 'prompt-overlay';
+
+        // Create the centered window
+        const promptWindow = document.createElement('div');
+        promptWindow.className = 'window centered-prompt';
+
+        // Create title bar
+        const titleBar = document.createElement('div');
+        titleBar.className = 'title-bar';
+        const titleBarText = document.createElement('div');
+        titleBarText.className = 'title-bar-text';
+        titleBarText.innerText = 'Confirmation';
+        titleBar.appendChild(titleBarText);
+
+        // Create the content
+        const promptBody = document.createElement('div');
+        promptBody.className = 'window-body';
+        const message = document.createElement('p');
+        message.innerText = 'Are you sure you want to continue?';
+        promptBody.appendChild(message);
+
+        // Create buttons
+        const buttonContainer = document.createElement('div');
+        const confirmButton = document.createElement('button');
+        confirmButton.innerText = 'Confirm';
+        confirmButton.onclick = function() {
+            console.log('Confirmed!');
+            if(typeof window.on_prompt_confirm === "function") window.on_prompt_confirm();
+            close_are_you_sure_prompt(overlay, promptWindow);
+        };
+
+        const cancelButton = document.createElement('button');
+        cancelButton.innerText = 'Cancel';
+        cancelButton.onclick = function() {
+            console.log('Cancelled.');
+            if(typeof window.on_prompt_cancel === "function") window.on_prompt_cancel();
+            close_are_you_sure_prompt(overlay, promptWindow);
+        };
+
+        buttonContainer.appendChild(confirmButton);
+        buttonContainer.appendChild(cancelButton);
+        promptBody.appendChild(buttonContainer);
+
+        // Append everything to the prompt window
+        promptWindow.appendChild(titleBar);
+        promptWindow.appendChild(promptBody);
+
+        // Append overlay and prompt to the body
+        document.body.appendChild(overlay);
+        document.body.appendChild(promptWindow);
+    }
+
+    // Function to close the 'Are you sure?' prompt
+    function close_are_you_sure_prompt(overlay, promptWindow) {
+        document.body.removeChild(overlay);
+        document.body.removeChild(promptWindow);
+    }
+
+
+</script>
+
+</body>
+</html>

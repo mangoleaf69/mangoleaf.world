@@ -374,6 +374,13 @@ function galAddImg(data) {
     li.appendChild(img)
     document.getElementById("gal_img_list").appendChild(li);
     _imgs.push(img)
+
+    let size = {
+        w: img.naturalWidth,
+        h: img.naturalHeight,
+        s: data.length,
+    }
+    img._size = size;
     img.addEventListener("click", activateImage);
     // <!--    <li><img src=”img2.jpg” alt=”My Home”></li>-->
 
@@ -1405,8 +1412,8 @@ async function switchCamera() {
     const constraints = {
         video: {
             deviceId: devs[next].deviceId,
-            width: {ideal: 4096},
-            height: {ideal: 2160}
+            width: {ideal: p.sd?1920:4096},
+            height: {ideal: p.sd?1080:2160}
         }
     };
     currentCamIndex = next;
@@ -1437,6 +1444,9 @@ var log = msg => div.innerHTML += msg + "<br>";
 async function startWebcam(stream) {
     const constraints = {
         video: true
+        // const constraints = {
+        //     video: { p.front: front ? "user" : "environment" },
+        // };
     };
 
 
