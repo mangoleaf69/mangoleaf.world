@@ -1,5 +1,5 @@
 __MACOSX
-node_modules
+/node_modules
 /public
 /function
 .idea

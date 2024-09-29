@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>98.css Prompt</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css">
+    <style>
+        /* Center the prompt window */
+        .centered-prompt {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            width: 300px;
+            padding: 20px;
+        }
+
+        /* Background overlay */
+        .prompt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Increase button size for better readability */
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<button onclick="trigger_are_you_sure_prompt()">Click me</button>
+
+<script>
+    // Function to dynamically create the 'Are you sure?' prompt
+    function trigger_are_you_sure_prompt() {
+        // Create overlay for the prompt
+        const overlay = document.createElement('div');
+        overlay.className = 'prompt-overlay';
+
+        // Create the centered window
+        const promptWindow = document.createElement('div');
+        promptWindow.className = 'window centered-prompt';
+
+        // Create title bar
+        const titleBar = document.createElement('div');
+        titleBar.className = 'title-bar';
+        const titleBarText = document.createElement('div');
+        titleBarText.className = 'title-bar-text';
+        titleBarText.innerText = 'Confirmation';
+        titleBar.appendChild(titleBarText);
+
+        // Create the content
+        const promptBody = document.createElement('div');
+        promptBody.className = 'window-body';
+        const message = document.createElement('p');
+        message.innerText = 'Are you sure you want to continue?';
+        promptBody.appendChild(message);
+
+        // Create buttons
+        const buttonContainer = document.createElement('div');
+        const confirmButton = document.createElement('button');
+        confirmButton.innerText = 'Confirm';
+        confirmButton.onclick = function() {
+            console.log('Confirmed!');
+            close_are_you_sure_prompt(overlay, promptWindow);
+        };
+
+        const cancelButton = document.createElement('button');
+        cancelButton.innerText = 'Cancel';
+        cancelButton.onclick = function() {
+            console.log('Cancelled.');
+            close_are_you_sure_prompt(overlay, promptWindow);
+        };
+
+        buttonContainer.appendChild(confirmButton);
+        buttonContainer.appendChild(cancelButton);
+        promptBody.appendChild(buttonContainer);
+
+        // Append everything to the prompt window
+        promptWindow.appendChild(titleBar);
+        promptWindow.appendChild(promptBody);
+
+        // Append overlay and prompt to the body
+        document.body.appendChild(overlay);
+        document.body.appendChild(promptWindow);
+    }
+
+    // Function to close the 'Are you sure?' prompt
+    function close_are_you_sure_prompt(overlay, promptWindow) {
+        document.body.removeChild(overlay);
+        document.body.removeChild(promptWindow);
+    }
+</script>
+
+</body>
+</html>
