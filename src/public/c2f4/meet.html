@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/icon/favicon-16x16.png">
+    <link rel="manifest" href="./img/icon/site.webmanifest">
+    <link rel="mask-icon" href="./img/icon/safari-pinned-tab.svg" color="#888888">
+    <link rel="shortcut icon" href="./img/icon/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="c2f4">
+    <meta name="application-name" content="c2f4">
+    <meta name="msapplication-TileColor" content="#888888">
+    <meta name="msapplication-config" content="./img/icon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+    <title>C2F4 - Meeting Page</title>
+    
+    <style>
+        body {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        header a {
+            color: #00aaff;
+            text-decoration: none;
+        }
+        header a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="./sales2.html">Guide Page</a>
+        <a href="./meet.html">Meeting Page</a>
+    </header>
+
+    <h1>Let's Collaborate on Your Vision</h1>
+    <p>Please provide your information below to schedule a meeting.</p>
+
+    <form id="meetingForm">
+        <div class="form-section">
+            <label for="domain">What’s the focus of your project?</label>
+            <select id="domain" name="domain" required>
+                <option value="GIS, Maps, Database">GIS, Maps, Database</option>
+                <option value="Marketing, Design, Vision Planning">Marketing, Design, Vision Planning</option>
+                <option value="Development & Technical Feasibility">Development & Technical Feasibility</option>
+            </select>
+        </div>
+
+        <div class="form-section">
+            <label for="time">Select your preferred meeting time</label>
+            <input type="datetime-local" id="time" name="time" required>
+        </div>
+
+        <div class="form-section">
+            <label for="timezone">Your Time Zone</label>
+            <input type="text" id="timezone" name="timezone" placeholder="e.g. GMT+5:30" required>
+        </div>
+
+        <div class="form-section">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" placeholder="name@example.com" required>
+        </div>
+
+        <div class="form-section">
+            <label for="phone">Your Phone Number (Optional)</label>
+            <input type="tel" id="phone" name="phone" placeholder="+1 123 456 7890">
+        </div>
+
+        <div class="form-section">
+            <label for="contactMethod">Preferred Method of Contact</label>
+            <select id="contactMethod" name="contactMethod" required>
+                <option value="email">Email</option>
+                <option value="phone">Phone Call</option>
+                <option value="video">Video Call</option>
+            </select>
+        </div>
+
+        <div class="form-section">
+            <label for="company">Tell us about your company or product</label>
+            <textarea id="company" name="company" rows="3" placeholder="Describe your business or product..." required></textarea>
+        </div>
+
+        <div class="form-section">
+            <label for="goal">What are you looking for?</label>
+            <textarea id="goal" name="goal" rows="3" placeholder="Describe your goal or what you are seeking..." required></textarea>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('meetingForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = {
+                domain: document.getElementById('domain').value,
+                time: document.getElementById('time').value,
+                timezone: document.getElementById('timezone').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                contactMethod: document.getElementById('contactMethod').value,
+                company: document.getElementById('company').value,
+                goal: document.getElementById('goal').value
+            };
+
+            fetch('/api/meet/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Meeting request submitted successfully!');
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                alert('Error submitting the meeting request.');
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

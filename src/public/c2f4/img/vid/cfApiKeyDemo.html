@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 Video Viewer - cfApiKeyDemo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+</head>
+<body>
+
+    <h1>Video Viewer: cfApiKeyDemo</h1>
+
+    <!-- HTML5 Video Player -->
+    <video width="640" height="360" controls>
+        <source src="./cfApiKeyDemo/cfApiKeyDemo_720p.mp4" type="video/mp4">
+        <source src="./cfApiKeyDemo/cfApiKeyDemo_480p.webm" type="video/webm">
+        <source src="./cfApiKeyDemo/cfApiKeyDemo_360p.ogg" type="video/ogg">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Buttons to download each version -->
+    <div>
+        <button><a href="./cfApiKeyDemo.mkv" download>Download Original (MKV)</a></button>
+        <button><a href="./cfApiKeyDemo/cfApiKeyDemo_720p.mp4" download>Download 720p (MP4)</a></button>
+        <button><a href="./cfApiKeyDemo/cfApiKeyDemo_480p.webm" download>Download 480p (WebM)</a></button>
+        <button><a href="./cfApiKeyDemo/cfApiKeyDemo_360p.ogg" download>Download 360p (Ogg)</a></button>
+    </div>
+
+    <!-- Absolute path version (commented out) -->
+    <!--
+    <video width="640" height="360" controls>
+        <source src="/img/vid/cfApiKeyDemo/cfApiKeyDemo_720p.mp4" type="video/mp4">
+        <source src="/img/vid/cfApiKeyDemo/cfApiKeyDemo_480p.webm" type="video/webm">
+        <source src="/img/vid/cfApiKeyDemo/cfApiKeyDemo_360p.ogg" type="video/ogg">
+        Your browser does not support the video tag.
+    </video>
+
+    <div>
+        <button><a href="/img/vid/cfApiKeyDemo.mkv" download>Download Original (MKV)</a></button>
+        <button><a href="/img/vid/cfApiKeyDemo/cfApiKeyDemo_720p.mp4" download>Download 720p (MP4)</a></button>
+        <button><a href="/img/vid/cfApiKeyDemo/cfApiKeyDemo_480p.webm" download>Download 480p (WebM)</a></button>
+        <button><a href="/img/vid/cfApiKeyDemo/cfApiKeyDemo_360p.ogg" download>Download 360p (Ogg)</a></button>
+    </div>
+    -->
+
+</body>
+</html>
