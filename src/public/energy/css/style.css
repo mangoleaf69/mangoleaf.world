@@ -15,9 +15,9 @@ body {
   font-family: "Open Sans", Arial, serif;
   line-height: 1.8;
   font-size: 16px;
-  background: #fff;
+  background: #fae420;
   color: #848484;
-  font-weight: 300;
+  font-weight: 300;fff
   overflow-x: hidden;
 }
 body.fh5co-offcanvas {
@@ -278,7 +278,7 @@ figure {
 }
 @media screen and (max-width: 768px) {
   .fh5co-cover {
-    heifght: inherit;
+    height: inherit;
     padding: 3em 0;
   }
 }
@@ -452,7 +452,7 @@ figure {
 }
 
 #fh5co-header-section {
-  background: white;
+  background: #fae420;
   padding: 0;
   width: 100%;
   -webkit-box-shadow: 0px 5px 5px -4px rgba(0, 0, 0, 0.22);
