@@ -1,0 +1,17 @@
+dev.txt
+
+planing 
+
+cf root kit as a service
+
+why .. consistancy.
+
+what do we provide: 
+
+common automations: deploy worker, add pages, domain etc. stuf we need to do all the time.
+
+kv storage r2 drive d1 database
+
+sqlite in r2 as a service 5$/month 
+
+

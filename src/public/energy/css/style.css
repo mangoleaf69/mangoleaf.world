@@ -17,7 +17,7 @@ body {
   font-size: 16px;
   background: #fae420;
   color: #848484;
-  font-weight: 300;fff
+  font-weight: 300;
   overflow-x: hidden;
 }
 body.fh5co-offcanvas {
@@ -232,6 +232,7 @@ figure {
   position: relative;
   margin-bottom: 0;
   z-index: 9999999;
+  background : #fae420;
 }
 
 .fh5co-cover,

@@ -1,0 +1,254 @@
+
+<html>
+
+<head>
+	
+	
+
+<link rel="apple-touch-icon" sizes="180x180" href="./img/icon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./img/icon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./img/icon/favicon-16x16.png">
+<link rel="manifest" href="./img/icon/site.webmanifest">
+<link rel="mask-icon" href="./img/icon/safari-pinned-tab.svg" color="#888888">
+<link rel="shortcut icon" href="./img/icon/favicon.ico">
+<meta name="apple-mobile-web-app-title" content="c2f4">
+<meta name="application-name" content="c2f4">
+<meta name="msapplication-TileColor" content="#888888">
+<meta name="msapplication-config" content="./img/icon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+
+    <style>
+        body {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        header a {
+            color: #00aaff;
+            text-decoration: none;
+        }
+        header a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 1.2rem;
+        }
+    </style>
+<title>C2F4 - Cloud 2 Flare 4</title>
+</head>
+
+<header><a href="./sales2.html">Guide Page</a> <a href="./meet.html">Meeting Page</a></header>
+  <h1>C2F4 - A Unified Simplified Cloud Control Platform</h1>
+  <h3>By developers, for developers; and everyday enthusiasts. Get your work done efficiently!</h3>
+  <p>This platform is designed to empower you to utilize Cloudflare's robust global network and edge capabilities, 
+     along with their generous free tier, to deliver exceptional services for yourself, your team, and your clients.</p>
+  
+  <h2>PSGR</h2>
+  <p>We need to create a better dashboard for Cloudflare as a service.</p>
+  <p>Why? Cloudflare's documentation can be difficult to navigate, and its APIs are scattered.</p>
+  <p>Structure: A database of Cloudflare accounts for our users.</p>
+  <p>Our aim is to prioritize security and user-friendliness.</p>
+  <p>Ultimately, we need a database of emails and passwords (encrypted, of course).</p>
+  
+  <hr>
+  
+  <h2>Setup Video</h2>
+  <p>Check out the video below to see how enable the free superpowers:</p>
+    <video width="640" height="360" controls>
+        <source src="./img/vid/cfApiKeyDemo/cfApiKeyDemo_720p.mp4" type="video/mp4">
+        <source src="./img/vid/cfApiKeyDemo/cfApiKeyDemo_480p.webm" type="video/webm">
+        <source src="./img/vid/cfApiKeyDemo/cfApiKeyDemo_360p.ogg" type="video/ogg">
+        Your browser does not support the video tag.
+    </video>
+
+<!--
+    <div>
+        <button><a href="./img/vid/cfApiKeyDemo.mkv" download>Download Original (MKV)</a></button>
+        <button><a href="./img/vid/cfApiKeyDemo/cfApiKeyDemo_720p.mp4" download>Download 720p (MP4)</a></button>
+        <button><a href="./img/vid/cfApiKeyDemo/cfApiKeyDemo_480p.webm" download>Download 480p (WebM)</a></button>
+        <button><a href="./img/vid/cfApiKeyDemo/cfApiKeyDemo_360p.ogg" download>Download 360p (Ogg)</a></button>
+    </div>
+-->
+
+  
+  
+<hr><hr>
+<div id="my-c2f4-data" style="display:grid;">
+	<h4>Enter Account Details.</h4>
+<hr>
+<label>Zone ID: <br>
+    <input type="text" name="zoneID" required>
+    <small>This can be found on your domain website</small>
+</label>
+<hr>
+<label>Account ID: <br>
+    <input type="text" name="accountID" required>
+    <small>Found in many places but is next to the zone ID.</small>
+</label>
+<hr>
+<label>Account Email: <br>
+    <input type="email" name="accountEmail" required>
+    <small>The email you use to log in.</small>
+</label>
+<hr>
+<label>API Key: <br>
+    <input type="text" name="apiKey" required>
+    <small>This is also found in the profile; we need the global key.</small>
+</label>
+<hr>
+<label>API Token: <br>
+    <input type="text" name="apiToken" required>
+    <small>This is found in the profile and should be generated with full write access.</small>
+</label>
+<button onclick="encryptAndTransmit()">Encrypt and Save My Cloudflare Account</button>
+<small>
+    While we encrypt your API keys using AES-256 GCM, in addition to Cloudflare's AES-256 encryption at rest, there are inherent risks associated with providing full access credentials to us. 
+    Please understand that we cannot be held liable for any damages caused. These tools are provided as-is and without any warranty, express or implied, of any kind.
+</small>
+</div>
+<hr><hr>
+
+<a href="./pricing.html"><button style="background: lightblue; color: #111">Need assistance? Get Support Now! As low as 5$</button>
+</a>
+<details id="env-config">
+    <summary>.env variables</summary>
+    <pre></pre>
+</details>
+<details id="lib-config">
+    <summary>lib_c2f4.js config</summary>
+    <pre></pre>
+</details>
+
+
+<footer>
+	Thats all we hope you enjoy the service and find value in our simplified aproche<br>
+	<hr><hr><hr><hr>
+</footer>
+
+<script>
+	
+	function generateConfigFiles(dataPayload) {
+    // Create .env file content with CF_ prefix
+    const envContent = `
+CF_ZONE_ID=${dataPayload.zoneId}
+CF_ACCOUNT_ID=${dataPayload.accountId}
+CF_EMAIL=${dataPayload.accountEmail}
+CF_API_KEY=${dataPayload.apiKey}
+CF_API_TOKEN=${dataPayload.apiToken}
+`.trim(); // Trim to remove extra whitespace
+
+    // Create c2f4Config JSON object without prefix
+    const c2f4Config = JSON.stringify(dataPayload, null, 2); // Pretty print JSON
+
+    // Display the .env content
+    const envContainer = document.getElementById('env-config').querySelector('pre');
+    envContainer.textContent = envContent; 
+
+    // Display the JSON config content
+    const jsonContainer = document.getElementById('lib-config').querySelector('pre');
+    jsonContainer.textContent = c2f4Config;
+
+    // Optional: Return the values for further use
+    return { envContent, c2f4Config };
+}
+
+	
+async function encryptAndTransmit() {
+    // Collect account details
+    const zoneID = document.querySelector('input[name="zoneID"]').value;
+    const accountID = document.querySelector('input[name="accountID"]').value;
+    const accountEmail = document.querySelector('input[name="accountEmail"]').value;
+    const apiKey = document.querySelector('input[name="apiKey"]').value;
+    const apiToken = document.querySelector('input[name="apiToken"]').value;
+
+     // Create a payload object for JSON config
+    const payload = {
+        zoneId: zoneID,          // Original naming
+        accountId: accountID,
+        accountEmail: accountEmail,
+        apiKey: apiKey,
+        apiToken: apiToken
+    };
+    generateConfigFiles(payload);
+    
+    // Generate a random key (use 256 bits for AES)
+    const key = await window.crypto.subtle.generateKey(
+        {
+            name: "AES-GCM",
+            length: 256 // AES-256
+        },
+        true, // extractable
+        ["encrypt", "decrypt"]
+    );
+
+    // Convert the key to a raw format
+    const rawKey = await window.crypto.subtle.exportKey("raw", key);
+
+    // Encrypt the payload
+    const iv = window.crypto.getRandomValues(new Uint8Array(12)); // Initialization vector
+    const encodedPayload = new TextEncoder().encode(JSON.stringify(payload));
+    const encryptedData = await window.crypto.subtle.encrypt(
+        {
+            name: "AES-GCM",
+            iv: iv // use random iv
+        },
+        key, // the key used for encryption
+        encodedPayload // data to encrypt
+    );
+
+    // Convert encrypted data and IV to Base64
+    const encryptedDataBase64 = btoa(String.fromCharCode(...new Uint8Array(encryptedData)));
+    const ivBase64 = btoa(String.fromCharCode(...iv));
+    const rawKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(rawKey)));
+
+
+
+    console.log(encryptedDataBase64);
+
+
+    return {
+        encryptedDataBase64,
+        ivBase64,
+        rawKeyBase64,
+        nextStep: "./pricing.html"
+    };
+
+    // Transmit the key and encrypted data separately
+    // await fetch('/api/c2f4/setKey', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ key: rawKeyBase64 })
+    // });
+
+    // await fetch('/api/c2f4/setVal', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ iv: ivBase64, data: encryptedDataBase64 })
+    // });
+
+    // alert('Data transmitted securely!');
+}
+
+</script>
+
+</body>
+
+
+</html>
