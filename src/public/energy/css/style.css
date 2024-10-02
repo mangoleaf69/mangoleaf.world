@@ -1892,4 +1892,13 @@ figure {
   background: url(../images/hourglass.svg) center no-repeat #222222;
 }
 
+.container {
+  text-align: center;
+  margin-top: 1.4em;
+  margin-bottom: 0;
+}
+
+.logo img {
+  vertical-align: middle;
+
 /*# sourceMappingURL=style.css.map */
