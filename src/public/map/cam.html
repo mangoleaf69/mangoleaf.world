@@ -29,21 +29,29 @@
         width: 100px;
         height: 100px;
         border-radius: 100px;
-        border: groove darkred 5px;
         font-weight: bolder;
+        padding: 10px;
     }
+	#cameraCapture img {
+        max-width: 80px;
+        max-height: 80px;
+        border-radius: 25%;
+        /*position: absolute;*/
 
+        /*top: 50%;*/
+        /*left: 50%;*/
+        /*transform: translate(-50%, -50%);*/
+    }
 
     #cameraRotate,
     #cameraGallary {
-        background: #dddd;
+        background: #fff;
         width: 80px;
         height: 80px;
         margin: 5px;
-        padding: 0px;
+        padding: 10px;
         border-radius: 100%;
-        /*border: inset black!**! 5px*/
-        border: groove silver 5px;
+      
         font-weight: bolder;
 
 
@@ -52,17 +60,17 @@
     #cameraRotate:hover,
     #cameraGallary:hover,
     #cameraCapture:hover {
-        border: none black 5px;
-        /*border: groove black 5px;*/
-
 
     }
 
 
-    #cameraGallary img {
-        max-width: 70px;
-        max-height: 70px;
-        border-radius: 25%;
+	#cameraRotate img,
+	#cameraGallary img {
+        max-width: 60px;
+        max-height: 60px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
         /*position: absolute;*/
 
         /*top: 50%;*/
@@ -91,8 +99,15 @@
         /*padding: 0px;*/
         margin: 0px;
     }
-
-    #video {
+    #video
+	{
+		transform: rotateY(180deg);
+		-webkit-transform:rotateY(180deg); /* Safari and Chrome */
+		-moz-transform:rotateY(180deg); /* Firefox */
+	}
+    #video,
+    inset-shadow-video {
+		
         width: 100%;
         height: auto;
         padding: 0px;
@@ -106,21 +121,146 @@
     }
 
 
+      .inset-shadow-button {
+            background-color: #4CAF50; /* Green */
+            color: #111;
+			
+            border: 1px solid black;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.3); /* Inset shadow */
+            transition: box-shadow 0.3s ease; /* Smooth transition */
+        }
+        .inset-shadow-button:hover {
+            box-shadow: inset 0 8px 12px rgba(0, 0, 0, 0.4); /* Darker inset shadow on hover */
+             box-shadow: inset 0 8px 12px rgba(0, 0, 0, 0.4);
+        }
+
+   .multiple-inset-shadow-button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: 1px solid black;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 
+                inset 0 4px 6px rgba(0, 0, 0, 0.3), /* First inset shadow */
+                inset 0 8px 12px rgba(0, 0, 0, 0.4), /* Second inset shadow */
+                inset 0 12px 118px rgba(0, 0, 0, 0.24); /* Third inset shadow */
+            transition: box-shadow 0.3s ease; /* Smooth transition */
+        }
+
+        .multiple-inset-shadow-button:hover {
+            box-shadow: 
+                inset 0 6px 8px rgba(0, 0, 0, 0.4), /* Darker first shadow on hover */
+                inset 0 10px 16px rgba(0, 0, 0, 0.5), /* Darker second shadow on hover */
+                inset 0 14px 22px rgba(0, 0, 0, 0.6); /* Darker third shadow on hover */
+        }
+        
+         .globe-button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 50%; /* Circular shape */
+            position: relative; /* Positioning for the shadow */
+            overflow: hidden; /* Clip shadows */
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.2), /* Subtle first inset shadow */
+                inset 0 4px 8px rgba(0, 0, 0, 0.15); /* Subtle second inset shadow */
+            transition: 
+                box-shadow 0.3s ease, /* Smooth shadow transition */
+                transform 0.4s ease; /* Smooth transform transition */
+            transform: perspective(600px) rotateX(0) rotateY(0); /* Initial rotation */
+        }
+
+        .globe-button:hover {
+            box-shadow: 
+                inset 0 4px 6px rgba(0, 0, 0, 0.3), /* Slightly deeper shadows on hover */
+                inset 0 6px 10px rgba(0, 0, 0, 0.2); /* Slightly deeper second shadow on hover */
+            transform: perspective(600px) rotateX(10deg) rotateY(10deg); /* Rotate to create a globe effect */
+        }
+
+		
+        .cam-nav {
+            font-family: 'Comic Sans MS', sans-serif; /* Comic Sans font */
+            font-size: 14px; /* Small font size */
+            color: #333; /* Clean text color */
+            background-color: #fff0; /* Light background */
+            padding: 10px 20px; /* Padding around the nav */
+            text-align: center; /* Center the text */
+            margin: 2px auto; /* Center the nav itself */
+            /*border-radius: 5px;  Slightly rounded corners */
+             /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); Subtle shadow for depth */
+        }
+
+        .cam-nav a {
+            color: #4CAF50; /* Green link color */
+            text-decoration: none; /* Remove underline */
+            margin: 0 10px; /* Space between links */
+            padding: 5px 10px; /* Padding inside links */
+            border-radius: 4px; /* Rounded link corners */
+            transition: background-color 0.3s ease; /* Smooth background transition */
+        }
+
+        .cam-nav a:hover {
+            background-color: #4CAF50; /* Green background on hover */
+            color: white; /* White text on hover */
+        }
+
+    
 </style>
 
 <!--<h1>Webcam Image Capture</h1>-->
 
 
 <div class="my-camera">
-    <video id="video" autoplay></video>
+	<div class="inset-shadow-video">
+
+    <nav class="cam-nav">
+		Dammm you look nice today. Photo shoot time!
+<!--
+        Welcome to Mango Leaf World... WOOOW!! You're looking legend wait for it--dary today!
+-->
+<!--
+        <a href="../index.html" class="globe-button">alpha landing</a>
+        <a class="multiple-shadow-button" href="../energy/index.html">energy</a>
+-->
+    </nav>	 <video  id="video" autoplay></video>
+	</div>
+   
     <div class="camera-btn-row">
-        <button id="cameraGallary">
+        <button  class="multiple-inset-shadow-button" id="cameraGallary">
             <img id="cameraGallaryImg"
                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAHBJREFUaIHtz7ENwCAAA0GTuVgG BgvLsFfSkxSI6ou/0pKLL0/Sc6jfqes2Wubm+fPNaHvfH9fpkcYQGkNoDKExhMYQGkNoDKExhMYQ GkNoDKExhMYQGkNoDKExhMYQGkNoDKExhMYQGkNoDKExhOYFHEwHxU/r6DgAAAAASUVORK5CYII="
                  alt="Default Image">
         </button>
-        <button id="cameraCapture" onclick="captureImage()">Capture Image</button>
-        <button id="cameraRotate" onclick="switchCamera()">Switch Camera</button>
+        <button id="cameraCapture" class="multiple-inset-shadow-button" onclick="captureImage()">
+          <img id="cameraGallaryImg"
+                 src="../img/icon/capture-shutter.svg">
+        </button>
+        <button id="cameraRotate" class="multiple-inset-shadow-button" onclick="switchCamera()">
+             <img id="cameraGallaryImg"
+                 src="../img/icon/rotate-camera.svg"
+
+                 alt="Switch Camera Image">
+        
+        </button>
     </div>
 </div>
 
@@ -251,9 +391,9 @@
     </ul>
 
     <div id="gal-tools">
-        <button id="gal-back" title="Return to camera."><- Back</button>
-        <button id="gal-upload" title="Send file to cloud storage for public access.">Upload Selected!</button>
-        <button id="gal-map" onclick="toggleMap()" title="Open the world map."> TO MAP!</button>
+        <button id="gal-back" class="inset-shadow-button" title="Return to camera."><- Back</button>
+        <button id="gal-upload"  class="inset-shadow-button" title="Send file to cloud storage for public access.">Upload Selected!</button>
+        <button id="gal-map"  class="inset-shadow-button" onclick="toggleMap()" title="Open the world map."> TO MAP!</button>
 
         <ul id="gal-uploads"></ul>
     </div>
@@ -326,10 +466,102 @@
     // initMap()
 </script>
 
+	
+
 <script src="./js/index.js"></script>
 <script>
 
 
+let svgIdMap = {
+	ids: ["path2191", "path2193", "path11171"]
+	// 0 left right shrink
+	// 1 top down shintk 
+	// 2 translin in at 30 degrees
+	
+	}
+	
+	
+	let complements = [
+		"You're on fire today! Snap a quick photo!",
+		"Looking sharp! Time for a gallery tour!",
+		"Legendary vibes only! Let's hit the map!",
+		"Epic look! Ready for a photo shoot?",
+		"Creativity boost activated! Try something new!",
+		"You woke up awesome! Show it off with a pic!",
+		"Map's calling! Let’s explore your next adventure!",
+		"Gallery's got room for your epic shots!",
+		"Bright future alert! Time to create magic!",
+		"Camera ready? Let's capture that vibe!",
+		"Feeling legendary? Explore the map, you're unstoppable!",
+		"That look deserves a gallery feature!",
+		"Today’s your day! Let’s do something epic!",
+		"Snapshot time! You’re setting the bar high!",
+		"Adventure awaits! Where will the map take you?",
+		"Feeling bold? Try something new today!",
+		"Picture perfect! Ready for the gallery?",
+		"Time to shine! Snap a legendary moment!",
+		"Your vibe's electric! Capture it on camera!",
+		"Explore your genius! Creativity starts now!"
+	]
+
+	let protips = [
+		"Wow, you're a natural! Try catching the golden hour!",
+		"Looking amazing! The camera loves you—find some soft light!",
+		"You're on fire! Shoot from a low angle, it’s epic!",
+		"Legendary shot incoming! Try centering your focus a bit more!",
+		"Your pics are gold! Add a cool background for extra wow!",
+		"Sharp and stylish! Get closer for that pro-level detail!",
+		"Total pro move! Avoid zoom, you're way too iconic for that!",
+		"Lighting magician! Try a side light to show off that glow!",
+		"You’ve got the eye! Frame the shot like a movie scene!",
+		"Picture perfect! Symmetry in nature makes your shots sing!",
+		"Steady hands, superstar! Your next shot’s gonna be crystal clear!",
+		"You're a star! The rule of thirds makes you shine even brighter!",
+		"Too cool! Try finding a reflection for a double-take moment!",
+		"Angles on point! Experiment with shooting from up high!",
+		"Incredible! Candid shots = capturing your awesome vibe in action!",
+		"Future legend here! Use a simple background, let YOU stand out!",
+		"Photo boss! Play with light and shadow—it’s like magic!",
+		"What a shot! Textures add extra pop—focus on details!",
+		"On your way to pro status! Wait for the perfect moment, it’s coming!",
+		"Wow, you’ve got skills! Action shots capture your epic energy!",
+		"Its okay somebody loves you."
+	]
+	
+	function randomTip(ratio = 0.5) {
+		
+		let cat = Math.random()
+		let list = protips;
+		if(cat < ratio) {
+			list = complements;
+		}
+		
+		let idx = Math.floor(Math.random() * list.length)
+		let index = Math.random(0, list.length);
+		let tip = list[idx]
+		console.log(idx, index, tip)
+		return(tip)
+		
+	}
+	var nav = document.querySelector(".cam-nav")
+	var interval = 24
+	function updateRandomTip() {
+		nav.innerText = randomTip()
+		console.log("interval is:", interval)
+		if(interval < 42000) {	
+			interval *= parseInt(interval* Math.random()+1)
+			setTimeout(updateRandomTip, interval)	
+		} else {
+			setInterval(updateRandomTip, interval)	
+		}
+		
+	}
+	setTimeout(updateRandomTip, interval)
+		setTimeout(()=>{
+			nav.innerText = "You have spent 69s looking at yourself. Nice 😏"
+			}, 69000)
+
+//~document.getElement
 </script>
 </body>
 </html>

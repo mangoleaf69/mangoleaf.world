@@ -1534,7 +1534,7 @@ var mapInit = new Promise(resolve => {
                 setTimeout(() => {
                     scrollCheckInterval = setInterval(checkForScrollbar, 100);
                     if (!map) {
-                        showPastelModal("Access the map from the gallery 🙂‍↔️🧐", "green")
+                        console.log("Access the map from the gallery 🙂‍↔️🧐", "green")
 
                         // let can = prompt("Do you want to skip to map? yes to cancel uploading a pic ... borrrring.")
                         // if (can && can.toLowerCase().startsWith("y")) {
