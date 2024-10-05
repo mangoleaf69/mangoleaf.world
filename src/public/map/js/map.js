@@ -224,7 +224,8 @@ document.querySelector("#gal-upload").addEventListener("click", async e => {
 
         topbar.show()
 
-        showPastelModal("Your photo should be uploaded, status: " + res.status, res.status === 200 ? "purple" : "orange")
+        console.log("Your photo should be uploaded, status: " + res.status, res.status === 200 ? "purple" : "orange")
+        showPastelModal("Photo Uploaded. Nice shot! In a sec Check it out on the map.", res.status === 200 ? "purple" : "orange")
 
         fetch("https://freemap.online/api/free/etch/" + hash, {
             method: "GET",
