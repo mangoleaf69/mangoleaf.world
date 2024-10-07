@@ -577,8 +577,26 @@
 								<form action="#" id="form-subscribe">
 									<div class="form-field">
 										<input type="email" placeholder="Email Address" id="email" required>
+
 										<input type="submit" id="submit" value="Send">
 									</div>
+									<div class="form-field">
+										<style>
+												#footer #form-subscribe input[type="text"] {
+
+													background: #fff;
+													padding: 5px 70px 5px 15px;
+													border: none;
+													height: 45px;
+													line-height: 30px;
+													width: 100%;
+
+												}
+
+										</style>
+											<input type="text" placeholder="Who Are You?" id="whoru" required>
+									</div>
+
 								</form>
 
 								<script>
@@ -592,16 +610,21 @@
 										e.stopPropagation();
 
 										let email = document.getElementById("email").value ;
+										let whoru = document.getElementById("whoru").value ;
 
-										const url = 'https://freemap.online/api/free/sendMail2?email=dev@syon.ca&name=mango-leaf-world-lead&msg=check out mangoleaf.world/energy for this lead source: '+ email;
+										const url = 'https://freemap.online/api/free/sendMail2?email=dev@syon.ca&name=mango-leaf-world-lead&msg=check out mangoleaf.world/energy for this lead source: '+ email + " :who is: " + whoru;
 										const options = {method: 'GET'};
 
 										try {
 											const response = await fetch(url, options);
 											const data = await response.json();
 											console.log(data);
+											subForm.innerHTML = "<span class='alert alert-success'>Roger Roger Email Incoming</span>"
+
 										} catch (error) {
 											console.error(error);
+
+											subForm.innerHTML = "<span class='alert alert-warning'>Your Email Has Been Sent</span>"
 										}
 
 									}
