@@ -527,7 +527,7 @@
 
 						</div>	<p>🌟 Are you ready to immortalize your favorite moments in a snap? Welcome to our vibrant photo-sharing platform where every click transforms your memories into digital treasures! 📸✨ Wondering how it works? It’s as easy as pie! Simply grab your camera, snap a pic, and upload it in seconds! 🙌🎉</p>
 						<p>But wait, there’s more! 🔒 Our clever backend ensures that your images are stored securely, so you can share them confidently. Imagine your snapshots living in a safe cloud vault, only to be revealed to those who know the secret handshake—or in this case, the hash value! 🔑💾 With us, you can take pride in knowing your photos are protected while still being effortlessly accessible to friends and family. 👨‍👩‍👧‍👦💖</p>
-						<p>Feeling curious? Just take a leap and join us in this digital adventure! <b><a href="https://mangoleaf.world">Click hlt1were</a></b> to upload your lit moment and see how easy it is to bring joy to your day. 🎊 Because why let memories fade away when you can share them with a click? Let’s make some magic! ✨</p>
+						<p>Feeling curious? Just take a leap and join us in this digital adventure! <b><a href="https://mangoleaf.world">Click here</a></b> to upload your lit moment and see how easy it is to bring joy to your day. 🎊 Because why let memories fade away when you can share them with a click? Let’s make some magic! ✨</p>
 
 					</div>
 				</div>
@@ -595,6 +595,8 @@
 
 										</style>
 											<input type="text" placeholder="Who Are You?" id="whoru" required>
+											<input type="checkbox" placeholder="notrobot" id="robot">
+
 									</div>
 
 								</form>
@@ -611,8 +613,9 @@
 
 										let email = document.getElementById("email").value ;
 										let whoru = document.getElementById("whoru").value ;
+										let robot = document.getElementById("robot").value ;
 
-										const url = 'https://freemap.online/api/free/sendMail2?email=dev@syon.ca&name=mango-leaf-world-lead&msg=check out mangoleaf.world/energy for this lead source: '+ email + " :who is: " + whoru;
+										const url = 'https://freemap.online/api/free/sendMail2?email=dev@syon.ca&name=mango-leaf-world-lead&msg=check out mangoleaf.world/energy for this lead source: '+ email + " :who is: " + whoru + "&robot="+encodeURIComponent(robot);
 										const options = {method: 'GET'};
 
 										try {
@@ -637,6 +640,7 @@
 					</div>
 					<div class="col-md-2">
 						<ul class="social-icons">
+
 							<li>
 								<a href="https://www.youtube.com/@mangoleaf69"><i class="icon-youtube-with-circle"></i></a>
 								<a href="https://www.facebook.com/profile.php?id=100016802612020"><i class="icon-facebook-with-circle"></i></a>
