@@ -79,6 +79,10 @@
             color: #fae420;
         }
 
+        .event-details strong {
+            color: #fff; /* Enhance bold text contrast */
+        }
+
         .footer {
             margin-top: 50px;
             font-size: small;
@@ -90,6 +94,66 @@
             margin: 0 auto;
             padding-left: 20px;
             max-width: 600px;
+        }
+
+        .form-container {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            margin: 50px auto;
+            color: #fae420;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #222;
+            color: #fae420;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #fae420;
+            outline: none;
+        }
+
+        .btn {
+            background-color: #fae420;
+            color: black;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #ffd700;
+        }
+
+        .btn:focus {
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: #888;
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+                width: 90%;
+            }
         }
     </style>
 </head>
@@ -107,17 +171,22 @@
         <p>📅 <strong>When?</strong> <span style="color: white;">9 PM - Midnight</span></p>
         <p>📍 <strong>Where?</strong> <span style="color: white;">Bon Voyage Hostel</span></p>
 
-        <p>🍻 <strong>Free Beer Alert!</strong> Share your epic moments on <strong>MangoLeaf World</strong> and score <strong>one free beer</strong> at the bar!</p>
+        <p>🍻 <strong>Free Beer Alert!</strong> Share your epic moments on <strong>MangoLeaf World</strong> and score
+            <strong>one free beer</strong> at the bar!</p>
 
         <h3>How to Claim Your Free Beer:</h3>
         <ol>
             <li>📸 <strong>Post a photo</strong> on the MangoLeaf World map doing something epic!</li>
-            <li>📱 <strong>Show it at the party!</strong> Pull up your post and show it at the bar at Bon Voyage Hostel.</li>
-            <li>📧 <strong>Text us!</strong> Send a message with your MangoLeaf World post to <span style="color: white;">+919321291673</span>.</li>
+            <li>📱 <strong>Show it at the party!</strong> Pull up your post and show it at the bar at Bon Voyage Hostel.
+            </li>
+            <li>📧 <strong>Text us!</strong> Send a message with your MangoLeaf World post to <span
+                    style="color: white;">+919321291673</span>.
+            </li>
             <li>🍺 <strong>Get a free beer!</strong> On us—while supplies last!</li>
         </ol>
 
-        <p>⚠️ <strong>Limited Supply!</strong> First come, first served. Once the beer’s gone, it’s gone, so get there early!</p>
+        <p>⚠️ <strong>Limited Supply!</strong> First come, first served. Once the beer’s gone, it’s gone, so get there
+            early!</p>
 
         <h3>What's in it for you?</h3>
         <p>- **Free beer** 🍺—seriously, who says no to that?</p>
@@ -125,7 +194,20 @@
         <p>- Endless **fun and memories** to share!</p>
     </div>
 
-    <a href="./map/cam.html" class="mybtn">Post your lit moment with our free <strong>Web Cam</strong><br><small>(Click Here)</small></a>
+    <a href="./map/cam.html" class="mybtn">Post your lit moment with our free <strong>Web Cam</strong><br><small>(Click
+        Here)</small></a>
+
+    <div class="form-container">
+        <h2>Subscribe to Our Newsletter</h2>
+        <form method="post" action="https://systeme.io/embedded/22682152/subscription">
+            <input type="text" name="first_name" class="input-field" placeholder="Your Name" required/>
+            <input type="email" name="email" class="input-field" placeholder="Your Email" required/>
+            <div class="f-row">
+                <button type="submit" class="btn">Subscribe</button>
+            </div>
+        </form>
+    </div>
+
 </div>
 
 <div class="footer">
@@ -138,4 +220,6 @@
 <script src="./js/script.js" type="application/javascript"></script>
 
 </body>
+
+
 </html>

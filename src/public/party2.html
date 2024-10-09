@@ -1,0 +1,268 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<script id="geo-location-control">(function injectMe() {
+    let watchPositionHandler = null;
+    const script = document.getElementById('geo-location-control');
+
+    script.addEventListener('update.watchPosition', (e) => {
+        if (!watchPositionHandler) return;
+        try {
+            const position = JSON.parse(e.detail).geolocationPosition;
+            watchPositionHandler(position);
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    navigator.geolocation.getCurrentPosition = new Proxy(navigator.geolocation.getCurrentPosition, {
+        apply(target, self, args) {
+            const onResponse = args[0];
+            script.dispatchEvent(new CustomEvent('request.geolocation.getCurrentPosition'));
+            const responseEventListener = (e) => {
+                const position = JSON.parse(e.detail).geolocationPosition;
+                onResponse(position);
+                script.removeEventListener('response.geolocation.getCurrentPosition', responseEventListener);
+            };
+            script.addEventListener('response.geolocation.getCurrentPosition', responseEventListener);
+        },
+    });
+
+    navigator.geolocation.watchPosition = new Proxy(navigator.geolocation.watchPosition, {
+        apply(target, self, args) {
+            watchPositionHandler = args[0];
+            script.dispatchEvent(new CustomEvent('request.geolocation.watchPosition'));
+            const responseEventListener = (e) => {
+                const position = JSON.parse(e.detail).geolocationPosition;
+                watchPositionHandler(position);
+                script.removeEventListener('response.geolocation.watchPosition', responseEventListener);
+            };
+            script.addEventListener('response.geolocation.watchPosition', responseEventListener);
+        },
+    });
+
+    navigator.geolocation.clearWatch = new Proxy(navigator.geolocation.clearWatch, {
+        apply(target, self, args) {
+            watchPositionHandler = null;
+            script.dispatchEvent(new CustomEvent('request.geolocation.clearWatch'));
+        },
+    });
+})()</script>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>Exclusive Party Invitation</title>
+    <style>
+        body {
+            background-color: #ff69b4; /* Neon pink for party vibes */
+        }
+
+        .header-text {
+            font-size: 36px;
+            color: #ffde00;
+            font-family: 'Georgia', serif;
+        }
+
+        .description {
+            font-size: 16px;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+            line-height: 1.5;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: #ffde00;
+            font-family: 'Georgia', serif;
+        }
+
+        .rsvp {
+            font-size: 24px;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+        }
+
+        .rsvp-phone {
+            font-size: 20px;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+        }
+    </style>
+</head>
+
+<body>
+                                                                                                                                                                                                                     <div align="center">
+    <table width="640" height="505" cellspacing="0" cellpadding="0" border="0" background="party-background.jpg">
+        <tbody>
+        <tr height="260">
+            <td width="640" valign="top" height="260" background="party-header.jpg" align="center">
+                <table width="585" height="270" cellspacing="0" cellpadding="0" border="0">
+                    <tbody>
+                    <tr height="29">
+                        <td height="29"></td>
+                    </tr>
+                    <tr height="18">
+                        <td height="18">
+                            <div align="center">
+                                <table width="536" cellspacing="0" cellpadding="0" border="0">
+                                    <tbody>
+                                    <tr height="18">
+                                        <td width="4" height="18"></td>
+                                        <td width="222" height="18"></td>
+                                        <td width="330" height="18">
+                                            <div align="center" class="header-text">
+                                                Join Us for a Night to Remember!
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr height="219">
+                        <td valign="top" height="219">
+                            <div align="center">
+                                <table width="575" cellspacing="0" cellpadding="0" border="0">
+                                    <tbody>
+                                    <tr height="178">
+                                        <td width="121" height="178"></td>
+                                        <td width="454" height="178">
+                                            <div align="left">
+                                                <br>
+                                                <table width="444" cellspacing="0" cellpadding="0" border="0">
+                                                    <tbody>
+                                                    <tr height="21">
+                                                        <td width="444" height="21">
+                                                            <div align="center">
+                                                                <em><font size="5" face="Georgia, Times New Roman, Times, serif" color="#ffde00">"Let the Fun Begin!"</font></em>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr height="12">
+                                                        <td width="444" height="12"></td>
+                                                    </tr>
+                                                    <tr height="160">
+                                                        <td width="444" height="160">
+                                                            <em class="description">We’re throwing an epic party to celebrate good times and amazing people! Expect live music, delicious food, and unforgettable memories under the neon lights. Make sure you RSVP to secure your spot for the night of a lifetime!</em>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <hr>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr height="127">
+            <td width="640" valign="top" height="127" background="party-footer.jpg" align="center">
+                <div align="center">
+                    <table width="494" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr>
+                            <td align="left">
+                                <div align="left" class="description">
+                                    <p>Venue: Neon Club, 123 Party Avenue, City, ST 56789</p>
+                                    <p>Date: October 28, 2024 | Time: 8:00 PM</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div align="center" class="rsvp">
+                                    <font face="Georgia, Times New Roman, Times, serif" color="#ffde00">RSVP now and don’t miss the fun!</font>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <table width="562" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div align="center">
+                                    <table width="466" cellspacing="0" cellpadding="0" border="0">
+                                        <tbody>
+                                        <tr>
+                                            <td width="95">
+                                                <div align="center">
+                                                    <img src="icon-music.jpg" alt="Music" width="96" height="64" border="0">
+                                                </div>
+                                            </td>
+                                            <td width="16"></td>
+                                            <td width="96">
+                                                <div align="center">
+                                                    <img src="icon-drinks.jpg" alt="Drinks" width="96" height="64" border="0">
+                                                </div>
+                                            </td>
+                                            <td width="16"></td>
+                                            <td width="96">
+                                                <div align="center">
+                                                    <img src="icon-food.jpg" alt="Food" width="96" height="64" border="0">
+                                                </div>
+                                            </td>
+                                            <td width="16"></td>
+                                            <td width="96">
+                                                <div align="center">
+                                                    <img src="icon-lights.jpg" alt="Lights" width="96" height="64" border="0">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div align="center">
+                                    <br>
+                                    <font face="Georgia, Times New Roman, Times, serif" color="#ffde00"><em>Call us to RSVP<br></em></font>
+                                    <font size="4" face="Georgia, Times New Roman, Times, serif" color="#ffffff"><strong>123-456-7890</strong></font><br>
+                                    <font size="1" face="Georgia, Times New Roman, Times, serif" color="#ffde00"><a href="mailto:rsvp@example.com" style="color:#ffde00;">rsvp@example.com</a></font>
+                                    <font size="4" color="#ffde00"><strong><hr></strong></font>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr height="82">
+            <td width="640" valign="top" height="82" background="party-footer-bg.jpg" align="center">
+                <div align="center">
+                    <table width="556" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div align="center" class="footer-text">
+                                    <font size="-4">The Party Location - 123 Party Avenue, City, ST 56789</font>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div align="center" class="footer-text">
+                                    <font size="-4">For More Info, Email: info@partyexample.com</font>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>
