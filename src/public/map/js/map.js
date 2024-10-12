@@ -1082,13 +1082,21 @@ function latLonMap(ll, data) {
             
            
             <div style="margin-top: 10px;"><span></span>
-                <button id="mango-btn" onclick="attachEmojiPicker(document.getElementById('mango-btn'))" title="React to: [${ll.join(", ")}]">🥭</button>
+                <button id="mango-btn" onclick="attachEmojiPicker(document.getElementById('mango-btn').parentElement)" style="padding: 5px 10px; margin-right: 5px;" title="React to: [${ll.join(", ")}]">🥭</button>
                 <button id="feelingLuckyBtn"  onclick="showCamera()" style="padding: 5px 10px; margin-right: 5px;">Feeling Lucky</button>
                 <button id="shareBtn" onclick="shareImage('${ll[0]}','${ll[1]}','${data}')" style="padding: 5px 10px;">Share</button>
 
             </div>
         </div>
     `;
+
+        window._onemoji = (e) => {
+
+            console.log("e:", e) ;
+
+            document.getElementById("mango-btn").innerText = e
+
+        }
 
         // Add the popup with the content to the CircleMarker
         circleMarker.bindPopup(popupContent);

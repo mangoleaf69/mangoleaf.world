@@ -10727,9 +10727,18 @@ for (let key in emojis) {
         emojiA.textContent = category[emojiPos].emoji;
         emojiA.setAttribute('href', '#');
         emojiA.addEventListener('click', function (e) {
-            let textarea = document.getElementById('text');
-            //textarea.focus();
-            textarea.value += e.target.textContent;
+
+
+            if(typeof window._onemoji === "function") {
+                window._onemoji(e.target.textContent)
+            } else {
+                console.log("Override _onemoji to controle the reaction logic: ", e.target.textContent)
+            }
+
+
+            // let textarea = document.getElementById('text');
+            // //textarea.focus();
+            // textarea.value += e.target.textContent;
         });
 
         emojiLi.classList.add('item');
@@ -10782,7 +10791,9 @@ style.innerHTML = `
             max-width: 480px;
             max-height: 300px;
             overflow: auto;
-            margin: 0 auto;
+            margin: 8px auto;
+            
+            border-radius: 8px;
         }
 
         ul#emojis li.category {
@@ -10829,6 +10840,8 @@ style.innerHTML = `
             transform: scale(1.3);
         }
     `;
+
+// css in js why not
 document.head.appendChild(style);
 
 // attachEmojiPicker(document.body)
