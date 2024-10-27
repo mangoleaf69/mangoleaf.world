@@ -10760,8 +10760,8 @@ function attachEmojiPicker(el) {
 
 
 // Add CSS styles dynamically via JavaScript
-const style = document.createElement('style');
-style.innerHTML = `
+const emojiStyle = document.createElement('style');
+emojiStyle.innerHTML = `
         * {
             box-sizing: border-box;
         }
@@ -10842,6 +10842,6 @@ style.innerHTML = `
     `;
 
 // css in js why not
-document.head.appendChild(style);
+document.head.appendChild(emojiStyle);
 
 // attachEmojiPicker(document.body)
