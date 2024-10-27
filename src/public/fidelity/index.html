@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fidelity Page Explainer</title>
+    <link rel="stylesheet" href="https://unpkg.com/water.css/out/water.min.css">
+    <style>
+        body {
+            background-color: #fae420; /* Background color */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .nyan-text-dark {
+            background: linear-gradient(270deg, #6a0dad, #dc143c, #ff4500, #ffa500, #ff69b4, #008080, #0000ff, #4b0082);
+            background-size: 400% 400%;
+            color: #fff;
+            display: inline-block;
+            font-size: 2rem;
+            font-weight: bold;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientAnimation 8s ease infinite;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        img {
+            width: 150px; /* Adjust QR code size */
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>✨ Welcome to Fidelity! ✨</h1>
+
+<p>Join our amazing platform where your financial future is our priority! 💰</p>
+
+<p class="nyan-text-dark">🚀 Click here to create your account! 🚀</p>
+
+<p>Get started by filling out your details and enjoy exclusive benefits! 🎉</p>
+
+<p class="nyan-text-dark">🌟 Important: Verify your identity to unlock all features! 🌟</p>
+
+<img src="https://api.qrserver.com/v1/create-qr-code/?data=https://example.com/create-account&size=150x150" alt="QR Code to create account">
+
+<p>📲 Scan the QR code above to create your account now! 📲</p>
+</body>
+</html>
