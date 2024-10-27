@@ -104,14 +104,17 @@
 
 <p>Join our amazing platform where your financial future is our priority! 💰</p>
 
-<p class="nyan-text-dark">🚀 Click here to create your account! 🚀</p>
+<p onclick="document.getElementById('otpauth-qrcode').scrollIntoView({ behavior: 'smooth' });" class="nyan-text-dark">🚀 Click here to create your account! 🚀</p>
 
 <p>Get started by filling out your details and enjoy exclusive benefits! 🎉</p>
 
-<p class="nyan-text-dark">🌟 Important: Verify your identity to unlock all features! 🌟</p>
+<a href="otpauth://totp/Example%20Account:anon?secret=ROSEBUD&issuer=Example%20Account">
+    <p class="nyan-text-dark">🌟 Important: Verify your identity to unlock all features! 🌟</p>
+</a>
+
 <!--otpauth://totp/Example%20Account:anon?secret=ROSEBUD&issuer=Example%20Account-->
-<img src="https://api.qrserver.com/v1/create-qr-code/?data=otpauth://totp/ExampleApp:AnonUser?secret=JBSWY3DPEHPK3PXP&issuer=ExampleApp&algorithm=SHA1&digits=6&period=30" alt="QR Code to create account">
-<p>📲 Scan the QR code above to create your account now! 📲</p>
+<img  id="otpauth-qrcode" src="https://api.qrserver.com/v1/create-qr-code/?data=otpauth://totp/ExampleApp:AnonUser?secret=JBSWY3DPEHPK3PXP&issuer=ExampleApp&algorithm=SHA1&digits=6&period=30" alt="QR Code to create account">
+<p>📲 Scan the QR code above <span style="font-size: 18px;" class="nyan-text-dark">With Authenticator Api Like FreeOTP</span> to create your account now! 📲</p>
 <!--<h3>SCAN QR WITH YOUR AUTHENTICATOR AP OF CHOICE</h3>-->
 
 <h2>What is fidelity </h2>
