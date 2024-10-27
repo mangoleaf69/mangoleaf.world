@@ -46,6 +46,57 @@
             height: auto;
             margin-top: 20px;
         }
+
+        .img-big      {
+            width: 350px; /* Adjust QR code size */
+            height: auto;
+            margin-top: 40px;
+        }
+
+
+
+
+           .definition-box {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            max-width: 600px;
+        }
+        .term {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .pronunciation {
+            font-size: 1.1em;
+            color: #666;
+        }
+        .part-of-speech {
+            font-size: 1.1em;
+            font-style: italic;
+            color: #666;
+        }
+        .definition {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: #444;
+        }
+        .source {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #888;
+        }
+        .source a {
+            color: #888;
+            text-decoration: none;
+        }
+        .source a:hover {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
@@ -58,9 +109,35 @@
 <p>Get started by filling out your details and enjoy exclusive benefits! 🎉</p>
 
 <p class="nyan-text-dark">🌟 Important: Verify your identity to unlock all features! 🌟</p>
-
-<img src="https://api.qrserver.com/v1/create-qr-code/?data=https://example.com/create-account&size=150x150" alt="QR Code to create account">
-
+<!--otpauth://totp/Example%20Account:anon?secret=ROSEBUD&issuer=Example%20Account-->
+<img src="https://api.qrserver.com/v1/create-qr-code/?data=otpauth://totp/ExampleApp:AnonUser?secret=JBSWY3DPEHPK3PXP&issuer=ExampleApp&algorithm=SHA1&digits=6&period=30" alt="QR Code to create account">
 <p>📲 Scan the QR code above to create your account now! 📲</p>
+<!--<h3>SCAN QR WITH YOUR AUTHENTICATOR AP OF CHOICE</h3>-->
+
+<h2>What is fidelity </h2>
+
+<div class="definition-box">
+    <span class="term">fidelity</span>
+    <span class="pronunciation">noun | fə-ˈde-lə-tē, fī-</span>
+    <div class="part-of-speech">plural: fidelities</div>
+    <div class="definition">
+        <strong>1a.</strong> The quality or state of being faithful.<br>
+        <em>Example:</em> his fidelity to his wife.
+    </div>
+    <div class="definition">
+        <strong>1b.</strong> Accuracy in details; exactness.<br>
+        <em>Example:</em> The movie's director insisted on total fidelity to the book.
+    </div>
+    <div class="definition">
+        <strong>2.</strong> The degree to which an electronic device (such as a record player, radio, or television) accurately reproduces its effect (such as sound or picture).
+    </div>
+    <div class="source">
+        Source: <a href="https://www.merriam-webster.com/dictionary/fidelity" target="_blank">Merriam-Webster</a>
+    </div>
+</div>
+<img class="img-big" src="../img/fidelity_meme_2.webp">
+<img class="img-big" src="../img/fidelity_meme_1.webp">
+
+
 </body>
 </html>

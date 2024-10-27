@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Scanner Demo</title>
+    <link href="https://unpkg.com/water.css/out/water.min.css" rel="stylesheet">
+    <link href="https://bsjs.sgol.pub/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #222;
+            color: #fae420;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #fae420;
+            margin-bottom: 20px;
+        }
+
+        #video-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .output-section, .action-buttons {
+            margin-top: 20px;
+        }
+
+        .highlight {
+            color: #f3c623;
+            font-weight: bold;
+        }
+
+        #flash-toggle, #start-button, #stop-button, #copy-button, #go-button {
+            background-color: #fae420;
+            color: #222;
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #flash-toggle:hover, #start-button:hover, #stop-button:hover, #copy-button:hover, #go-button:hover {
+            background-color: #d4b517;
+        }
+
+        #file-selector {
+            display: block;
+            margin: 15px auto;
+        }
+
+        hr {
+            border: 1px solid #fae420;
+            width: 80%;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+<h1>QR Scanner Demo</h1>
+
+<div id="video-container">
+    <video id="qr-video"></video>
+</div>
+
+<div class="output-section">
+    <b>Detected QR code:</b> <span id="cam-qr-result" class="highlight">None</span><br>
+    <b>Last detected at:</b> <span id="cam-qr-result-timestamp" class="highlight"></span>
+</div>
+
+<div class="action-buttons">
+    <button id="start-button">Start Scanner</button>
+    <button id="stop-button">Stop Scanner</button>
+<!--    <a id="qr-link">click link</a>-->
+    <button id="copy-button" style="display: none;">Copy to Clipboard</button>
+    <button id="go-button" style="display: none;">Go to Link</button>
+</div>
+
+<hr>
+
+<h2>Scan from File:</h2>
+<input type="file" id="file-selector">
+<b>Detected QR code from file:</b> <span id="file-qr-result" class="highlight">None</span>
+
+<script type="module">
+    import QrScanner from "./qr-scanner-master/qr-scanner.min.js";
+
+    const video = document.getElementById('qr-video');
+    const camQrResult = document.getElementById('cam-qr-result');
+    const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
+    const fileSelector = document.getElementById('file-selector');
+    const fileQrResult = document.getElementById('file-qr-result');
+    const copyButton = document.getElementById('copy-button');
+    const goButton = document.getElementById('go-button');
+    // const qrLink = document.getElementById('qr-link');
+
+    var _qrcode = ""
+
+    function setResult(label, result) {
+        label.textContent = result.data;
+        camQrResultTimestamp.textContent = new Date().toString() + " - " + result;
+        _qrcode = result
+        console.log(result, label)
+        showActionButtons(result);
+    }
+
+    function showActionButtons(data) {
+        copyButton.style.display = 'inline-block';
+        goButton.style.display = (isValidUrl(data)) ? 'inline-block' : 'none';
+        // copyButton.
+        if (data && data.startsWith("https://") || data.startsWith("otpauth://")) {
+            alert("secure url")
+            // qrLink.herf = data;
+            // qrLink.innerText = data;
+
+        } else {
+            // qrLink.herf = "";
+            // qrLink.innerText = ""
+        }
+
+    }
+
+    function isValidUrl(string) {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+
+    const scanner = new QrScanner(video, result => setResult(camQrResult, result));
+
+    document.getElementById('start-button').addEventListener('click', () => scanner.start());
+    document.getElementById('stop-button').addEventListener('click', () => scanner.stop());
+
+    copyButton.addEventListener('click', () => {
+        console.log(_qrcode + "copy")
+        navigator.clipboard.writeText(_qrcode).then(() => {
+            // navigator.clipboard.writeText(_qrcode)
+            alert('Copied to clipboard: ' +_qrcode);
+        });
+    });
+
+    goButton.addEventListener('click', () => {
+        if (isValidUrl(_qrcode)) {
+            window.open(_qrcode, '_blank');
+        } else {
+            alert('Invalid URL');
+        }
+    });
+
+    fileSelector.addEventListener('change', event => {
+        const file = fileSelector.files[0];
+        if (!file) return;
+        QrScanner.scanImage(file, {returnDetailedScanResult: true})
+            .then(result => setResult(fileQrResult, result))
+            .catch(() => fileQrResult.textContent = 'No QR code found.');
+    });
+</script>
+</body>
+</html>
