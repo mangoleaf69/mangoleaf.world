@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Exchange</title>
+    <script src=" https://cdn.jsdelivr.net/npm/jspanel4@4.16.1/dist/jspanel.min.js "></script>
+    <link href=" https://cdn.jsdelivr.net/npm/jspanel4@4.16.1/dist/jspanel.min.css " rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+        .exchange-output {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<script>
+    // Create the JSPanel window
+    jsPanel.create({
+        headerTitle: "Currency Exchange",
+        contentSize: "400x300",
+        content: `
+                <div id="exchange-panel">
+                    <!-- "You Have" section -->
+                    <label for="you-have">You Have:</label>
+                    <select id="you-have">
+                        <option value="INR" selected>INR</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                    </select>
+
+                    <!-- Amount input -->
+                    <label for="amount-have">Amount (#):</label>
+                    <input type="number" id="amount-have" placeholder="Enter amount" min="0">
+
+                    <!-- "You Want" section -->
+                    <label for="you-want">You Want:</label>
+                    <select id="you-want">
+                        <option value="LAK" selected>LAK</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                    </select>
+
+                    <!-- Exchange result -->
+                    <div id="exchange-result" class="exchange-output"></div>
+                </div>
+            `,
+        position: "center",
+        callback: function(panel) {
+            // Add event listeners for currency conversion logic
+            const youHave = panel.content.querySelector("#you-have");
+            const youWant = panel.content.querySelector("#you-want");
+            const amountHave = panel.content.querySelector("#amount-have");
+            const exchangeResult = panel.content.querySelector("#exchange-result");
+
+            const exchangeRates = {
+                INR: { LAK: 125.0, USD: 0.012, EUR: 0.011 },
+                LAK: { INR: 0.008, USD: 0.0001, EUR: 0.00009 },
+                USD: { INR: 83.0, LAK: 11000.0, EUR: 0.91 },
+                EUR: { INR: 91.0, LAK: 12000.0, USD: 1.1 }
+            };
+
+            function updateExchange() {
+                const fromCurrency = youHave.value;
+                const toCurrency = youWant.value;
+                const amount = parseFloat(amountHave.value);
+
+                if (amount > 0 && exchangeRates[fromCurrency] && exchangeRates[fromCurrency][toCurrency]) {
+                    const rate = exchangeRates[fromCurrency][toCurrency];
+                    const converted = (amount * rate).toFixed(2);
+                    exchangeResult.textContent = `${amount} ${fromCurrency} = ${converted} ${toCurrency}`;
+                } else {
+                    exchangeResult.textContent = "Invalid input or conversion not available.";
+                }
+            }
+
+            // Attach input events
+            youHave.addEventListener("change", updateExchange);
+            youWant.addEventListener("change", updateExchange);
+            amountHave.addEventListener("input", updateExchange);
+        }
+    });
+</script>
+</body>
+</html>

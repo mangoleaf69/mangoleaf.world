@@ -1061,6 +1061,8 @@ function shareImage(lat, lon, hash) {
 
 var heat, marker, _llmap = {}
 
+
+
 function latLonMap(ll, data) {
 
     let lat = parseInt(Math.floor(ll[0]))

@@ -17,14 +17,17 @@
             text-align: center;
             padding: 20px;
         }
+
         h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
         }
+
         p {
             font-size: 1.2em;
             margin: 10px 0;
         }
+
         .nyan-text-dark {
             background: linear-gradient(270deg, #6a0dad, #dc143c, #ff4500, #ffa500, #ff69b4, #008080, #0000ff, #4b0082);
             background-size: 400% 400%;
@@ -36,27 +39,33 @@
             -webkit-text-fill-color: transparent;
             animation: gradientAnimation 8s ease infinite;
         }
+
         @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
+
         img {
-            width: 150px; /* Adjust QR code size */
+            width: 350px; /* Adjust QR code size */
             height: auto;
             margin-top: 20px;
         }
 
-        .img-big      {
-            width: 350px; /* Adjust QR code size */
+        .img-big {
+            width: 450px; /* Adjust QR code size */
             height: auto;
             margin-top: 40px;
         }
 
 
-
-
-           .definition-box {
+        .definition-box {
             font-family: Arial, sans-serif;
             margin: 20px;
             padding: 20px;
@@ -65,34 +74,41 @@
             background-color: #f9f9f9;
             max-width: 600px;
         }
+
         .term {
             font-size: 2em;
             font-weight: bold;
             color: #333;
         }
+
         .pronunciation {
             font-size: 1.1em;
             color: #666;
         }
+
         .part-of-speech {
             font-size: 1.1em;
             font-style: italic;
             color: #666;
         }
+
         .definition {
             margin-top: 10px;
             font-size: 1.2em;
             color: #444;
         }
+
         .source {
             margin-top: 20px;
             font-size: 0.9em;
             color: #888;
         }
+
         .source a {
             color: #888;
             text-decoration: none;
         }
+
         .source a:hover {
             text-decoration: underline;
         }
@@ -104,17 +120,70 @@
 
 <p>Join our amazing platform where your financial future is our priority! 💰</p>
 
-<p onclick="document.getElementById('otpauth-qrcode').scrollIntoView({ behavior: 'smooth' });" class="nyan-text-dark">🚀 Click here to create your account! 🚀</p>
+<p onclick="document.getElementById('otpauth-qrcode').scrollIntoView({ behavior: 'smooth' });" class="nyan-text-dark">🚀
+    Click here to create your account! 🚀</p>
 
 <p>Get started by filling out your details and enjoy exclusive benefits! 🎉</p>
 
-<a href="otpauth://totp/Example%20Account:anon?secret=ROSEBUD&issuer=Example%20Account">
+<a href="otpauth://totp/Example%20Account:anon?secret=12345678932467342746&issuer=Dev%20Account">
     <p class="nyan-text-dark">🌟 Important: Verify your identity to unlock all features! 🌟</p>
 </a>
 
+<script type="application/javascript" src="https://bsjs.sgol.pub/lib/qrcode.js"></script>
+<script type="application/javascript" src="https://bsjs.sgol.pub/js/bs.js"></script>
+<!--<script type="application/javascript" src="https://bsjs.sgol.pub/js/bs.js"></script>-->
+
+<div style="width: 100%; height: auto;" id="local-svg-qr-container"></div>
+<script>
+
+
+    <!--     alt="QR Code to create account">-->
+
+    function toAuthUrl(issuer = "syon", secret = "hunter2rosebud", account = "anon") {
+
+        return `otpauth://totp/${issuer}:${account}?secret=${secret}&issuer=${issuer}`
+
+    }
+
+    var elQr = document.getElementById("local-svg-qr-container")
+
+    let data = "otpauth://totp/FidelityDemoSFF:anon?secret=hunter2&issuer=sgol&algorithm=SHA1&digits=6&period=30"
+
+    let ttest = toAuthUrl();
+
+    console.log(data)
+    console.log(ttest)
+
+    console.log("Overwriting data with test")
+    data = ttest;
+
+    let qr = bs.str2qr(data)
+    // let res = qrcode(24, "H")
+    // let user = "anon"
+    // let issuer = "sgol"
+
+
+    let img = qr.createImgTag(16, 4, "Auth OTP Url") //"4px", "8px", "Auth OTP URL For Fidelity Check.", "Scan this QR to Share this Identity"
+
+    // img.width=350;
+    console.log(qr.createASCII())
+
+
+    window.addEventListener("load", e => {
+        elQr.innerHTML = img;
+    })
+
+
+</script>
+
 <!--otpauth://totp/Example%20Account:anon?secret=ROSEBUD&issuer=Example%20Account-->
-<img  id="otpauth-qrcode" src="https://api.qrserver.com/v1/create-qr-code/?data=otpauth://totp/ExampleApp:AnonUser?secret=JBSWY3DPEHPK3PXP&issuer=ExampleApp&algorithm=SHA1&digits=6&period=30" alt="QR Code to create account">
-<p>📲 Scan the QR code above <span style="font-size: 18px;" class="nyan-text-dark">With Authenticator Api Like FreeOTP</span> to create your account now! 📲</p>
+<!--<img id="otpauth-qrcode"-->
+<!--     src="https://api.qrserver.com/v1/create-qr-code/?data=otpauth://totp/ExampleApp:AnonUser?secret=JBSWY3DPEHPK3PXP&issuer=ExampleApp&algorithm=SHA1&digits=6&period=30"-->
+<!--     alt="QR Code to create account">-->
+
+<p>📲 Scan the QR code above <span style="font-size: 18px;"
+                                  class="nyan-text-dark">With Authenticator Api Like FreeOTP</span> to create your
+    account now! 📲</p>
 <!--<h3>SCAN QR WITH YOUR AUTHENTICATOR AP OF CHOICE</h3>-->
 
 <h2>What is fidelity </h2>
@@ -132,7 +201,8 @@
         <em>Example:</em> The movie's director insisted on total fidelity to the book.
     </div>
     <div class="definition">
-        <strong>2.</strong> The degree to which an electronic device (such as a record player, radio, or television) accurately reproduces its effect (such as sound or picture).
+        <strong>2.</strong> The degree to which an electronic device (such as a record player, radio, or television)
+        accurately reproduces its effect (such as sound or picture).
     </div>
     <div class="source">
         Source: <a href="https://www.merriam-webster.com/dictionary/fidelity" target="_blank">Merriam-Webster</a>
@@ -140,6 +210,7 @@
 </div>
 <img class="img-big" src="../img/fidelity_meme_2.webp">
 <img class="img-big" src="../img/fidelity_meme_1.webp">
+<img class="img-big" src="../img/qrcode_meme_1.jpg">
 
 
 </body>
