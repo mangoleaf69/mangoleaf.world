@@ -4,24 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Currency Exchange</title>
-    <script src=" https://cdn.jsdelivr.net/npm/jspanel4@4.16.1/dist/jspanel.min.js "></script>
-    <link href=" https://cdn.jsdelivr.net/npm/jspanel4@4.16.1/dist/jspanel.min.css " rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.16.1/dist/jspanel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/jspanel4@4.16.1/dist/jspanel.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #fae420;
+            margin: 0;
+            padding: 0;
         }
+
+        #exchange-panel {
+            padding: 20px;
+            background-color: #fae420;
+            border-radius: 8px;
+            color: #333; /* Grey foreground for good contrast */
+        }
+
+        .form-group, .form-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
         label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-        }
-        .exchange-output {
             font-size: 1.2em;
-            margin-top: 10px;
+            flex: 1;
+            color: #444; /* Slightly darker grey for text */
+            margin-right: 10px;
+        }
+
+        select, input, button {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1.1em;
+            flex: 2;
+            max-width: 45%;
+        }
+
+        select:focus, input:focus {
+            border-color: #666; /* Darker grey for focus highlight */
+            outline: none;
+        }
+
+        button {
+            background-color: #fae420;
+            border: 2px solid #666; /* Grey border for visibility */
+            color: #333;
+            font-weight: bold;
+            flex: 0 0 auto;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ffd700; /* Slightly brighter gold on hover */
+        }
+
+        .exchange-output {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #444;
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .jspanel-content {
+            padding: 20px;
+        }
+
+        .jspanel-hdr {
+            background-color: #fae420 !important;
+            color: #444 !important;
         }
     </style>
 </head>
@@ -30,31 +90,38 @@
     // Create the JSPanel window
     jsPanel.create({
         headerTitle: "Currency Exchange",
-        contentSize: "400x300",
-        content: `
+        contentSize: "500x350",
+        content: node`
                 <div id="exchange-panel">
-                    <!-- "You Have" section -->
-                    <label for="you-have">You Have:</label>
-                    <select id="you-have">
-                        <option value="INR" selected>INR</option>
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                    </select>
+                    <!-- "You Have" and "You Want" on the same row with Swap Button -->
+                    <div class="form-row">
+                        <label for="you-have">You Have:</label>
+                        <select id="you-have">
+                            <option value="INR" selected>INR</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+
+                        <button id="swap-button">⇄</button>
+
+                        <label for="you-want">You Want:</label>
+                        <select id="you-want">
+                            <option value="LAK" selected>LAK</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+                    </div>
 
                     <!-- Amount input -->
-                    <label for="amount-have">Amount (#):</label>
-                    <input type="number" id="amount-have" placeholder="Enter amount" min="0">
+                    <div class="form-group">
+                        <label for="amount-have">Amount (#):</label>
+                        <input type="number" id="amount-have" placeholder="Enter amount" min="0">
+                    </div>
 
-                    <!-- "You Want" section -->
-                    <label for="you-want">You Want:</label>
-                    <select id="you-want">
-                        <option value="LAK" selected>LAK</option>
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                    </select>
-
-                    <!-- Exchange result -->
-                    <div id="exchange-result" class="exchange-output"></div>
+                    <!-- Exchange result on a single row -->
+                    <div class="exchange-output" id="exchange-result">
+                        Enter values to see the result
+                    </div>
                 </div>
             `,
         position: "center",
@@ -63,6 +130,7 @@
             const youHave = panel.content.querySelector("#you-have");
             const youWant = panel.content.querySelector("#you-want");
             const amountHave = panel.content.querySelector("#amount-have");
+            const swapButton = panel.content.querySelector("#swap-button");
             const exchangeResult = panel.content.querySelector("#exchange-result");
 
             const exchangeRates = {
@@ -85,6 +153,14 @@
                     exchangeResult.textContent = "Invalid input or conversion not available.";
                 }
             }
+
+            // Swap logic
+            swapButton.addEventListener("click", () => {
+                const temp = youHave.value;
+                youHave.value = youWant.value;
+                youWant.value = temp;
+                updateExchange();
+            });
 
             // Attach input events
             youHave.addEventListener("change", updateExchange);
