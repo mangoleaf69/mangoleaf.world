@@ -17,10 +17,15 @@
     <link href="https://bsjs.sgol.pub/css/all.min.css" rel="stylesheet">
 
     <!--<link href="https://bsjs.sgol.pub/js/all.min.js" rel="stylesheet">-->
-    <link href="./energy/css" rel="stylesheet">
+<!--    <link href="./energy/css" rel="stylesheet">-->
     <style>
 
 
+        :root {
+            --dark: #111;
+            --light: #eee;
+            --grey: #888;
+        }
         .myh2 {
             position: absolute;
             top: 50%;
@@ -32,7 +37,13 @@
             color: #fae420;
             text-shadow: -1px -1px #fa1, 2px 3px #111, -2px -1px #eee;
         }
+  .myh2 > a{
+                 color: #fae420;
 
+  }
+  /*.myh2 > a:hover{*/
+  /*       transform: translateX(2px);*/
+  /*}*/
         .mybtn {
             font-family: Verdana, sans-serif;
             font-size: x-large;
@@ -45,7 +56,8 @@
 
         .mybtn:hover {
             border: inset 5px #fae420;
-
+            color: var(--light);
+            background: var(--dark);
         }
 
         body {
@@ -59,11 +71,9 @@
 
 
 <body>
-<!--Your html here
-<h1>Mango Leaf . World</h1>
- -->
+
 <h2 class="myh2">
-    Mango Leaf . World
+   <a href="https://mangoleaf.world/map/cam/" title="A free public web map cam.">Mango Leaf . World</a>
 </h2>
 
 <img width="100%" src="./img/logo/mangoleafworldlogov1_42.jpg">
@@ -105,8 +115,7 @@
     <a href="./map/cam.html" style="width: 100%;">
         <button class="mybtn">Post your lit moment with our free <span style="font-weight: bolder;">Web Cam</span>
             <br> <small class="nyan-text-dark">( Click Here )</small>
-            <hr>
-            <img src="img/qrcode_meme_1.jpg">
+
         </button>
     </a>
 
@@ -115,16 +124,38 @@
 
 </div>
 
-
+<footer>#mangoleafworld #web #map #cam #lit #moments #travel #share</footer>
 
 <!--Scripts n stuff-->
-<script src="https://bsjs.sgol.pub/js/all.min.js" type="application/javascript"></script>
+<!--<script src="https://bsjs.sgol.pub/js/all.min.js" type="application/javascript"></script>-->
 
-<script src="./js/script.js" type="application/javascript"></script>
+<!--<script src="./js/script.js" type="application/javascript"></script>-->
 <script>
 
 
     console.log("hello world");
+
+    let f = document.querySelector("footer");
+    let t = f.innerText;
+    f.innerHTML = '';
+
+    let links = t.split(" ").map(h=>{
+
+        let l = encodeURIComponent(h)
+        let linkUrl = `https://www.instagram.com/explore/search/keyword/?q=${l}`
+
+        let a = document.createElement("a")
+        a.href = linkUrl;
+        a.innerText = h
+        return a;
+    })
+
+
+    links.forEach(a=>{
+        console.log(a)
+        f.appendChild(a)
+    })
+
 
 </script>
 

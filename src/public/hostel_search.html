@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Search</title>
+</head>
+<body>
+<h1>Hostel Search</h1>
+<form id="searchForm" action="https://www.hostelworld.com/pwa/wds/s" method="GET" target="_blank">
+    <label for="location">Enter Location:</label>
+    <input type="text" id="location" name="q" placeholder="e.g., Goa, India" required>
+    <input type="hidden" name="type" value="city">
+    <input type="hidden" name="country" value="">
+    <input type="hidden" name="city" value="">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" id="fromDate" name="from" value="">
+    <input type="hidden" id="toDate" name="to" value="">
+    <input type="hidden" name="guests" value="2">
+    <input type="hidden" name="page" value="1">
+    <button type="submit">Search</button>
+</form>
+
+<script>
+    function getFormattedDate(offsetDays) {
+        const date = new Date();
+        date.setDate(date.getDate() + offsetDays);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const fromDate = getFormattedDate(0); // Today's date
+        const toDate = getFormattedDate(2);  // 2 days from today
+        document.getElementById("fromDate").value = fromDate;
+        document.getElementById("toDate").value = toDate;
+    });
+</script>
+</body>
+</html>
