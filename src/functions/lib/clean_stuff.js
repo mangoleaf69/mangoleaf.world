@@ -2046,7 +2046,7 @@ let data = [
 ]
 
 
-let obj = Object.fromEntries(data.map(r=>{
+let obj = Object.fromEntries(data.map(r => {
 
     let vals = Object.values(r);
 
@@ -2057,3 +2057,689 @@ let obj = Object.fromEntries(data.map(r=>{
 console.log(JSON.stringify(obj))
 
 console.log(Object.keys(data[0]))
+
+
+// PPP: Purchasing Power Parity is the relitive index
+
+//
+// S=P1/P2
+// where:
+//     S= Exchange rate of currency 1 to currency 2
+//     P1= Cost of good X in currency 1
+//     P2= Cost of good X in currency 2
+//
+//
+// Goods Selected: Bread Butter Beer
+//
+// Each MLB will bee sold in each contery for the sum of 1 loaf bread 100g of butter and 500ml beer.
+//
+//     the costs of these should be determined at the local supermarket
+//
+
+
+//tldr only domain is .uk
+let codeMapKeys = [
+    'country_name',
+    'country_numeric_code',
+    'country_alpha2_code',
+    'country_alpha3_code',
+    'currency_name',
+    'currency_numeric_code',
+    'currency_alpha3_code',
+    'currency_exponent',
+    'currency_subunit',
+    'currency_description',
+    'country_tld',
+    'country_year_assigned'
+]
+
+let codeMap = {"AF":["Afghanistan","4","AF","AFG","Afghani","971","AFN","2","Pul","Afghani",".af","1974"],"AL":["Albania","8","AL","ALB","Albanian Lek","8","ALL","2","Qindarka","Lekë",".al","1974"],"DZ":["Algeria","12","DZ","DZA","Algerian Dinar","12","DZD","2","Santīm","Algerian Dinars",".dz","1974"],"AO":["Angola","24","AO","AGO","Kwanza","973","AOA","2","Cents","Kwansa",".ao","1974"],"AR":["Argentina","32","AR","ARG","Argentine Peso","32","ARS","2","Centavos","Argentine Pesos",".ar","1974"],"AM":["Armenia","51","AM","ARM","Armenian Dram","51","AMD","2","Luma","Armenian Dram",".am","1992"],"AW":["Aruba","533","AW","ABW","Aruban Florin","533","AWG","2","Cents","Aruban Florin",".aw","1986"],"AU":["Australia","36","AU","AUS","Australian Dollar","36","AUD","2","Cents","Australian Dollars",".au","1974"],"AZ":["Azerbaijan","31","AZ","AZE","Azerbaijanian Manat","944","AZN","2","Qəpik","Manats",".az","1992"],"BS":["Bahamas","44","BS","BHS","Bahamian Dollar","44","BSD","2","Cents","Bahamian Dollars",".bs","1974"],"BH":["Bahrain","48","BH","BHR","Bahraini Dinar","48","BHD","3","Fils","Bahraini Dinars",".bh","1974"],"BD":["Bangladesh","50","BD","BGD","Bangladeshi Taka","50","BDT","2","Poishas","Takas",".bd","1974"],"BB":["Barbados","52","BB","BRB","Barbados Dollar","52","BBD","2","Cents","Barbados Dollars",".bb","1974"],"BY":["Belarus","112","BY","BLR","Belarussian Ruble","933","BYR","2","Kapyeyka","Belarussian Rubles",".by","1974"],"BZ":["Belize","84","BZ","BLZ","Belize Dollar","84","BZD","2","Cents","Belize Dollars",".bz","1974"],"BM":["Bermuda","60","BM","BMU","Bermudian Dollar","60","BMD","2","Cents","Bermudan Dollars",".bm","1974"],"BT":["Bhutan","64","BT","BTN","Bhutanese Ngultrum","64","BTN","2","Chetrums","Ngultrums",".bt","1974"],"BA":["Bosnia and Herzegovina","70","BA","BIH","Convertible Mark","977","BAM","2","Fenings","Convert. Marks",".ba","1992"],"BW":["Botswana","72","BW","BWA","Botswana Pula","72","BWP","2","Thebe","Pula",".bw","1974"],"BR":["Brazil","76","BR","BRA","Brazilian Real","986","BRL","2","Centavos","Brazilian Real",".br","1974"],"BN":["Brunei Darussalam","96","BN","BRN","Brunei Dollar","96","BND","2","Cents","Brunei Dollars",".bn","1974"],"BG":["Bulgaria","100","BG","BGR","Bulgarian Lev","975","BGN","2","Stotinka","Lev",".bg","1974"],"BI":["Burundi","108","BI","BDI","Burundi Franc","108","BIF","0","Centimes","Burundi Francs",".bi","1974"],"KH":["Cambodia","116","KH","KHM","Riel","116","KHR","2","Sens","Riels",".kh","1974"],"CA":["Canada","124","CA","CAN","Canadian Dollar","124","CAD","2","Cents","Canadian Dollars",".ca","1974"],"CV":["Cape Verde","132","CV","CPV","Cape Verde Escudo","132","CVE","2","Centavos","Escudos",".cv","1974"],"KY":["Cayman Islands","136","KY","CYM","Cayman Islands Dollar","136","KYD","2","Cents","Cayman Dollars",".ky","1974"],"CL":["Chile","152","CL","CHL","Unidades de Fomento","990","CLF","0","","Unidades de Fomento",".cl","1974"],"CN":["China","156","CN","CHN","Yuan Renminbi","156","CNY","2","Fen","Renminbi",".cn","1974"],"CO":["Colombia","170","CO","COL","Colombian Peso","170","COP","2","Centavos","Colombian Pesos",".co","1974"],"KM":["Comoros","174","KM","COM","Comoro Franc","174","KMF","0","Centimes","Comoro Francs",".km","1974"],"CR":["Costa Rica","188","CR","CRI","Costa Rican Colon","188","CRC","2","Centimos","Costa Rican Colones",".cr","1974"],"HR":["Croatia","191","HR","HRV","Croatian Kuna","191","HRK","2","Lipa","Kuna",".hr","1992"],"CU":["Cuba","192","CU","CUB","Cuban Peso","192","CUP","2","Centavos","Cuban Pesos",".cu","1974"],"CZ":["Czech Republic","203","CZ","CZE","Czech Koruna","203","CZK","2","Haler","Korun",".cz","1993"],"DK":["Denmark","208","DK","DNK","Danish Krone","208","DKK","2","Ore","Danish Kroner",".dk","1974"],"DJ":["Djibouti","262","DJ","DJI","Djibouti Franc","262","DJF","0","Centimes","Djibouti Francs",".dj","1977"],"DO":["Dominican Republic","214","DO","DOM","Dominican Peso","214","DOP","2","Centavos","Dominican Pesos",".do","1974"],"EG":["Egypt","818","EG","EGY","Egyptian Pound","818","EGP","2","Piastre","Egyptian Pounds",".eg","1974"],"SV":["El Salvador","222","SV","SLV","El Salvador Colon","222","SVC","2","Centavos","El Salvador Colones",".sv","1974"],"ET":["Ethiopia","230","ET","ETH","Ethiopian Birr","230","ETB","2","Santim","Birr",".et","1974"],"FK":["Falkland Islands (Malvinas)","238","FK","FLK","Falkland Islands Pound","238","FKP","2","Pence","Falkland Pounds",".fk","1974"],"FJ":["Fiji","242","FJ","FJI","Fiji Dollar","242","FJD","2","Cents","Fiji Dollars",".fj","1974"],"GM":["Gambia","270","GM","GMB","Dalasi","270","GMD","2","Bututs","Dalasi",".gm","1974"],"GE":["Georgia","268","GE","GEO","Lari","981","GEL","2","Tetri","Georgian Lari",".ge","1992"],"GH":["Ghana","288","GH","GHA","Ghana Cedi","936","GHS","2","Pesewa","Cedis",".gh","1974"],"GI":["Gibraltar","292","GI","GIB","Gibraltar Pound","292","GIP","2","Pence","Gibraltar Pounds",".gi","1974"],"GT":["Guatemala","320","GT","GTM","Quetzal","320","GTQ","2","Centavos","Quetzales",".gt","1974"],"GN":["Guinea","324","GN","GIN","Guinea Franc","324","GNF","0","Centimes","Guinean Francs",".gn","1974"],"GY":["Guyana","328","GY","GUY","Guyana Dollar","328","GYD","2","Cents","Guyana Dollars",".gy","1974"],"HT":["Haiti","332","HT","HTI","Gourde","332","HTG","2","Centimes","Gourdes",".ht","1974"],"HN":["Honduras","340","HN","HND","Lempira","340","HNL","2","Centavos","Lempiras",".hn","1974"],"HK":["Hong Kong","344","HK","HKG","Hong Kong Dollar","344","HKD","2","Cents","H.K.Dollars",".hk","1974"],"HU":["Hungary","348","HU","HUN","Forint","348","HUF","2","Filler","Forint",".hu","1974"],"IS":["Iceland","352","IS","ISL","Iceland Krona","352","ISK","2","Eyrir","Iceland Krone",".is","1974"],"IN":["India","356","IN","IND","Indian Rupee","356","INR","2","Paise","Indian Rupees",".in","1974"],"ID":["Indonesia","360","ID","IDN","Rupiah","360","IDR","2","Sen","Rupiah",".id","1974"],"IQ":["Iraq","368","IQ","IRQ","Iraqi Dinar","368","IQD","3","Fils","Iraqi Dinars",".iq","1974"],"IL":["Israel","376","IL","ISR","New Israeli Sheqel","376","ILS","2","Agoras","Shekels",".il","1974"],"JM":["Jamaica","388","JM","JAM","Jamaican Dollar","388","JMD","2","Cents","Jamaican Dollars",".jm","1974"],"JP":["Japan","392","JP","JPN","Yen","392","JPY","0","Sen","Yen",".jp","1974"],"JO":["Jordan","400","JO","JOR","Jordanian Dinar","400","JOD","3","Fils","Jordanian Dinars",".jo","1974"],"KZ":["Kazakhstan","398","KZ","KAZ","Tenge","398","KZT","2","Tiyin","Tenge",".kz","1992"],"KE":["Kenya","404","KE","KEN","Kenyan Shilling","404","KES","2","Cents","Kenyan Shillings",".ke","1974"],"KW":["Kuwait","414","KW","KWT","Kuwaiti Dinar","414","KWD","3","Fils","Kuwaiti Dinars",".kw","1974"],"KG":["Kyrgyzstan","417","KG","KGZ","Kyrgyzstan Soma","417","KGS","2","Tyiyn","Som",".kg","1992"],"LA":["Lao Peoples Democratic Repub","418","LA","LAO","Kip","418","LAK","2","Att","Kip",".la","1974"],"LB":["Lebanon","422","LB","LBN","Lebanese Pound","422","LBP","2","Qirsh","Lebanese Pounds",".lb","1974"],"LS":["Lesotho","426","LS","LSO","Loti","426","LSL","2","Lisente","Maloti",".ls","1974"],"LR":["Liberia","430","LR","LBR","Liberian Dollar","430","LRD","2","Cents","Liberian Dollars",".lr","1974"],"LY":["Libyan Arab Jamahiriya","434","LY","LBY","Libyan Dinar","434","LYD","3","Dirhams","Libyan Dinars",".ly","1974"],"MO":["Macao","446","MO","MAC","Pataca","446","MOP","2","Avos","Patacas",".mo","1974"],"MK":["Macedonia","807","MK","MKD","Denar","807","MKD","2","Deni","Macedonian Denari",".mk","1993"],"MG":["Madagascar","450","MG","MDG","Malagasy Ariary","969","MGA","2","Centimes","Madagasc.Ariary",".mg","1974"],"MW":["Malawi","454","MW","MWI","Kwacha","454","MWK","2","Tambala","Malawi Kwacha",".mw","1974"],"MY":["Malaysia","458","MY","MYS","Malaysian Ringgit","458","MYR","2","Sen","Ringgit",".my","1974"],"MV":["Maldives","462","MV","MDV","Rufiyaa","462","MVR","2","Laari","Rufiyaa",".mv","1974"],"MR":["Mauritania","478","MR","MRT","Ouguiya","929","MRU","2","khoums","Ouguiya",".mr","1974"],"MU":["Mauritius","480","MU","MUS","Mauritius Rupee","480","MUR","2","Cents","Mauritian Rupees",".mu","1974"],"MX":["Mexico","484","MX","MEX","Mexican Peso","484","MXN","2","Centavos","Mexican Pesos",".mx","1974"],"MN":["Mongolia","496","MN","MNG","Tugrik","496","MNT","2","Mongo","Tugrik",".mn","1974"],"MA":["Morocco","504","MA","MAR","Moroccan Dirham","504","MAD","2","Centimes","Moroccan Dirhams",".ma","1974"],"MZ":["Mozambique","508","MZ","MOZ","Mozambique Metical","943","MZN","2","Centavos","Meticais",".mz","1974"],"MM":["Myanmar","104","MM","MMR","Kyat","104","MMK","2","Pyas","Kyats",".mm","1989"],"NA":["Namibia","516","NA","NAM","Namibia Dollar","516","NAD","2","Cents","Namibian Dollars",".na","1974"],"NP":["Nepal","524","NP","NPL","Nepalese Rupee","524","NPR","2","Paise","Nepalese Rupees",".np","1974"],"NZ":["New Zealand","554","NZ","NZL","New Zealand Dollar","554","NZD","2","Cents","N.Zeal.Dollars",".nz","1974"],"NI":["Nicaragua","558","NI","NIC","Cordoba Oro","558","NIO","2","Centavos","Cordobas",".ni","1974"],"NG":["Nigeria","566","NG","NGA","Naira","566","NGN","2","Kobo","Naira",".ng","1974"],"NO":["Norway","578","NO","NOR","Norwegian Krone","578","NOK","2","Ore","Norwegian Kroner",".no","1974"],"OM":["Oman","512","OM","OMN","Rial Omani","512","OMR","3","Baisa","Omani Rials",".om","1974"],"PK":["Pakistan","586","PK","PAK","Pakistan Rupee","586","PKR","2","Paise","Pakistani Rupees",".pk","1974"],"PA":["Panama","591","PA","PAN","Balboa","590","PAB","2","Centesimos","Balboas",".pa","1974"],"PG":["Papua New Guinea","598","PG","PNG","Kina","598","PGK","2","Toea","Kina",".pg","1974"],"PY":["Paraguay","600","PY","PRY","Guarani","600","PYG","0","Centimos","Guaranies",".py","1974"],"PE":["Peru","604","PE","PER","Nuevo Sol","604","PEN","2","Centimos","Sols",".pe","1974"],"PH":["Philippines","608","PH","PHL","Philippine Peso","608","PHP","2","Centavos","Philippine Pesos",".ph","1974"],"PL":["Poland","616","PL","POL","Zloty","985","PLN","2","Grosz","Zloty",".pl","1974"],"QA":["Qatar","634","QA","QAT","Qatari Rial","634","QAR","2","Dirhams","Qatari Rials",".qa","1974"],"SS":["Republic of South Sudan","728","SS","SSD","South Sudanese Pound","728","SSP","2","Piasters","South Sudanese Pounds",".ss","2011"],"RO":["Romania","642","RO","ROU","New Romanian Leu","946","RON","2","Bani","Romanian Lei",".ro","1974"],"RU":["Russian Federation","643","RU","RUS","Russian Ruble","643","RUB","2","Kopeyka","Rubles",".ru","1992"],"RW":["Rwanda","646","RW","RWA","Rwanda Franc","646","RWF","0","Centimes","Rwandan Francs",".rw","1974"],"SH":["Saint Helena","654","SH","SHN","Saint Helena Pound","654","SHP","2","Pence","St.Helena Pounds",".sh","1974"],"WS":["Samoa","882","WS","WSM","Tala","882","WST","2","Sene","Tala",".ws","1974"],"ST":["Sao Tome and Principe","678","ST","STP","Dobra","930","STN","2","Centimos","Dobra",".st","1974"],"SA":["Saudi Arabia","682","SA","SAU","Saudi Riyal","682","SAR","2","Halala","Saudi Riyals",".sa","1974"],"RS":["Serbia","688","RS","SRB","Serbian Dinar","941","RSD","2","Paras","Serbian Dinars",".rs","2006"],"SC":["Seychelles","690","SC","SYC","Seychelles Rupee","690","SCR","2","Cents","Seychelles Rupees",".sc","1974"],"SL":["Sierra Leone","694","SL","SLE","Leone","694","SLL","2","Cents","Leones",".sl","1974"],"SG":["Singapore","702","SG","SGP","Singapore Dollar","702","SGD","2","Cents","Singapore Dollars",".sg","1974"],"SB":["Solomon Islands","90","SB","SLB","Solomon Islands dollar","90","SBD","2","Cents","Sol.Isl.Dollars",".sb","1974"],"SO":["Somalia","706","SO","SOM","Somali Shilling","706","SOS","2","Senti","Somalian Shillings",".so","1974"],"ZA":["South Africa","710","ZA","ZAF","Rand","710","ZAR","2","Cents","Rand",".za","1974"],"ES":["Spain","724","ES","ESP","ESA","996","ESA","2","Céntimos","Bolívares Soberanos",".es","1974"],"LK":["Sri Lanka","144","LK","LKA","Sri Lanka Rupee","144","LKR","2","Cents","Lankan Rupee",".lk","1974"],"SD":["Sudan","729","SD","SDN","Sudanese Pound","938","SDG","2","Qirsh (Piastre)","Sudanese Pound",".sd","1974"],"SR":["Suriname","740","SR","SUR","Surinam Dollar","968","SRD","2","Cents","Surinam Dollars",".sr","1974"],"SZ":["Swaziland","748","SZ","SWZ","Lilangeni","748","SZL","2","Cents","Lilangeni",".sz","1974"],"SE":["Sweden","752","SE","SWE","Swedish Krona","752","SEK","2","Ore","Swedish Kronor",".se","1974"],"CH":["Switzerland","756","CH","CHE","Swiss Franc","756","CHF","2","Rappen","Swiss Francs",".ch","1974"],"TW":["Taiwan","158","TW","TWN","New Taiwan Dollar","901","TWD","2","Cents","Taiwan Dollars",".tw","1974"],"TJ":["Tajikistan","762","TJ","TJK","Somoni","972","TJS","2","Diram","Somoni",".tj","1992"],"TH":["Thailand","764","TH","THA","Baht","764","THB","2","Satang","Baht",".th","1974"],"TO":["Tonga","776","TO","TON","PaÃ¢â‚¬â„¢anga","776","TOP","2","Seniti","Paanga",".to","1974"],"TT":["Trinidad and Tobago","780","TT","TTO","Trinidad and Tobago Dollar","780","TTD","2","Cents","Trinidad and Tobago Dollars",".tt","1974"],"TN":["Tunisia","788","TN","TUN","Tunisian Dinar","788","TND","3","Millimes","Tunisian Dinars",".tn","1974"],"TR":["Turkey","792","TR","TUR","Turkish Lira","949","TRY","2","Kurus","Lira",".tr","1974"],"TM":["Turkmenistan","795","TM","TKM","Turkmenistan New Manat","934","TMT","2","Tenge","Manats",".tm","1992"],"UG":["Uganda","800","UG","UGA","Uganda Shilling","800","UGX","0","Cents","Ugandan Shillings",".ug","1974"],"UA":["Ukraine","804","UA","UKR","Hryvnia","980","UAH","2","Kopiyka","Hryvnia",".ua","1974"],"AE":["United Arab Emirates","784","AE","ARE","UAE Dirham","784","AED","2","Fils","UAE Dirhams",".ae","1974"],"GB":["United Kingdom","826","GB","GBR","Pound Sterling","826","GBP","2","Pence","Pounds",".gb(.uk)","1974"],"US":["United States","840","US","USA","US Dollar","840","USD","2","Cents","US Dollars",".us","1974"],"UY":["Uruguay","858","UY","URY","Peso Uruguayo","858","UYU","2","Centesimo","Pesos Uruguayos",".uy","1974"],"UZ":["Uzbekistan","860","UZ","UZB","Uzbekistan Sum","860","UZS","2","Tiyin","Som",".uz","1992"],"VU":["Vanuatu","548","VU","VUT","Vatu","548","VUV","0","","Vatu",".vu","1980"],"VN":["Viet Nam","704","VN","VNM","Dong","704","VND","0","Hao","Dong",".vn","1974"],"YE":["Yemen","887","YE","YE","Yemeni Rial","886","YER","2","Fils","Yemeni Rials",".ye","1974"],"ZM":["Zambia","894","ZM","ZMB","Zambian Kwacha","967","ZMW","2","Ngwee","Zambian Kwacha",".zm","1974"]}
+let conVals = Object.values(codeMap);
+
+
+let bhk = `1.	Singapore		1,999.15 $
+2.	Hong Kong (China)		1,581.82 $
+3.	Switzerland		1,575.35 $
+4.	Ireland		1,451.42 $
+5.	United States		1,449.11 $
+6.	Netherlands		1,182.87 $
+7.	Canada		1,169.53 $
+8.	United Arab Emirates		1,153.09 $
+9.	Australia		1,120.05 $
+10.	United Kingdom		1,088.23 $
+11.	Qatar		994.97 $
+12.	Israel		982.15 $
+13.	New Zealand		888.97 $
+14.	Norway		874.99 $
+15.	Denmark		854.36 $
+16.	Malta		846.60 $
+17.	Portugal		793.07 $
+18.	Cyprus		786.42 $
+19.	Spain		770.20 $
+20.	Belgium		760.65 $
+21.	Austria		748.14 $
+22.	Germany		709.48 $
+23.	Finland		679.26 $
+24.	Sweden		664.89 $
+25.	Kuwait		640.65 $
+26.	Czech Republic		636.41 $
+27.	France		631.04 $
+28.	El Salvador		616.55 $
+29.	Italy		601.17 $
+30.	Poland		595.93 $
+31.	Bahrain		592.29 $
+32.	Armenia		575.36 $
+33.	Costa Rica		544.71 $
+34.	Nigeria		529.28 $
+35.	Cuba		521.80 $
+36.	Slovakia		515.39 $
+37.	Croatia		511.82 $
+38.	Montenegro		491.62 $
+39.	Estonia		471.25 $
+40.	Lithuania		464.28 $
+41.	Mexico		424.97 $
+42.	Greece		416.26 $
+43.	Turkey		412.98 $
+44.	Uruguay		400.90 $
+45.	Japan		392.75 $
+46.	Georgia		391.39 $
+47.	Moldova		386.00 $
+48.	Hungary		382.00 $
+49.	Saudi Arabia		375.98 $
+50.	Serbia		370.31 $
+51.	Chile		369.18 $
+52.	South Africa		367.75 $
+53.	Oman		364.00 $
+54.	Uzbekistan		358.93 $
+55.	Albania		357.58 $
+56.	South Korea		334.97 $
+57.	Bulgaria		334.36 $
+58.	Taiwan		327.25 $
+59.	Romania		326.60 $
+60.	Mauritius		323.88 $
+61.	Latvia		319.19 $
+62.	Kazakhstan		311.61 $
+63.	Argentina		301.69 $
+64.	China		292.78 $
+65.	Colombia		274.90 $
+66.	Ecuador		272.35 $
+67.	Peru		270.43 $
+68.	Thailand		258.98 $
+69.	Belarus		256.66 $
+70.	Palestine		252.96 $
+71.	Malaysia		252.21 $
+72.	Russia		244.12 $
+73.	Ukraine		241.41 $
+74.	Azerbaijan		239.50 $
+75.	Iran		237.79 $
+76.	Vietnam		235.21 $
+77.	Jordan		235.05 $
+78.	Bolivia		234.14 $
+79.	North Macedonia		230.22 $
+80.	Bosnia And Herzegovina		209.25 $
+81.	Iraq		208.89 $
+82.	Brazil		208.59 $
+83.	Venezuela		203.03 $
+84.	Morocco		191.69 $
+85.	Indonesia		174.23 $
+86.	Philippines		167.68 $
+87.	Sri Lanka		139.77 $
+88.	Tunisia		139.24 $
+89.	Kenya		134.34 $
+90.	India		121.70 $
+91.	Algeria		103.78 $
+92.	Libya		98.74 $
+93.	Egypt		91.61 $
+94.	Nepal		77.09 $
+95.	Pakistan		69.05 $
+96.	Bangladesh		49.54 $`
+
+//Rank	Country	Domestic Beer(0.5 liter bottle)
+let beer = `1\tJordan\t4.86
+2\tAustralia\t4.62
+3\tOman\t4.04
+4\tSingapore\t3.94
+5\tNorway\t3.06
+6\tFinland\t3.04
+7\tNew Zealand\t2.99
+8\tPalestine\t2.98
+9\tIreland\t2.93
+10\tCanada\t2.86
+11\tBahrain\t2.84
+12\tIsrael\t2.68
+13\tMalaysia\t2.67
+14\tUnited Kingdom\t2.61
+15\tCosta Rica\t2.37
+16\tUnited Arab Emirates\t2.36
+17\tSwitzerland\t2.32
+18\tFrance\t2.30
+19\tMorocco\t2.27
+20\tNepal\t2.22
+21\tIndonesia\t2.21
+22\tSouth Korea\t2.10
+23\tUruguay\t2.08
+24\tHong Kong (China)\t2.06
+25\tKenya\t2.05
+26\tCuba\t2.03
+27\tJapan\t2.01
+28\tSri Lanka\t1.99
+29\tTurkey\t1.98
+30\tUnited States\t1.90
+31\tIndia\t1.88
+32\tIraq\t1.86
+33\tBolivia\t1.84
+34\tSweden\t1.82
+35\tGreece\t1.80
+36\tEcuador\t1.76
+37\tBelgium\t1.76
+38\tDenmark\t1.75
+39\tThailand\t1.73
+40\tEstonia\t1.68
+41\tCyprus\t1.66
+42\tLatvia\t1.64
+43\tItaly\t1.63
+44\tPeru\t1.63
+45\tMalta\t1.61
+46\tAlgeria\t1.58
+47\tTaiwan\t1.58
+48\tArgentina\t1.56
+49\tEl Salvador\t1.55
+50\tMauritius\t1.52
+51\tLithuania\t1.50
+52\tMexico\t1.45
+53\tCroatia\t1.44
+54\tAlbania\t1.40
+55\tChile\t1.39
+56\tNetherlands\t1.37
+57\tArmenia\t1.36
+58\tSouth Africa\t1.35
+59\tAzerbaijan\t1.34
+60\tAustria\t1.33
+61\tGeorgia\t1.33
+62\tVenezuela\t1.25
+63\tEgypt\t1.24
+64\tPortugal\t1.19
+65\tTunisia\t1.18
+66\tMoldova\t1.15
+67\tUzbekistan\t1.15
+68\tSpain\t1.15
+69\tPhilippines\t1.14
+70\tBrazil\t1.08
+71\tPoland\t1.05
+72\tMontenegro\t1.05
+73\tRomania\t1.03
+74\tNorth Macedonia\t0.99
+75\tSlovakia\t0.99
+76\tBulgaria\t0.98
+77\tColombia\t0.97
+78\tHungary\t0.97
+79\tGermany\t0.96
+80\tKazakhstan\t0.87
+81\tBelarus\t0.87
+82\tNigeria\t0.87
+83\tBosnia And Herzegovina\t0.86
+84\tCzech Republic\t0.86
+85\tVietnam\t0.83
+86\tChina\t0.81
+87\tUkraine\t0.80
+88\tSerbia\t0.75
+89\tRussia\t0.71
+90\tIran\t-
+91\tLibya\t-
+92\tSaudi Arabia\t-
+93\tPakistan\t-
+94\tQatar\t-
+95\tKuwait\t-
+96\tBangladesh\t-`
+
+let bread = `1.\tSwitzerland\t\t3.67 $
+2.\tUnited States\t\t3.61 $
+3.\tDenmark\t\t3.15 $
+4.\tCosta Rica\t\t3.08 $
+5.\tNorway\t\t3.00 $
+6.\tSouth Korea\t\t2.96 $
+7.\tAustria\t\t2.71 $
+8.\tSweden\t\t2.65 $
+9.\tIsrael\t\t2.63 $
+10.\tCanada\t\t2.60 $
+11.\tFinland\t\t2.58 $
+12.\tUruguay\t\t2.48 $
+13.\tMexico\t\t2.41 $
+14.\tAustralia\t\t2.40 $
+15.\tPeru\t\t2.31 $
+16.\tHong Kong (China)\t\t2.30 $
+17.\tBelgium\t\t2.19 $
+18.\tSingapore\t\t2.14 $
+19.\tItaly\t\t2.11 $
+20.\tEl Salvador\t\t2.02 $
+21.\tGermany\t\t2.01 $
+22.\tArgentina\t\t1.91 $
+23.\tIreland\t\t1.91 $
+24.\tFrance\t\t1.90 $
+25.\tNew Zealand\t\t1.87 $
+26.\tNetherlands\t\t1.85 $
+27.\tTaiwan\t\t1.85 $
+28.\tVenezuela\t\t1.84 $
+29.\tCyprus\t\t1.82 $
+30.\tChina\t\t1.64 $
+31.\tEcuador\t\t1.63 $
+32.\tUnited Kingdom\t\t1.58 $
+33.\tLithuania\t\t1.57 $
+34.\tQatar\t\t1.56 $
+35.\tJapan\t\t1.50 $
+36.\tBahrain\t\t1.48 $
+37.\tChile\t\t1.48 $
+38.\tLatvia\t\t1.47 $
+39.\tSlovakia\t\t1.46 $
+40.\tCroatia\t\t1.45 $
+41.\tPortugal\t\t1.43 $
+42.\tCzech Republic\t\t1.39 $
+43.\tSpain\t\t1.38 $
+44.\tBrazil\t\t1.37 $
+45.\tUnited Arab Emirates\t\t1.36 $
+46.\tHungary\t\t1.35 $
+47.\tThailand\t\t1.35 $
+48.\tGreece\t\t1.35 $
+49.\tNigeria\t\t1.34 $
+50.\tColombia\t\t1.32 $
+51.\tEstonia\t\t1.25 $
+52.\tPhilippines\t\t1.22 $
+53.\tMalta\t\t1.21 $
+54.\tBolivia\t\t1.21 $
+55.\tPoland\t\t1.21 $
+56.\tCuba\t\t1.20 $
+57.\tIndonesia\t\t1.19 $
+58.\tOman\t\t1.15 $
+59.\tRomania\t\t1.13 $
+60.\tKuwait\t\t1.10 $
+61.\tSaudi Arabia\t\t1.03 $
+62.\tBulgaria\t\t0.99 $
+63.\tBosnia And Herzegovina\t\t0.99 $
+64.\tSouth Africa\t\t0.99 $
+65.\tTurkey\t\t0.98 $
+66.\tVietnam\t\t0.96 $
+67.\tPalestine\t\t0.94 $
+68.\tAlbania\t\t0.92 $
+69.\tMontenegro\t\t0.91 $
+70.\tMalaysia\t\t0.89 $
+71.\tIraq\t\t0.84 $
+72.\tArmenia\t\t0.82 $
+73.\tSerbia\t\t0.76 $
+74.\tMauritius\t\t0.71 $
+75.\tNorth Macedonia\t\t0.68 $
+76.\tUkraine\t\t0.63 $
+77.\tEgypt\t\t0.62 $
+78.\tBangladesh\t\t0.61 $
+79.\tSri Lanka\t\t0.61 $
+80.\tPakistan\t\t0.60 $
+81.\tGeorgia\t\t0.59 $
+82.\tBelarus\t\t0.56 $
+83.\tKenya\t\t0.53 $
+84.\tIran\t\t0.51 $
+85.\tMoldova\t\t0.51 $
+86.\tJordan\t\t0.50 $
+87.\tIndia\t\t0.50 $
+88.\tNepal\t\t0.50 $
+89.\tRussia\t\t0.47 $
+90.\tUzbekistan\t\t0.47 $
+91.\tMorocco\t\t0.47 $
+92.\tKazakhstan\t\t0.47 $
+93.\tAzerbaijan\t\t0.43 $
+94.\tLibya\t\t0.30 $
+95.\tTunisia\t\t0.16 $
+96.\tAlgeria\t\t0.14 $`
+
+
+// countries of the workd by osm overpass https://overpass-turbo.eu/s/vVb
+let dataOsm3166 = `relation,9407,boundary,administrative,administrative,AD,Andorra,Andorra,
+relation,11980,land_area,,administrative,FR,France (land mass),France (terres),
+relation,14296,boundary,administrative,administrative,SK,Slovakia,Slovensko,
+relation,16239,boundary,administrative,administrative,AT,Austria,Österreich,
+relation,21335,boundary,administrative,administrative,HU,Hungary,Magyarország,
+relation,28699,boundary,administrative,,GE,Georgia,საქართველო,
+relation,36989,boundary,administrative,administrative,VA,Vatican City,Civitas Vaticana - Città del Vaticano,
+relation,36990,land_area,land_area,administrative,MC,Monaco,Monaco,
+relation,49715,boundary,administrative,,PL,Poland,Polska,
+relation,49898,boundary,administrative,,KH,Cambodia,ព្រះរាជាណាចក្រ​កម្ពុជា,
+relation,49903,boundary,administrative,,LA,Laos,ປະເທດລາວ,
+relation,49915,boundary,administrative,,VN,Vietnam,Việt Nam,
+relation,50046,boundary,administrative,,DK,Denmark,Danmark,
+relation,50371,boundary,administrative,,MM,Myanmar,မြန်မာ,
+relation,51477,boundary,administrative,,DE,Germany,Deutschland,
+relation,51684,boundary,administrative,administrative,CZ,Czechia,Česko,
+relation,51701,boundary,administrative,administrative,CH,Switzerland,Schweiz/Suisse/Svizzera/Svizra,
+relation,52411,boundary,administrative,,BE,Belgium,België / Belgique / Belgien,
+relation,52822,boundary,administrative,,SE,Sweden,Sverige,
+relation,52939,boundary,administrative,,FO,Faroe Islands,Føroyar,
+relation,53292,boundary,administrative,,AL,Albania,Shqipëria,
+relation,53293,boundary,administrative,,MK,North Macedonia,Северна Македонија,
+relation,53296,boundary,administrative,,ME,Montenegro,Crna Gora / Црна Гора,
+relation,54224,boundary,administrative,,FI,Finland,Suomi / Finland,
+relation,54624,boundary,administrative,administrative,SM,San Marino,San Marino,
+relation,58974,boundary,administrative,administrative,MD,Moldova,Moldova,
+relation,59065,boundary,administrative,,BY,Belarus,Беларусь,
+relation,59470,boundary,administrative,,BR,Brazil,Brasil,
+relation,60189,boundary,administrative,,RU,Russia,Россия,
+relation,60199,boundary,administrative,,UA,Ukraine,Україна,
+relation,62149,boundary,administrative,,GB,United Kingdom,United Kingdom,
+relation,62269,boundary,administrative,,IM,Isle of Man,Isle of Man,
+relation,62273,boundary,administrative,,IE,Ireland,Éire / Ireland,
+relation,62781,land_area,land_area,administrative,,Federal Republic of Germany (land mass),Deutschland (Landmasse),
+relation,72594,boundary,administrative,,LV,Latvia,Latvija,
+relation,72596,boundary,administrative,,LT,Lithuania,Lietuva,
+relation,79510,boundary,administrative,,EE,Estonia,Eesti,
+relation,80500,boundary,administrative,,AU,Australia,Australia,
+relation,87565,boundary,administrative,,ZA,South Africa,South Africa,
+relation,88210,boundary,administrative,administrative,SZ,Eswatini,Eswatini,
+relation,90689,boundary,administrative,,RO,Romania,România,
+relation,108089,boundary,administrative,,EC,Ecuador,Ecuador,
+relation,114686,boundary,administrative,,MX,Mexico,México,
+relation,120027,boundary,administrative,,CO,Colombia,Colombia,
+relation,148838,boundary,administrative,,US,United States,United States,
+relation,161033,boundary,administrative,administrative,MN,Mongolia,Монгол улс ᠮᠤᠩᠭᠤᠯ ᠤᠯᠤᠰ,
+relation,167454,boundary,administrative,,CL,Chile,Chile,
+relation,171496,boundary,administrative,,RW,Rwanda,Rwanda,
+relation,174737,boundary,administrative,,TR,Turkey,Türkiye,
+relation,178009,boundary,administrative,,KG,Kyrgyzstan,Кыргызстан,
+relation,184629,boundary,administrative,,BT,Bhutan,འབྲུགཡུལ་,
+relation,184633,boundary,administrative,,NP,Nepal,नेपाल,
+relation,184640,boundary,administrative,,BD,Bangladesh,বাংলাদেশ,
+relation,184818,boundary,administrative,,JO,Jordan,الأردن,
+relation,184840,boundary,administrative,,SY,Syria,سوريا,
+relation,184843,boundary,administrative,,LB,Lebanon,لبنان,
+relation,186382,boundary,administrative,,BG,Bulgaria,България,
+relation,192307,boundary,administrative,,GR,Greece,Ελλάς,
+relation,192734,boundary,administrative,,KP,North Korea,조선민주주의인민공화국,
+relation,192756,boundary,administrative,,DZ,Algeria,Algérie ⵍⵣⵣⴰⵢⴻⵔ الجزائر,
+relation,192757,boundary,administrative,,TN,Tunisia,تونس,
+relation,192758,boundary,administrative,,LY,Libya,ليبيا,
+relation,192763,boundary,administrative,,MR,Mauritania,موريتانيا,
+relation,192774,boundary,administrative,,GM,The Gambia,Gambia,
+relation,192775,boundary,administrative,,SN,Senegal,Sénégal,
+relation,192776,boundary,administrative,,GW,Guinea-Bissau,Guiné-Bissau,
+relation,192777,boundary,administrative,,SL,Sierra Leone,Sierra Leone,
+relation,192778,boundary,administrative,,GN,Guinea,Guinée,
+relation,192779,boundary,administrative,,CI,Côte d'Ivoire,Côte d’Ivoire,
+relation,192780,boundary,administrative,,LR,Liberia,Liberia,
+relation,192781,boundary,administrative,,GH,Ghana,Ghana,
+relation,192782,boundary,administrative,,TG,Togo,Togo,
+relation,192783,boundary,administrative,,BF,Burkina Faso,Burkina Faso,
+relation,192784,boundary,administrative,,BJ,Benin,Bénin,
+relation,192785,boundary,administrative,,ML,Mali,Mali,
+relation,192786,boundary,administrative,,NE,Niger,Niger,
+relation,192787,boundary,administrative,,NG,Nigeria,Nigeria,
+relation,192789,boundary,administrative,,SD,Sudan,السودان,
+relation,192790,boundary,administrative,,CF,Central African Republic,Ködörösêse tî Bêafrîka / République centrafricaine,
+relation,192791,boundary,administrative,,GQ,Equatorial Guinea,Guinea Ecuatorial,
+relation,192793,boundary,administrative,,GA,Gabon,Gabon,
+relation,192794,boundary,administrative,,CG,Congo-Brazzaville,Congo,
+relation,192795,boundary,administrative,,CD,Democratic Republic of the Congo,République démocratique du Congo,
+relation,192796,boundary,administrative,,UG,Uganda,Uganda,
+relation,192798,boundary,administrative,,KE,Kenya,Kenya,
+relation,192799,boundary,administrative,,SO,Somalia,Soomaaliya الصومال,
+relation,192800,boundary,administrative,,ET,Ethiopia,ኢትዮጵያ,
+relation,192801,boundary,administrative,,DJ,Djibouti,Djibouti جيبوتي,
+relation,192830,boundary,administrative,,CM,Cameroon,Cameroun,
+relation,195266,boundary,administrative,,NA,Namibia,Namibia,
+relation,195267,boundary,administrative,,AO,Angola,Angola,
+relation,195269,boundary,administrative,,BI,Burundi,Burundi,
+relation,195270,boundary,administrative,,TZ,Tanzania,Tanzania,
+relation,195271,boundary,administrative,,ZM,Zambia,Zambia,
+relation,195272,boundary,administrative,,ZW,Zimbabwe,Zimbabwe,
+relation,195273,boundary,administrative,,MZ,Mozambique,Moçambique,
+relation,195290,boundary,administrative,,MW,Malawi,Malawi,
+relation,196240,boundary,administrative,,UZ,Uzbekistan,Oʻzbekiston,
+relation,214626,boundary,administrative,administrative,TJ,Tajikistan,Тоҷикистон,
+relation,214665,boundary,administrative,,KZ,Kazakhstan,Қазақстан,
+relation,214885,boundary,administrative,,HR,Croatia,Hrvatska,
+relation,218657,boundary,administrative,,SI,Slovenia,Slovenija,
+relation,223026,boundary,administrative,,TM,Turkmenistan,Türkmenistan,
+relation,252645,boundary,administrative,,BO,Bolivia,Bolivia,
+relation,270009,boundary,administrative,,GG,Guernsey,Guernsey,
+relation,270056,boundary,administrative,,CN,China,中国,
+relation,272644,boundary,administrative,,VE,Venezuela,Venezuela,
+relation,285454,boundary,administrative,,VG,British Virgin Islands,British Virgin Islands,
+relation,286393,boundary,administrative,,AR,Argentina,Argentina,
+relation,287072,boundary,administrative,,UY,Uruguay,Uruguay,
+relation,287077,boundary,administrative,,PY,Paraguay,Paraguay / Paraguái,
+relation,287082,boundary,administrative,,SR,Suriname,Suriname,
+relation,287083,boundary,administrative,,GY,Guyana,Guyana,
+relation,287666,boundary,administrative,,NI,Nicaragua,Nicaragua,
+relation,287667,boundary,administrative,,CR,Costa Rica,Costa Rica,
+relation,287668,boundary,administrative,,PA,Panama,Panamá,
+relation,287670,boundary,administrative,,HN,Honduras,Honduras,
+relation,287827,boundary,administrative,,BZ,Belize,Belize,
+relation,288247,boundary,administrative,,PE,Peru,Perú,
+relation,295480,boundary,administrative,,PT,Portugal,Portugal,
+relation,296961,boundary,administrative,,ER,Eritrea,ኤርትራ Eritrea إرتريا,
+relation,299133,boundary,administrative,,IS,Iceland,Ísland,
+relation,303427,boundary,administrative,,AF,Afghanistan,افغانستان,
+relation,304716,boundary,administrative,,IN,India,India,
+relation,304751,boundary,administrative,,ID,Indonesia,Indonesia,
+relation,304934,boundary,administrative,,IQ,Iraq,العراق,
+relation,304938,boundary,administrative,,IR,Iran,ایران,
+relation,305092,boundary,administrative,,YE,Yemen,اليمن,
+relation,305095,boundary,administrative,,QA,Qatar,قطر,
+relation,305099,boundary,administrative,,KW,Kuwait,الكويت,
+relation,305138,boundary,administrative,,OM,Oman,عمان,
+relation,305142,boundary,administrative,,TL,East Timor,Timor-Leste,
+relation,307573,boundary,administrative,,PK,Pakistan,پاکستان,
+relation,307584,boundary,administrative,,SA,Saudi Arabia,السعودية,
+relation,307756,boundary,administrative,,KR,South Korea,대한민국,
+relation,307763,boundary,administrative,,AE,United Arab Emirates,الإمارات العربية المتحدة,
+relation,307787,boundary,administrative,,CY,Cyprus,Κύπρος - Kıbrıs,
+relation,307823,boundary,administrative,,DM,Dominica,Dominica,
+relation,307828,boundary,administrative,,DO,Dominican Republic,República Dominicana,
+relation,307829,boundary,administrative,,HT,Haiti,Ayiti,
+relation,307833,boundary,administrative,,CU,Cuba,Cuba,
+relation,307866,boundary,administrative,,PG,Papua New Guinea,Papua Niugini,
+relation,364066,boundary,administrative,administrative,AM,Armenia,Հայաստան,
+relation,364110,boundary,administrative,administrative,AZ,Azerbaijan,Azərbaycan,
+relation,365307,boundary,administrative,,MT,Malta,Malta,
+relation,365331,boundary,administrative,,IT,Italy,Italia,
+relation,367988,boundary,administrative,,JE,Jersey,Jersey,
+relation,378734,boundary,administrative,,BH,Bahrain,البحرين,
+relation,382313,boundary,administrative,,JP,Japan,日本,
+relation,443174,boundary,administrative,,PH,Philippines,Pilipinas,
+relation,447325,boundary,administrative,,MG,Madagascar,Madagasikara / Madagascar,
+relation,449220,boundary,administrative,,TW,Taiwan,臺灣,
+relation,535774,boundary,administrative,,CV,Cape Verde,Cabo Verde,
+relation,535790,boundary,administrative,,KM,Comoros,Comores Komori جزر القمر,
+relation,535828,boundary,administrative,,MU,Mauritius,Mauritius / Maurice,
+relation,535880,boundary,administrative,,ST,São Tomé and Príncipe,São Tomé e Príncipe,
+relation,536765,boundary,administrative,,SC,Seychelles,Sesel,
+relation,536773,boundary,administrative,,MV,Maldives,ދިވެހިރާއްޖެ,
+relation,536780,boundary,administrative,,SG,Singapore,Singapore,
+relation,536807,boundary,administrative,,LK,Sri Lanka,Sri Lanka,
+relation,536899,boundary,administrative,,KN,Saint Kitts and Nevis,Saint Kitts and Nevis,
+relation,536900,boundary,administrative,,AG,Antigua and Barbuda,Antigua and Barbuda,
+relation,537257,boundary,administrative,,MS,Montserrat,Montserrat,
+relation,547469,boundary,administrative,,BS,Bahamas,The Bahamas,
+relation,547479,boundary,administrative,,TC,Turks and Caicos Islands,Turks and Caicos Islands,
+relation,547511,boundary,administrative,,BB,Barbados,Barbados,
+relation,550725,boundary,administrative,,VC,Saint Vincent and the Grenadines,Saint Vincent and the Grenadines,
+relation,550727,boundary,administrative,,GD,Grenada,Grenada,
+relation,550728,boundary,administrative,,LC,Saint Lucia,Saint Lucia,
+relation,555017,boundary,administrative,,JM,Jamaica,Jamaica,
+relation,555717,boundary,administrative,,TT,Trinidad and Tobago,Trinidad and Tobago,
+relation,556706,boundary,administrative,,NZ,New Zealand,New Zealand / Aotearoa,
+relation,571178,boundary,administrative,,KI,Kiribati,Kiribati,
+relation,571747,boundary,administrative,,FJ,Fiji,Viti,
+relation,571771,boundary,administrative,,MH,Marshall Islands,Ṃajeḷ,
+relation,571802,boundary,administrative,,FM,Federated States of Micronesia,Micronesia,
+relation,571804,boundary,administrative,,NR,Nauru,Naoero,
+relation,571805,boundary,administrative,,PW,Palau,Belau,
+relation,1124039,boundary,administrative,,MC,Monaco,Monaco,
+relation,1155955,boundary,administrative,administrative,LI,Liechtenstein,Liechtenstein,
+relation,1252792,land_area,land_area,administrative,ZA,South Africa (land mass),South Africa (land mass),
+relation,1278736,boundary,administrative,,GI,Gibraltar,Gibraltar,
+relation,1311341,boundary,administrative,,ES,Spain,España,
+relation,1428125,boundary,administrative,,CA,Canada,Canada,
+relation,1473946,boundary,administrative,,IL,Israel,ישראל,
+relation,1473947,boundary,administrative,,EG,Egypt,مصر,
+relation,1520612,boundary,administrative,,SV,El Salvador,El Salvador,
+relation,1521463,boundary,administrative,,GT,Guatemala,Guatemala,
+relation,1558556,boundary,administrative,,NU,Niue,Niuē,
+relation,1656678,boundary,administrative,,SS,South Sudan,South Sudan جنوب السودان,
+relation,1711283,land_area,land_area,administrative,JE,Jersey (land mass),Jersey (land mass),
+relation,1741311,boundary,administrative,administrative,RS,Serbia,Србија,
+relation,1857436,boundary,administrative,,SB,Solomon Islands,Solomon Islands,
+relation,1872673,boundary,administrative,,WS,Samoa,Sāmoa,
+relation,1889339,boundary,administrative,,BW,Botswana,Botswana,
+relation,1964272,boundary,administrative,,SH,"Saint Helena, Ascension and Tristan da Cunha","Saint Helena, Ascension and Tristan da Cunha",
+relation,1983628,boundary,administrative,,GS,South Georgia and the South Sandwich Islands,South Georgia and the South Sandwich Islands,
+relation,1993208,boundary,administrative,,BM,Bermuda,Bermuda,
+relation,1993867,boundary,administrative,,IO,British Indian Ocean Territory,British Indian Ocean Territory,
+relation,2067731,boundary,administrative,,TH,Thailand,ประเทศไทย,
+relation,2088990,boundary,administrative,,XK,Kosovo,Kosova / Kosovo,
+relation,2093234,boundary,administrative,administrative,LS,Lesotho,Lesotho,
+relation,2103120,boundary,administrative,,BN,Brunei,Brunei,
+relation,2108121,boundary,administrative,,MY,Malaysia,Malaysia,
+relation,2171347,boundary,administrative,administrative,LU,Luxembourg,Lëtzebuerg,
+relation,2177161,boundary,administrative,,AI,Anguilla,Anguilla,
+relation,2177246,boundary,administrative,,VU,Vanuatu,Vanuatu,
+relation,2177266,boundary,administrative,,TV,Tuvalu,Tuvalu,
+relation,2184073,boundary,administrative,,GL,Greenland,Kalaallit Nunaat,
+relation,2184233,boundary,administrative,,CK,Cook Islands,Kūki ʻĀirani,
+relation,2185366,boundary,administrative,,KY,Cayman Islands,Cayman Islands,
+relation,2185374,boundary,administrative,,FK,Falkland Islands,Falkland Islands,
+relation,2185375,boundary,administrative,,PN,Pitcairn Islands,Pitcairn Islands,
+relation,2186600,boundary,administrative,,TK,Tokelau,Tokelau,
+relation,2186665,boundary,administrative,,TO,Tonga,Tonga,
+relation,2202162,boundary,administrative,,FR,France,France,
+relation,2323309,boundary,administrative,,NL,Netherlands,Nederland,
+relation,2361304,boundary,administrative,,TD,Chad,Tchad تشاد,
+relation,2528142,boundary,administrative,,BA,Bosnia and Herzegovina,Bosna i Hercegovina / Босна и Херцеговина,
+relation,2978650,boundary,administrative,,NO,Norway,Norge,
+relation,3263728,boundary,administrative,,,Akrotiri and Dhekelia,Akrotiri and Dhekelia,
+relation,3630439,boundary,administrative,,MA,Morocco,Maroc ⵍⵎⵖⵔⵉⴱ المغرب,
+relation,3832630,land_area,land_area,administrative,QA,Qatar (Land mass),قطر (الكتلة الأرضية),
+relation,4452839,land_area,,administrative,RU,Russia (land mass),Российская Федерация (суша),
+relation,4474651,land_area,land_area,administrative,LT,Lithuania (land mass),Lietuva (sausuma),
+relation,5441968,boundary,administrative,,,Sahrawi Arab Democratic Republic,República Árabe Saharaui Democrática الجمهورية العربية الصحراوية الديمقراطية,
+relation,6571872,land_area,land_area,administrative,GG,Guernsey (land mass),Guernsey (land mass),
+relation,17893356,boundary,administrative,,,,,
+relation,17893357,boundary,administrative,,,,Isla Tres Cruces,
+relation,17893358,boundary,administrative,,,,Isla Bassi,
+relation,17893359,boundary,administrative,,,,Isla Filomena Grande,
+relation,17894046,boundary,administrative,,,,Isla Verde,`
+beer2 = beer.split("\n")
+beer3 = beer2.map(b => {
+    let a = b.split("\t")
+    return [parseInt(a[0]), a[1], parseFloat(a[2])]
+})
+
+console.log(beer3);
+
+
+bhk2 = bhk.split("\n");
+bhk3 = bhk2.map(b => {
+    // let a = b.split("\t");
+    let a = b.split(/\s+/);
+
+    return [parseInt(a[0]), a[1], parseFloat(a[2])];
+})
+console.log(bhk3);
+
+
+bread2 = bread.split("\n");
+bread3 = bread2.map(b => {
+    let a = b.split("\t");
+    return [parseInt(a[0]), a[1], parseFloat(a[3])];
+})
+console.log(bread3);
+
+// let bbb =
+
+//todo
+
+let keymap = [
+    ...bread3.map(b => b[1]),
+    ...beer3.map(b => b[1]),
+    ...bhk3.map(b => b[1])
+
+]
+
+
+let keys = Array.from(new Set(keymap));
+
+console.log(keys.length);
+
+
+var results = []; // Array to store matching entries
+
+keys.forEach(k => {
+    let found = data.find(entry => {
+        if (entry.country_name.toLowerCase().includes(k.toLowerCase())) {
+            return true
+        }
+        return false
+
+
+    });
+    if (!found) {
+        results.push([k, null]); // Add matching entry to results
+    } else {
+        results.push([k, found]); // Add matching entry to results
+    }
+});
+
+// keys.forEach(k => {
+//     let found = conVals.find(entry => {
+//         if (entry[0].toLowerCase().includes(k.toLowerCase())) {
+//             return true
+//         }
+//         return false
+//
+//
+//     });
+//     if (!found) {
+//         results.push([k, null]); // Add matching entry to results
+//     } else {
+//         results.push([k, found]); // Add matching entry to results
+//     }
+// });
+
+
+results.forEach(r=>{
+    if(r[1] == null) console.log(r[0])
+})
+
+
+// let refed = results.filter(r=>r[1]!=null);
+
+var refMap = Object.fromEntries(results);
+
+var bbb = {
+    bread: bread3,
+    beer: beer3,
+    bhk: bhk3,
+
+    refMap,
+    keys,
+}
+
+
+let key = "Canada"
+function bbbLookup(key) {
+    let ret = {
+        bread: bbb.bread.find(b=>b[1]==key),
+        beer:   bbb.beer.find(b=>b[1]==key),
+        bhk:     bbb.bhk.find(b=>b[1]==key),
+        ref: bbb.refMap[key]
+    }
+    return ret;
+}
+
+console.log(bbbLookup("Canada"))
+
+//console.log(results); // Output the results
+
+
+
+
+
+
+
+
+
