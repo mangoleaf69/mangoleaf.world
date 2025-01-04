@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exchange Rate Matrix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            width: 50px;
+            height: 50px;
+        }
+
+        th {
+            background-color: #fae420;
+            color: #333;
+            position: sticky;
+            z-index: 2;
+        }
+
+        th:first-child {
+            left: 0;
+            z-index: 3;
+        }
+
+        th:not(:first-child),
+        td {
+            position: relative;
+        }
+
+        .highlight-row {
+            background-color: #fff7c1;
+        }
+
+        .highlight-column {
+            background-color: #fff7c1;
+        }
+
+        .highlight-cell {
+            background-color: #fae420;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        select, input {
+            padding: 5px;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>Exchange Rate Matrix</h1>
+
+<div class="controls">
+    <label for="fromRate">From: </label>
+    <input list="rates" id="fromRate" name="fromRate">
+    <label for="toRate">To: </label>
+    <input list="rates" id="toRate" name="toRate">
+    <datalist id="rates"></datalist>
+</div>
+
+<div class="table-container">
+    <table id="rateTable"></table>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const x = params.get('x') || '';
+    const y = params.get('y') || '';
+
+    const rateTable = document.getElementById('rateTable');
+    const rateList = document.getElementById('rates');
+    const fromRate = document.getElementById('fromRate');
+    const toRate = document.getElementById('toRate');
+
+    fromRate.value = x;
+    toRate.value = y;
+
+    async function loadMatrix() {
+        try {
+            const response = await fetch('./rates/matrix.json');
+            const matrix = await response.json();
+
+            // Populate datalist
+            Object.keys(matrix).forEach((key) => {
+                const option = document.createElement('option');
+                option.value = key;
+                rateList.appendChild(option);
+            });
+
+            // Render table
+            renderTable(matrix, x, y);
+
+            // Add onchange events
+            fromRate.addEventListener('change', () => updateTable(matrix));
+            toRate.addEventListener('change', () => updateTable(matrix));
+        } catch (error) {
+            console.error('Error loading matrix:', error);
+        }
+    }
+
+    function renderTable(matrix, highlightX, highlightY) {
+        rateTable.innerHTML = ''; // Clear existing table
+        const keys = Object.keys(matrix);
+        const tableHeader = document.createElement('tr');
+        tableHeader.innerHTML = `<th></th>` + keys.map((key) => `<th>${key}</th>`).join('');
+        rateTable.appendChild(tableHeader);
+
+        keys.forEach((rowKey) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<th>${rowKey}</th>` + keys.map((colKey) => {
+                const value = matrix[rowKey][colKey]?.toFixed(2) || '-';
+                const isHighlightRow = rowKey === highlightX;
+                const isHighlightColumn = colKey === highlightY;
+                const isHighlightCell = rowKey === highlightX && colKey === highlightY;
+
+                return `<td class="${isHighlightCell ? 'highlight-cell' : isHighlightRow ? 'highlight-row' : isHighlightColumn ? 'highlight-column' : ''}">${value}</td>`;
+            }).join('');
+            rateTable.appendChild(row);
+        });
+
+        // Scroll to highlighted cell
+        if (highlightX && highlightY) {
+            const cell = rateTable.querySelector(`td.highlight-cell`);
+            if (cell) {
+                cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+            }
+        }
+    }
+
+    function updateTable(matrix) {
+        const fromValue = fromRate.value.toUpperCase();
+        const toValue = toRate.value.toUpperCase();
+        renderTable(matrix, fromValue, toValue);
+
+        // Update URL parameters
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('x', fromValue);
+        newUrl.searchParams.set('y', toValue);
+        window.history.pushState({}, '', newUrl);
+    }
+
+    loadMatrix();
+</script>
+</body>
+</html>
