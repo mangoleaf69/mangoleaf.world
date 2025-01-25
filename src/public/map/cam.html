@@ -15,6 +15,7 @@
     <meta name="msapplication-TileColor" content="#fae420">
     <meta name="msapplication-config" content="../img/icon/browserconfig.xml">
     <meta name="theme-color" content="#fae420">
+
 </head>
 <body>
 
@@ -150,7 +151,7 @@
         display: inline-block;
         font-size: 16px;
         cursor: pointer;
-        border-radius: 4px;
+        border-radius: 8px;
         box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.3); /* Inset shadow */
         transition: box-shadow 0.3s ease; /* Smooth transition */
     }
@@ -234,8 +235,6 @@
 
 </style>
 
-<!--<h1>Webcam Image Capture</h1>-->
-
 
 <div class="my-camera">
     <div class="inset-shadow-video">
@@ -288,7 +287,8 @@
         height: 100%;
         overflow: auto;
         background: #ddda;
-        padding: 0px;
+        padding: 0.5em;
+        /*margin: 0.5em;*/
     }
 
     .hidden {
@@ -314,12 +314,14 @@
         width: 95%;
         height: auto;
         /*scrol: 50px;*/
+        margin: 0.5em;
     }
 
     #gal_img_list li {
         width: 90px;
         display: inline-block;
         max-height: 250px;
+        margin-left: 0.5em;
 
     }
 
@@ -340,13 +342,14 @@
         width: 40%;
         /*margin: 5%;*/
         font-weight: bolder;
-        background: #222;
+        background: #333;
         color: #ddd;
         padding: 5px;
         border-radius: 3px;
         font-size: larger;
         padding-top: 16px;
         padding-bottom: 16px;
+        margin: 0.5em;
 
 
     }
@@ -390,24 +393,26 @@
 </style>
 
 <div id="gal" class="hidden">
-    <div id="selected_img">
-        <!--    <img src=”img1.jpg” alt="My Home">-->
-    </div>
+    <div id="selected_img" style="max-height: 70%; overflow: auto">
+        <img id="galDefaultImg"
+             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAHBJREFUaIHtz7ENwCAAA0GTuVgG BgvLsFfSkxSI6ou/0pKLL0/Sc6jfqes2Wubm+fPNaHvfH9fpkcYQGkNoDKExhMYQGkNoDKExhMYQ GkNoDKExhMYQGkNoDKExhMYQGkNoDKExhMYQGkNoDKExhOYFHEwHxU/r6DgAAAAASUVORK5CYII="
+             alt="Default Image">    </div>
     <ul id="gal_img_list">
         <!--    <li><img src=”img2.jpg” alt=”My Home”></li>-->
         <!-- Here we later dynamicaly add the taken images-->
     </ul>
 
     <div id="gal-tools">
-        <button id="gal-back" class="inset-shadow-button" title="Return to camera."><- Back</button>
-        <button id="gal-upload" class="inset-shadow-button" title="Send file to cloud storage for public access.">Upload
-            Selected!
-        </button>
-        <button id="gal-map" class="inset-shadow-button" onclick="toggleMap()" title="Open the world map."> TO MAP!
-        </button>
+        <button id="gal-back" class="inset-shadow-button" title="Go back to the camera to take more photos.">Camera📷</button>
+        <button id="gal-upload" class="inset-shadow-button" title="Upload your selected photo to the map.">Upload💾</button>
+        <button id="gal-map" class="inset-shadow-button" onclick="toggleMap()" title="Open the map to explore the world.">Map🗺️</button>
 
         <ul id="gal-uploads"></ul>
     </div>
+
+    <p><i><b>Select</b> a photo by tapping. <b>Upload</b> it, then view your epic moment on the <b>map</b>!</i>
+<!--        <br> MangoLeaf World; Share your World!-->
+    </p>
 </div>
 
 

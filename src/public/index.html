@@ -22,7 +22,7 @@
 
 
         :root {
-            --dark: #111;
+            --dark: #333;
             --light: #eee;
             --grey: #888;
         }
@@ -63,6 +63,13 @@
         body {
 
             background: black;
+        }
+
+        footer {
+              text-align: center;     /* Centers text within each flex item */
+            /*justify-content: center; !* Centers horizontally *!*/
+            /*align-items: center;*/
+            /*align-content: center;*/
         }
 
     </style>
@@ -124,8 +131,12 @@
 
 </div>
 
-<footer>#mangoleafworld #web #map #cam #lit #moments #travel #share</footer>
-
+<footer >
+    <p>&copy; 2025 Mango Leaf World. <b>Share your world!</b>  <i>( Alpha Product MVP )</i></p>
+    <p>Please submit feedback to <a href="mailto:mangoleafworld@gmail.com">mangoleafworld@gmail.com</a>.</p>
+    <p>We hope you have a wonderful day!</p>
+</footer><!--<footer>#mangoleafworld #web #map #cam #lit #moments #travel #share</footer>-->
+<hr>
 <!--Scripts n stuff-->
 <!--<script src="https://bsjs.sgol.pub/js/all.min.js" type="application/javascript"></script>-->
 
@@ -133,28 +144,28 @@
 <script>
 
 
-    console.log("hello world");
+    // console.log("hello world");
+    //
+    // let f = document.querySelector("footer");
+    // let t = f.innerText;
+    // f.innerHTML = '';
+    //
+    // let links = t.split(" ").map(h=>{
+    //
+    //     let l = encodeURIComponent(h)
+    //     let linkUrl = `https://www.instagram.com/explore/search/keyword/?q=${l}`
+    //
+    //     let a = document.createElement("a")
+    //     a.href = linkUrl;
+    //     a.innerText = h
+    //     return a;
+    // })
 
-    let f = document.querySelector("footer");
-    let t = f.innerText;
-    f.innerHTML = '';
 
-    let links = t.split(" ").map(h=>{
-
-        let l = encodeURIComponent(h)
-        let linkUrl = `https://www.instagram.com/explore/search/keyword/?q=${l}`
-
-        let a = document.createElement("a")
-        a.href = linkUrl;
-        a.innerText = h
-        return a;
-    })
-
-
-    links.forEach(a=>{
-        console.log(a)
-        f.appendChild(a)
-    })
+    // links.forEach(a=>{
+    //     console.log(a)
+    //     f.appendChild(a)
+    // })
 
 
 </script>
