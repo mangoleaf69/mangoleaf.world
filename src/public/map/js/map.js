@@ -254,7 +254,7 @@ document.querySelector("#gal-upload").addEventListener("click", async e => {
             let url = "https://freemap.online/api/free/etch//view?etch=" + hash
 
             if (sameDataReturned) {
-                li.style.background = "#89ff89"
+                li.style.background = "#83e183"
             } else {
                 console.log(hash)
                 console.log(hash3)
@@ -389,7 +389,77 @@ function galAddImg(data) {
 }
 
 
-function showPastelModal(message, color, img) {
+// function showPastelModal(message, color, img) {
+//     // Color options
+//     const colors = {
+//         green: 'rgba(250,228,32,0.66)',  // Pastel green
+//         blue: 'rgba(174,198,207,0.62)',   // Pastel blue
+//         orange: 'rgba(255,179,71,0.63)', // Pastel orange
+//         purple: 'rgba(179,158,181,0.69)', // Pastel purple
+//         black: 'rgba(207,207,196,0.6)'   // Light grey (pastel alternative for black)
+//     };
+//
+//     // Ensure color is one of the allowed options, default to black if not
+//     const modalColor = colors[color] || colors.black;
+//
+//     // Create the backdrop
+//     const backdrop = document.createElement('div');
+//     backdrop.style.position = 'fixed';
+//     backdrop.style.top = '0';
+//     backdrop.style.left = '0';
+//     backdrop.style.width = '100%';
+//     backdrop.style.height = '100%';
+//     backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Transparent black background
+//     backdrop.style.zIndex = '105';
+//
+//
+//     // Create the modal container
+//     const modal = document.createElement('div');
+//     modal.style.position = 'fixed';
+//     modal.style.top = '50%';
+//     modal.style.left = '50%';
+//     modal.style.transform = 'translate(-50%, -50%)';
+//     modal.style.padding = '20px';
+//     modal.style.backgroundColor = modalColor;
+//     modal.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.1)';
+//     modal.style.borderRadius = '10px';
+//     modal.style.zIndex = '5000';
+//     modal.style.maxWidth = '80%';
+//     modal.style.textAlign = 'center';
+//     modal.style.fontFamily = '"Comic Sans MS", sans-serif'; // Cartoon-like font
+//     modal.style.fontSize = '42px';
+//     modal.style.color = '#fff';
+//
+//     if (img) {
+//         modal.style.opacity = "0.9";
+//         backdrop.style.background = "url(" + img + ")";
+//         backdrop.style.backgroundSize = "cover"; // This will cover the entire backdrop
+//         backdrop.style.backgroundRepeat = "repeat"; // This will tile the background image
+//         backdrop.style.backgroundPosition = "center"; // Center the background image
+//         backdrop.style.backgroundSize = "240px 240px"; // Adjust this to control tile size
+//     }
+//     // Create the message text
+//     const messageText = document.createElement('p');
+//     messageText.innerHTML = message;
+//
+//     /*TODO add a close button called Okay that closes the modal from these without tapping outsied*/
+//
+//     // Add the message to the modal
+//     modal.appendChild(messageText);
+//
+//     // Append both backdrop and modal to the body
+//     document.body.appendChild(backdrop);
+//     document.body.appendChild(modal);
+//
+//     // Close the modal when clicking on the backdrop todo make this function reuaable and add to returned object
+//     backdrop.addEventListener('click', function () {
+//         document.body.removeChild(modal);
+//         document.body.removeChild(backdrop);
+//     });
+//
+//     //todo return object with {modal, msg, close}
+// }
+function showPastelModal(message, color, img, buttonText = 'Okay') {
     // Color options
     const colors = {
         green: 'rgba(250,228,32,0.66)',  // Pastel green
@@ -411,7 +481,6 @@ function showPastelModal(message, color, img) {
     backdrop.style.height = '100%';
     backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Transparent black background
     backdrop.style.zIndex = '105';
-
 
     // Create the modal container
     const modal = document.createElement('div');
@@ -438,23 +507,66 @@ function showPastelModal(message, color, img) {
         backdrop.style.backgroundPosition = "center"; // Center the background image
         backdrop.style.backgroundSize = "240px 240px"; // Adjust this to control tile size
     }
+
     // Create the message text
     const messageText = document.createElement('p');
     messageText.innerHTML = message;
 
-    // Add the message to the modal
+    // Create the "Okay" button to close the modal
+    const closeButton = document.createElement('button');
+    closeButton.innerHTML = buttonText;
+    closeButton.style.padding = '10px 20px';
+    closeButton.style.marginTop = '20px';
+    closeButton.style.fontSize = '20px';
+    closeButton.style.backgroundColor = '#fff';
+    closeButton.style.color = '#333';
+    closeButton.style.border = 'none';
+    closeButton.style.borderRadius = '5px';
+    closeButton.style.cursor = 'pointer';
+
+    // Define the close function inline and reuse it
+    const closeModal = () => {
+        document.body.removeChild(modal);
+        document.body.removeChild(backdrop);
+    };
+
+    closeButton.addEventListener('click', closeModal);
+
+    // Create the close button in the top-right corner ([X])
+    const closeIconButton = document.createElement('button');
+    closeIconButton.innerHTML = '[X]';
+    closeIconButton.style.position = 'absolute';
+    closeIconButton.style.top = '10px';
+    closeIconButton.style.right = '10px';  // Moved to the right side
+    closeIconButton.style.fontSize = '24px';
+    closeIconButton.style.backgroundColor = 'transparent';
+    closeIconButton.style.color = '#fff';
+    closeIconButton.style.border = 'none';
+    closeIconButton.style.cursor = 'pointer';
+    closeIconButton.style.fontWeight = 'bold';
+    closeIconButton.style.padding = '5px';
+
+    closeIconButton.addEventListener('click', closeModal);
+
+    // Add the message, close button, and close icon to the modal
     modal.appendChild(messageText);
+    modal.appendChild(closeButton);
+    modal.appendChild(closeIconButton);
 
     // Append both backdrop and modal to the body
     document.body.appendChild(backdrop);
     document.body.appendChild(modal);
 
-    // Close the modal when clicking on the backdrop
-    backdrop.addEventListener('click', function () {
-        document.body.removeChild(modal);
-        document.body.removeChild(backdrop);
-    });
+    backdrop.addEventListener('click', closeModal);
+
+    // Return the modal, message, and close function as an object
+    return {
+        modal: modal,
+        message: messageText,
+        close: closeModal
+    };
 }
+
 
 // Example usage
 // showPastelModal('Mango Leaf World Map Requires Camera Permissions. Please Accept', 'orange');
@@ -1235,6 +1347,28 @@ const ispLoc = async function () {
         }
 
 
+        // Create a custom GIF icon
+        // const gifIcon = L.icon({
+        //     iconUrl: '../img/dance.gif', // Replace with your GIF path
+        //     iconSize: [256, 256], // Width and height in pixels
+        //     iconAnchor: [128, 128], // Center the icon (half of width/height)
+        //     popupAnchor: [0, -128] // Position the popup above the icon
+        // });
+
+        const customIcon = L.divIcon({
+            className: 'dance-marker',
+            iconSize: [256, 256],
+            iconAnchor: [128, 128]
+        });
+
+        // Add a marker with the custom icon
+        const marker2 = L.marker(ll, { icon: customIcon ,     interactive: false }).addTo(map);
+        window.danceIcon = customIcon;
+        window.danceMarker = marker2;
+        // Add a popup to the marker
+        // marker2.bindPopup('<b>Hello!</b><br>This is a custom GIF marker.');
+
+
         bs.resNotify({
             success: true,
             color: "info",
@@ -1369,6 +1503,8 @@ const ispLoc = async function () {
         // console.log("failed to get location doing nothing ;)", e)
     })
 }
+
+
 
 
 const mapDiv = document.getElementById('map');
