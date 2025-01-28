@@ -1,0 +1,155 @@
+<html>
+<!--Make it look good :)-->
+
+<head>
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/icon/favicon-16x16.png">
+    <link rel="manifest" href="./img/icon/site.webmanifest">
+    <link rel="mask-icon" href="./img/icon/safari-pinned-tab.svg" color="#fae420">
+    <link rel="shortcut icon" href="./img/icon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#fae420">
+    <meta name="msapplication-config" content="./img/icon/browserconfig.xml">
+    <meta name="theme-color" content="#fae420">
+
+    <link href="https://bsjs.sgol.pub/css/all.min.css" rel="stylesheet">
+
+    <!--<link href="https://bsjs.sgol.pub/js/all.min.js" rel="stylesheet">-->
+    <link href="./css/index.css" rel="stylesheet">
+
+
+</head>
+
+
+<body>
+
+<h2 class="myh2">
+    <a href="https://mangoleaf.world/map/cam/" title="A free public web map cam.">Mango Leaf . World</a>
+</h2>
+
+<img width="100%" src="../img/logo/mangoleafworldlogov1_42.jpg">
+
+
+<div>
+
+    <form>
+
+        <label class="input" title="This is the hms/dms j2000 ra/dec from stellarium.">
+            <input name="dist" id="img" class="input__field" type="file" placeholder=" " required>
+            <span class="input__label">Epic Moment Image</span>
+        </label>
+        <label class="input" title="This is the hms/dms j2000 ra/dec from stellarium.">
+            <input name="dist" id="desc" class="input__field" type="number" placeholder=" " required>
+            <span class="input__label">Comment</span>
+        </label>
+
+
+
+        <p>Your location will be detected by your ip address.</p>
+        <b>Use GPS Location</b>
+
+    </form>
+
+
+    <a href="../map/cam.html" style="width: 100%;">
+        <button class="mybtn">Post your lit moment with our free <span style="font-weight: bolder;">Web Cam</span>
+            <br> <small class="nyan-text-dark">( Click Here )</small>
+
+        </button>
+    </a>
+
+    <div id="image-output"></div>
+    <details>
+        <summary>EXIF Data</summary>
+        <pre id="exif"></pre>
+    </details>
+</div>
+
+<footer >
+    <p>&copy; 2025 Mango Leaf World. <b>Share your world!</b>  <i>( Alpha Product MVP )</i></p>
+    <p>Please submit feedback to <a href="mailto:mangoleafworld@gmail.com">mangoleafworld@gmail.com</a>.</p>
+    <p>We hope you have a wonderful day!</p>
+</footer><!--<footer>#mangoleafworld #web #map #cam #lit #moments #travel #share</footer>-->
+<hr>
+
+<script src="./js/lib/exifreader.js"></script>
+<!--Scripts n stuff-->
+<!--<script src="https://bsjs.sgol.pub/js/all.min.js" type="application/javascript"></script>-->
+
+<!--<script src="./js/script.js" type="application/javascript"></script>-->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const imgInput = document.querySelector("#img");
+        const imageOutput = document.querySelector("#image-output");
+        const exifPre = document.querySelector("#exif");
+
+        imgInput.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+
+            if (!file) {
+                exifPre.textContent = "No file selected.";
+                return;
+            }
+
+            try {
+                // Load EXIF data
+                const tags = await ExifReader.load(file);
+
+                // Display metadata
+                const metadata = Object.entries(tags).map(
+                    ([key, value]) => `${key}: ${value.description || value.value}`
+                ).join("\n");
+
+                exifPre.textContent = metadata;
+
+                // Display the image
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.alt = "Uploaded Image";
+                img.style.maxWidth = "100%"; // Ensure it fits the container
+                img.onload = () => URL.revokeObjectURL(img.src); // Free memory
+
+                // Clear previous output and append the new image
+                imageOutput.innerHTML = "";
+                imageOutput.appendChild(img);
+            } catch (error) {
+                console.error("Error processing file:", error);
+                exifPre.textContent = "Error reading metadata. Ensure the file is a valid image.";
+            }
+        });
+    });
+
+
+
+    // console.log("hello world");
+    //
+    // let f = document.querySelector("footer");
+    // let t = f.innerText;
+    // f.innerHTML = '';
+    //
+    // let links = t.split(" ").map(h=>{
+    //
+    //     let l = encodeURIComponent(h)
+    //     let linkUrl = `https://www.instagram.com/explore/search/keyword/?q=${l}`
+    //
+    //     let a = document.createElement("a")
+    //     a.href = linkUrl;
+    //     a.innerText = h
+    //     return a;
+    // })
+
+
+    // links.forEach(a=>{
+    //     console.log(a)
+    //     f.appendChild(a)
+    // })
+
+
+</script>
+
+
+</body>
+
+</html>
