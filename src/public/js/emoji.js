@@ -10750,10 +10750,21 @@ for (let key in emojis) {
     emojisUl.appendChild(categoryLi);
 }
 
-function attachEmojiPicker(el) {
+function attachEmojiPicker(el, reportFun) {
+
 
 
     el.appendChild(emojisUl)
+
+    if(typeof reportFun === "function") {
+
+        let report = document.createElement("button")
+        report.innerText = "⚠️ Report"
+
+        let reportCB = reportFun()
+        el.appendChild(report)
+        report.addEventListener("click", reportCB)
+    }
 
 }
 

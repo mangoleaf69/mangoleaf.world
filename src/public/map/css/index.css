@@ -140,6 +140,8 @@ footer {
     top: 0;
     padding: calc(var(--size-bezel) * 0.75) calc(var(--size-bezel) * .5);
     margin: calc(var(--size-bezel) * 0.75 + 3px) calc(var(--size-bezel) * .5);
+    font-family: 'Comic Sans MS', sans-serif; /* Comic Sans font */
+
     background: pink;
     white-space: nowrap;
     transform: translate(3px, 0);

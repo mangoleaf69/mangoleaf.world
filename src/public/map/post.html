@@ -40,15 +40,14 @@
             <input name="dist" id="img" class="input__field" type="file" placeholder=" " required>
             <span class="input__label">Epic Moment Image</span>
         </label>
-        <label class="input" title="This is the hms/dms j2000 ra/dec from stellarium.">
-            <input name="dist" id="desc" class="input__field" type="number" placeholder=" " required>
-            <span class="input__label">Comment</span>
+        <label class="input" title="Add your news / caption to this image.">
+            <input name="dist" id="caption" class="input__field" placeholder=" " required>
+            <span class="input__label">Caption</span>
         </label>
 
 
-
-        <p>Your location will be detected by your ip address.</p>
         <b>Use GPS Location</b>
+        <pre id="gps-pos">Your location will be detected by your ip address.</pre>
 
     </form>
 
@@ -67,9 +66,9 @@
     </details>
 </div>
 
-<footer >
-    <p>&copy; 2025 Mango Leaf World. <b>Share your world!</b>  <i>( Alpha Product MVP )</i></p>
-    <p>Please submit feedback to <a href="mailto:mangoleafworld@gmail.com">mangoleafworld@gmail.com</a>.</p>
+<footer>
+    <p>&copy; 2025 Mango Leaf World. <b>Share your world!</b> <i>( Alpha Product MVP )</i></p>
+    <p>Please submit feedback to <a href="mailto:pallavi@mangoleaf.world">pallavi@mangoleaf.world</a>.</p>
     <p>We hope you have a wonderful day!</p>
 </footer><!--<footer>#mangoleafworld #web #map #cam #lit #moments #travel #share</footer>-->
 <hr>
@@ -80,7 +79,37 @@
 
 <!--<script src="./js/script.js" type="application/javascript"></script>-->
 <script>
+
+    function updatePosition(position) {
+        const {latitude, longitude, accuracy} = position.coords;
+        document.getElementById('gps-pos').textContent =
+            `Latitude: ${latitude}\nLongitude: ${longitude}\nAccuracy: ±${accuracy} meters`;
+    }
+
+    function handleError(error) {
+        const errors = {
+            1: "Permission denied. Please enable location services.",
+            2: "Position unavailable.",
+            3: "Request timed out. Try again."
+        };
+        document.getElementById('gps-pos').textContent = errors[error.code] || "An unknown error occurred.";
+    }
+
+
     document.addEventListener("DOMContentLoaded", () => {
+
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(updatePosition, handleError, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            });
+        } else {
+            document.getElementById('gps-pos').textContent = "Geolocation is not supported by this browser.";
+        }
+
+        //todo get exif data if its there but :( its not on alot of devices.
+
         const imgInput = document.querySelector("#img");
         const imageOutput = document.querySelector("#image-output");
         const exifPre = document.querySelector("#exif");
@@ -96,7 +125,7 @@
             try {
                 // Load EXIF data
                 const tags = await ExifReader.load(file);
-
+                window.tags = tags;
                 // Display metadata
                 const metadata = Object.entries(tags).map(
                     ([key, value]) => `${key}: ${value.description || value.value}`
@@ -120,7 +149,6 @@
             }
         });
     });
-
 
 
     // console.log("hello world");

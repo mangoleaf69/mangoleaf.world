@@ -115,6 +115,11 @@ var fileCount = 0;
 
 document.querySelector("#gal-back").addEventListener("click", toggleGal)
 
+/**
+ * This function actual sends the data to the server saving it
+ * @param data - the image base64 data
+ * @returns {Promise<any>}
+ */
 async function getLit(data) {
 
     let res = await fetch("https://freemap.online/api/free/lit?data=" + data);
@@ -172,6 +177,9 @@ document.querySelector("#gal-upload").addEventListener("click", async e => {
     let hash = await sha512Hash(etch)
 
     let lit = await getLit(hash);
+
+    let post = prompt("Would you like to post some news with this photo?")
+
     console.log(lit)
     _hash = hash
     viewFileUrl = "https://freemap.online/api/free/etch/file?hash=" + _hash
@@ -1173,7 +1181,19 @@ function shareImage(lat, lon, hash) {
 
 var heat, marker, _llmap = {}
 
+function reportFun(url) {
 
+    return (e)=>{
+
+        showPastelModal("Are you sure you want to report?", "orange", undefined, "submit")
+        let reason = prompt("Reason");
+
+        if(reason) {
+            alert("Submitting report");
+        }
+    }
+
+}
 
 function latLonMap(ll, data) {
 
@@ -1196,13 +1216,7 @@ function latLonMap(ll, data) {
             
            
             <div style="margin-top: 10px;"><span></span>
-                <button id="mango-btn" onclick="attachEmojiPicker(document.getElementById('mango-btn').parentElement)" style="padding: 5px 10px; margin-right: 5px;" title="React to: [${ll.join(", ")}]">🥭</button>
-                <button id="feelingLuckyBtn"  onclick="showCamera()" style="padding: 5px 10px; margin-right: 5px;">Feeling Lucky</button>
-                <button id="shareBtn" onclick="shareImage('${ll[0]}','${ll[1]}','${data}')" style="padding: 5px 10px;">Share</button>
-
-            </div>
-        </div>
-    `;
+                <button id="mango-btn" onclick="attachEmojiPicker(document.getElementById('mango-btn').parentElement, document.reportFun(${imageUrl}`;
 
         window._onemoji = (e) => {
 
