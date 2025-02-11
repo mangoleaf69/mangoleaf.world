@@ -467,7 +467,17 @@ function galAddImg(data) {
 //
 //     //todo return object with {modal, msg, close}
 // }
-function showPastelModal(message, color, img, buttonText = 'Okay') {
+
+/**
+ * A function to create a cute popup
+ * @param message - the text contents
+ * @param color - the backround color
+ * @param [img] - a background image
+ * @param [buttonText="Okay"] - the button text
+ * @param buttonCallback - a callback that happens only when the modal is confirmed with the local button not when it is closed
+ * @returns {{message: HTMLParagraphElement, close: closeModal, modal: HTMLDivElement}}
+ */
+function showPastelModal(message, color, img, buttonText = 'Okay', buttonCallback = null) {
     // Color options
     const colors = {
         green: 'rgba(250,228,32,0.66)',  // Pastel green
@@ -533,11 +543,21 @@ function showPastelModal(message, color, img, buttonText = 'Okay') {
     closeButton.style.cursor = 'pointer';
 
     // Define the close function inline and reuse it
-    const closeModal = () => {
-        document.body.removeChild(modal);
-        document.body.removeChild(backdrop);
-    };
+    let closeModal
 
+
+    let closePromise = new Promise(resolve => {
+        closeModal = () => {
+            document.body.removeChild(modal);
+            document.body.removeChild(backdrop);
+            resolve()
+        }
+    });
+
+
+    if (typeof buttonCallback === "function") {
+        closeButton.addEventListener('click', buttonCallback);
+    }
     closeButton.addEventListener('click', closeModal);
 
     // Create the close button in the top-right corner ([X])
@@ -571,7 +591,8 @@ function showPastelModal(message, color, img, buttonText = 'Okay') {
     return {
         modal: modal,
         message: messageText,
-        close: closeModal
+        close: closeModal,
+        closePromise
     };
 }
 
@@ -1072,7 +1093,73 @@ https://github.com/mourner/simpleheat
     return new L.HeatLayer(t, i)
 };
 
+
+// Custom Compass Rose Control
+L.Control.Compass = L.Control.extend({
+    options: {
+        position: 'topright' // Position in the top right corner
+    },
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-compass');
+        L.DomEvent.on(container, 'click', function () {
+
+            var center = map.getCenter();
+            var scale = getScale();
+            var crs = map.options.crs.code === "EPSG:3857" ? "Web Mercator" : "WGS 84";
+            var zoom = map.getZoom();
+    let msg = `
+                <div>
+                    <p><b>📍 Center:</b> ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}</p>
+                    <p><b>🔍 Zoom:</b> ${zoom}</p>
+                    <p><b>📏 Scale:</b> ${scale}</p>
+                    <p><b>🌍 CRS:</b> ${crs}</p>
+                </div>`;
+            let ret = showPastelModal(msg, "blue", null, "Share Position", ()=>{
+
+                // alert("share clicked")
+                let fmUrl = shareToFreemap();
+                console.log(fmUrl)
+                window.open(fmUrl, "_blank");
+            })
+
+            ret.closePromise.then(r=>{
+                console.log("compass rose popup closed")
+            })
+            console.log(ret);
+        });
+        return container;
+    }
+});
+
+
 var map;
+
+// Function to calculate map scale (meters per pixel)
+function getScale() {
+    var zoom = map.getZoom();
+    return (40075016.686 / Math.pow(2, zoom + 8)).toFixed(2) + " meters per pixel";
+}
+
+function getParamMapinfo() {
+    let z = map.getZoom()
+    let c = map.getCenter()
+    let a = [z, c.lat, c.lng]
+    return "mapinfo=" + encodeURIComponent(JSON.stringify(a))
+}
+
+function shareToFreemap(hash, lat, lon, width, height) {
+
+    let baseUrl = "https://freemap.online/map42?"+ getParamMapinfo()
+
+    if(Array.isArray(window._redDragonParams)) {
+        baseUrl += "&" + window._redDragonParams.join("&")
+    }
+
+    console.log("Todo Add rotated overlay for current selected layer ")
+    return baseUrl
+}
+
+
 
 // Initialize the map
 async function initMap() {
@@ -1118,6 +1205,9 @@ async function initMap() {
     // Add scale control
     L.control.scale().addTo(map);
 
+
+    // Add Compass Control to the Map
+    map.addControl(new L.Control.Compass());
     // var t = L.terminator({
     //     color: false,
     //     fillColor: "#242424",
@@ -1163,7 +1253,6 @@ var addressPoints = [
 ]
 
 function showCamera() {
-
     if (isMap) {
         toggleMap()
     }
@@ -1175,7 +1264,6 @@ function showCamera() {
 function shareImage(lat, lon, hash) {
     let url = "https://mangoleaf.world/map/cam?i=" + encodeURIComponent(JSON.stringify([lat, lon, hash]))
     navigator.clipboard.writeText(url)
-
     showPastelModal("Photo <a href=" + url + ">Link</a> Copied To Clipboard!", "green")
 }
 
@@ -1183,16 +1271,128 @@ var heat, marker, _llmap = {}
 
 function reportFun(url) {
 
-    return (e)=>{
+    return (e) => {
 
         showPastelModal("Are you sure you want to report?", "orange", undefined, "submit")
         let reason = prompt("Reason");
 
-        if(reason) {
+        if (reason) {
             alert("Submitting report");
         }
     }
 
+}
+
+async function getImageClientRect(img) {
+    const startTime = performance.now();  // Start timing the image load
+
+    // Wait for the image to load
+    if (!img.complete) {
+        await new Promise(resolve => img.addEventListener('load', resolve));
+    }
+
+    const loadTime = performance.now() - startTime;  // Calculate load time
+    const rect = img.getBoundingClientRect();
+
+    // Compute the top-left, top-right, and bottom-left positions
+    const topLeft = { x: rect.left, y: rect.top };
+    const topRight = { x: rect.right, y: rect.top };
+    const bottomLeft = { x: rect.left, y: rect.bottom };
+
+    // Return the results as an object
+    return { loadTime, clientRect: rect, topLeft, topRight, bottomLeft };
+}
+
+var popupIdx = 0
+function addPopupToCircleMarker(circleMarker, hash, isFullUrl) {
+
+    let imgUrl = "https://freemap.online/api/free/etch/file?etch=" + hash;
+
+    if(isFullUrl) imgUrl = hash;
+
+    let latLng = marker.getLatLng()
+    let ll = [latLng.lat, latLng.lng]
+    // Create a container for the popup content
+    let id = ""+popupIdx++;
+    const popupContent = `
+        <div style="text-align: center;">
+        
+            <img id="popup${id}" src="${imgUrl}" alt="Popup Image" style="width: 250px; height: auto; border-radius: 5px;">
+            
+            
+           
+            <div style="margin-top: 10px;"><span></span>
+                <button id="mango-btn" onclick="attachEmojiPicker(document.getElementById('mango-btn').parentElement)" style="padding: 5px 10px; margin-right: 5px;" title="React to: [${ll.join(", ")}]">🥭</button>
+                <button id="feelingLuckyBtn"  onclick="showCamera()" style="padding: 5px 10px; margin-right: 5px;">Feeling Lucky</button>
+                <button id="shareBtn" onclick="shareImage('${ll[0]}','${ll[1]}','${hash}')" style="padding: 5px 10px;">Share</button>
+
+            </div>
+        </div>
+    `;
+
+
+
+    // Add the popup with the content to the CircleMarker
+    circleMarker.bindPopup(popupContent);
+
+    // Event listener for the popup opening to attach event listeners to the buttons
+    circleMarker.on('popupopen', function (event) {
+
+        var redDragonUrl = null;
+        window._onemoji = (e) => {
+
+            console.log("e:", e) ;
+
+            if(e === "🀄️") {
+                console.log("Red Dragon")
+
+                if(redDragonUrl) {
+                    window.open(redDragonUrl, "_blank")
+                }
+
+            }
+            document.getElementById("mango-btn").innerText = e
+
+        }
+
+        document.getElementById('feelingLuckyBtn').addEventListener('click', function () {
+            console.log("You clicked 'Feeling Lucky'!");
+            // Add custom functionality for 'Feeling Lucky' button here
+        });
+
+        document.getElementById('shareBtn').addEventListener('click', function () {
+            console.log("You clicked 'Share'!");
+            // Add custom functionality for 'Share' button here
+        });
+        let elImg = document.getElementById("popup"+id);
+        // let elImg = event.popup._container.querySelector("img")
+        console.log(id, event, elImg)
+        window._popupEvent = event;
+
+
+        getImageClientRect(elImg).then(deets=>{
+            console.log(deets)
+            let lls = [deets.topLeft, deets.topRight, deets.bottomLeft]
+            let cd = [elImg.src, ...lls.map(xy => {
+                let l = map.containerPointToLatLng(xy);
+                return [l.lat, l.lng];
+            })]
+            let param = "ro"+id+"=" + encodeURIComponent(JSON.stringify(cd))
+
+            let url = "https://freemap.online/map42?"+ getParamMapinfo() + "&" + param
+
+            window._redDragonParams = window._redDragonParams || [];
+            window._redDragonParams.push(param)
+            window._redDragonUrl = redDragonUrl= url;
+            console.log(url);
+
+        })
+
+
+// map.containerPointToLatLng({x: 360, y: 264})
+
+
+    });
 }
 
 function latLonMap(ll, data) {
@@ -1206,42 +1406,7 @@ function latLonMap(ll, data) {
     let p = heat.addLatLng(ll)
 
 
-    function addPopupToCircleMarker(circleMarker, imageUrl) {
-        // Create a container for the popup content
-        const popupContent = `
-        <div style="text-align: center;">
-        
-            <img src="${imageUrl}" alt="Popup Image" style="width: 250px; height: auto; border-radius: 5px;">
-            
-            
-           
-            <div style="margin-top: 10px;"><span></span>
-                <button id="mango-btn" onclick="attachEmojiPicker(document.getElementById('mango-btn').parentElement, document.reportFun(${imageUrl}`;
 
-        window._onemoji = (e) => {
-
-            console.log("e:", e) ;
-
-            document.getElementById("mango-btn").innerText = e
-
-        }
-
-        // Add the popup with the content to the CircleMarker
-        circleMarker.bindPopup(popupContent);
-
-        // Event listener for the popup opening to attach event listeners to the buttons
-        circleMarker.on('popupopen', function () {
-            document.getElementById('feelingLuckyBtn').addEventListener('click', function () {
-                console.log("You clicked 'Feeling Lucky'!");
-                // Add custom functionality for 'Feeling Lucky' button here
-            });
-
-            document.getElementById('shareBtn').addEventListener('click', function () {
-                console.log("You clicked 'Share'!");
-                // Add custom functionality for 'Share' button here
-            });
-        });
-    }
 
 
     let lll = generateGaussianPoints({lat: ll[0], lng: ll[1]}, 1, 0.1)[0]
@@ -1249,7 +1414,6 @@ function latLonMap(ll, data) {
     heat.addLatLng(lll);
 
     console.log(ll, lll)
-
 
 
     let m = L.circleMarker(lll, {
@@ -1263,7 +1427,7 @@ function latLonMap(ll, data) {
     m.addTo(map);
 
 
-    addPopupToCircleMarker(m, "https://freemap.online/api/free/etch/file?etch=" + data)
+    addPopupToCircleMarker(m,  data)
     // addImagePopupOnMarker(map, m, "https://freemap.online/api/free/etch/file?etch="+data, ll.join(", "))
 
     a.push({ll, data, p, m})
@@ -1300,25 +1464,24 @@ function generateGaussianPoints(latlng, n, sigma) {
 
 
 var pi;
-if(p.i) {
+if (p.i) {
 
     try {
         pi = JSON.parse(p.i);
-        if(!Array.isArray(pi) && pi.length=== 3) {
+        if (!Array.isArray(pi) && pi.length === 3) {
             console.warn("Invalid i param!");
             pi = null;
         }
 
         let ll = [parseFloat(pi[0]), parseFloat(pi[1])]
         let hash = pi[2];
-        setTimeout(()=>{
+        setTimeout(() => {
             toggleGal();
             toggleMap();
-              setTimeout(()=>{
+            setTimeout(() => {
 
 
-
-        }, 330)
+            }, 330)
         }, 1000)
 
 
@@ -1362,12 +1525,12 @@ const ispLoc = async function () {
 
 
         // Create a custom GIF icon
-        // const gifIcon = L.icon({
-        //     iconUrl: '../img/dance.gif', // Replace with your GIF path
-        //     iconSize: [256, 256], // Width and height in pixels
-        //     iconAnchor: [128, 128], // Center the icon (half of width/height)
-        //     popupAnchor: [0, -128] // Position the popup above the icon
-        // });
+        const gifIcon = L.icon({
+            iconUrl: '../img/cute_cat.gif', // Replace with your GIF path
+            iconSize: [128, 128], // Width and height in pixels
+            iconAnchor: [64, 128], // Center the icon (half of width/height)
+            popupAnchor: [0, -128] // Position the popup above the icon
+        });
 
         const customIcon = L.divIcon({
             className: 'dance-marker',
@@ -1376,9 +1539,11 @@ const ispLoc = async function () {
         });
 
         // Add a marker with the custom icon
-        const marker2 = L.marker(ll, { icon: customIcon ,     interactive: false }).addTo(map);
+        const marker2 = L.marker(ll, {icon: gifIcon, interactive: false}).addTo(map);
         window.danceIcon = customIcon;
-        window.danceMarker = marker2;
+        window.catIcon = gifIcon;
+
+        window.userMarker = marker2;
         // Add a popup to the marker
         // marker2.bindPopup('<b>Hello!</b><br>This is a custom GIF marker.');
 
@@ -1403,34 +1568,6 @@ const ispLoc = async function () {
 
         // for (let i = 0; i < 10000; i++) {
         //     addressPoints.push([ll.lat, ll.lng, i])
-        function addPopupToCircleMarker(circleMarker, imageUrl) {
-            // Create a container for the popup content
-            const popupContent = `
-        <div style="text-align: center;">
-            <img src="${imageUrl}" alt="Popup Image" style="width: 300px; height: auto; background: #fae42088 border-radius: 5px;">
-            <div style="margin-top: 10px;">
-                <button id="feelingLuckyBtn"  onclick="showCamera()" style="padding: 5px 10px; margin-right: 5px;">Feeling Lucky</button>
-                <button id="shareBtn" style="padding: 5px 10px;">Share</button>
-            </div>
-        </div>
-    `;
-
-            // Add the popup with the content to the CircleMarker
-            circleMarker.bindPopup(popupContent).openPopup();
-
-            // Event listener for the popup opening to attach event listeners to the buttons
-            circleMarker.on('popupopen', function () {
-                document.getElementById('feelingLuckyBtn').addEventListener('click', function () {
-                    console.log("You clicked 'Feeling Lucky'!");
-                    // Add custom functionality for 'Feeling Lucky' button here
-                });
-
-                document.getElementById('shareBtn').addEventListener('click', function () {
-                    console.log("You clicked 'Share'!");
-                    // Add custom functionality for 'Share' button here
-                });
-            });
-        }
 
 
         try {
@@ -1438,14 +1575,14 @@ const ispLoc = async function () {
             if (p.i) {
                 let a = JSON.parse(p.i);
 
+                // let url = "https://freemap.online/api/free/etch/file?hash=" + a[2];
 
-                let url = "https://freemap.online/api/free/etch/file?hash="+a[2];
-
-                addPopupToCircleMarker(marker, url)
+                addPopupToCircleMarker(marker, a[2])
             } else {
 
                 let img = "https://picsum.photos/200"
-                addPopupToCircleMarker(marker, img)
+                // let img = "../img/dance.gif"
+                addPopupToCircleMarker(userMarker, img, true)
 
             }
 
@@ -1453,7 +1590,7 @@ const ispLoc = async function () {
         } catch (e) {
 
             let img = "https://mangoleaf.world/img/40dogo.jpg"
-            addPopupToCircleMarker(marker, img)
+            addPopupToCircleMarker(marker, img, true)
             console.error(e)
         }
 
@@ -1519,8 +1656,6 @@ const ispLoc = async function () {
 }
 
 
-
-
 const mapDiv = document.getElementById('map');
 
 const video = document.getElementById('video');
@@ -1577,8 +1712,8 @@ async function switchCamera() {
     const constraints = {
         video: {
             deviceId: devs[next].deviceId,
-            width: {ideal: p.sd?1920:4096},
-            height: {ideal: p.sd?1080:2160}
+            width: {ideal: p.sd ? 1920 : 4096},
+            height: {ideal: p.sd ? 1080 : 2160}
         }
     };
     currentCamIndex = next;

@@ -594,22 +594,22 @@ emojis_raw = [
             "mask"
         ]
     },
-    {
-        "emoji": "🤒",
-        "category": "People",
-        "tags": [
-            "sick",
-            "face_with_thermometer"
-        ]
-    },
-    {
-        "emoji": "🤕",
-        "category": "People",
-        "tags": [
-            "hurt",
-            "face_with_head_bandage"
-        ]
-    },
+    // {
+    //     "emoji": "🤒",
+    //     "category": "People",
+    //     "tags": [
+    //         "sick",
+    //         "face_with_thermometer"
+    //     ]
+    // },
+    // {
+    //     "emoji": "🤕",
+    //     "category": "People",
+    //     "tags": [
+    //         "hurt",
+    //         "face_with_head_bandage"
+    //     ]
+    // },
     {
         "emoji": "😈",
         "category": "People",
@@ -620,32 +620,32 @@ emojis_raw = [
             "smiling_imp"
         ]
     },
-    {
-        "emoji": "👿",
-        "category": "People",
-        "tags": [
-            "angry",
-            "devil",
-            "evil",
-            "horns",
-            "imp"
-        ]
-    },
-    {
-        "emoji": "👹",
-        "category": "People",
-        "tags": [
-            "monster",
-            "japanese_ogre"
-        ]
-    },
-    {
-        "emoji": "👺",
-        "category": "People",
-        "tags": [
-            "japanese_goblin"
-        ]
-    },
+    // {
+    //     "emoji": "👿",
+    //     "category": "People",
+    //     "tags": [
+    //         "angry",
+    //         "devil",
+    //         "evil",
+    //         "horns",
+    //         "imp"
+    //     ]
+    // },
+    // {
+    //     "emoji": "👹",
+    //     "category": "People",
+    //     "tags": [
+    //         "monster",
+    //         "japanese_ogre"
+    //     ]
+    // },
+    // {
+    //     "emoji": "👺",
+    //     "category": "People",
+    //     "tags": [
+    //         "japanese_goblin"
+    //     ]
+    // },
     {
         "emoji": "💩",
         "category": "People",
